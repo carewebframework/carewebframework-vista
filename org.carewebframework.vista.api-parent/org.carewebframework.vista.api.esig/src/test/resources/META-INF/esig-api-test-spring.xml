@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		 http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<beans profile="desktop">
+
+		<bean id="TestDocuments" class="org.carewebframework.vista.esig.TestDocuments">
+			<property name="typeRegistry" ref="eSigService" />
+			<property name="eSigService" ref="eSigService" />
+		</bean>
+
+		<bean id="TestOrders" class="org.carewebframework.vista.esig.TestOrders">
+			<property name="typeRegistry" ref="eSigService" />
+			<property name="eSigService" ref="eSigService" />
+		</bean>
+
+		<bean id="TestPOC" class="org.carewebframework.vista.esig.TestPOC">
+			<property name="typeRegistry" ref="eSigService" />
+			<property name="eSigService" ref="eSigService" />
+		</bean>
+
+	</beans>
+</beans>

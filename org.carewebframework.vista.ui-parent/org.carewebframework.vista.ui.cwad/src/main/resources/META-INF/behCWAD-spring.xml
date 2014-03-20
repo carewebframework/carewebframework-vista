@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:cwp="http://www.carewebframework.org/schema/plugin" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		 http://www.springframework.org/schema/beans/spring-beans.xsd
+		 http://www.carewebframework.org/schema/plugin
+		 http://www.carewebframework.org/schema/plugin/plugin-extensions.xsd">
+
+	<beans profile="root">
+
+		<cwp:plugin id="vistaCWAD" name="CWADF"
+			url="~./org/carewebframework/vista/ui/cwad/main.zul">
+			<cwp:serialization>
+				<cwp:property id="allowPrint" name="Allow Printing"
+					type="boolean" description="If true, printing of detail displays is allowed." />
+				<cwp:property id="color" name="Background Color" type="color"
+					description="Background color." />
+				<cwp:property id="popupFlags" name="Popup Record Flags"
+					type="boolean"
+					description="If true, a popup dialog will be presented if any patient flags are active." />
+			</cwp:serialization>
+			<cwp:resource>
+				<cwp:help-resource module="vistaCWADHelp" />
+			</cwp:resource>
+		</cwp:plugin>
+
+	</beans>
+
+	<beans profile="desktop">
+
+		<bean name="vistaCWADMainController" class="org.carewebframework.vista.ui.cwad.MainController"
+			scope="prototype">
+			<property name="brokerSession" ref="brokerSession" />
+		</bean>
+
+		<bean name="vistaCWADDetailsController" class="org.carewebframework.vista.ui.cwad.DetailsController"
+			scope="prototype">
+			<property name="brokerSession" ref="brokerSession" />
+		</bean>
+
+	</beans>
+
+</beans>

@@ -1,0 +1,63 @@
+<layout title="CareWeb - WVEHR">
+	<_menubar>
+		<menuitem action="@chat.action.create.session" label="Chat..."/>
+	</_menubar>
+	<_toolbar>
+		<vistaCWAD allowPrint="true" popupFlags="true" />
+	</_toolbar>
+	<splitterview orientation="vertical">
+		<splitterpane relative="false" size="47.0">
+			<splitterview orientation="horizontal">
+				<splitterpane relative="true" size="50">
+					<patientHeader color="lightyellow" />
+				</splitterpane>
+				<splitterpane relative="true" size="50">
+					<userHeader color="lightblue" />
+				</splitterpane>
+			</splitterview>
+		</splitterpane>
+		<splitterpane relative="true" size="88.69565217391305">
+			<tabview orientation="horizontal">
+				<tabpane label="Notifications">
+					<vistaNotification />
+				</tabpane>
+				<tabpane label="Chart">
+					<treeview open="true">
+						<treepane label="Allergies">
+							<vistaAllergies allowPrint="false" caption="Adverse Reactions"
+								captionStyle="HIDDEN" deferUpdate="true" horizontal="true"
+								layout="50:0:true;0:33%;1:33%;2:33%" showDetailPane="false" />
+						</treepane>
+						<treepane label="Consult Orders">
+							<vistaConsultOrders allowPrint="false" caption="Consult Orders"
+								captionStyle="HIDDEN" deferUpdate="true" horizontal="true"
+								layout="50:0:true;0:33%;1:33%;2:33%" showDetailPane="false" />
+						</treepane>
+						<treepane label="Crisis Alerts">
+							<vistaCrises allowPrint="false" caption="Crisis Alerts"
+								captionStyle="HIDDEN" deferUpdate="true" horizontal="true"
+								layout="50:0:true;0:100%" showDetailPane="false" />
+						</treepane>
+						<treepane label="Lab Orders">
+							<vistaLabOrders allowPrint="false" caption="Lab Orders"
+								captionStyle="HIDDEN" deferUpdate="true" horizontal="true"
+								layout="50:0:true;0:33%;1:33%;2:33%" showDetailPane="false" />
+						</treepane>
+						<treepane label="User Alerts">
+							<vistaAlerts allowPrint="false" caption="Alerts"
+								captionStyle="HIDDEN" deferUpdate="true" horizontal="true"
+								layout="50:0:true;0:100%" showDetailPane="false" />
+						</treepane>
+					</treeview>
+				</tabpane>
+				<tabpane label="Settings">
+					<settingsEditor group="CIANB SITE PARAMETERS"
+						provider="settingsProvider" />
+				</tabpane>
+			</tabview>
+		</splitterpane>
+		<splitterpane relative="false" size="37.0">
+			<statusPanel />
+		</splitterpane>
+	</splitterview>
+</layout>

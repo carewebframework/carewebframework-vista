@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		 http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<beans profile="root">
+
+		<bean class="org.carewebframework.vista.smart.medication.SmartMedications" />
+
+		<bean class="org.carewebframework.vista.smart.patient.SmartDemographics" />
+
+		<bean class="org.carewebframework.vista.smart.problem.SmartProblems" />
+
+		<bean class="org.carewebframework.vista.smart.lab.SmartLabs" />
+
+		<bean class="org.carewebframework.vista.smart.immunization.SmartImmunizations" />
+
+	</beans>
+
+	<beans profile="desktop">
+
+		<bean id="smart.context.record" parent="smart.context.base"
+			class="org.carewebframework.vista.smart.patient.SmartContextRecord" depends-on="patientContext" />
+
+	</beans>
+</beans>
