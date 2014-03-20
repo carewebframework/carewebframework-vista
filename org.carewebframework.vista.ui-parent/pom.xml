@@ -12,7 +12,6 @@
 		<module>org.carewebframework.vista.ui.core</module>
 		<module>org.carewebframework.vista.ui.alerts</module>
 		<module>org.carewebframework.vista.ui.allergies</module>
-		<module>org.carewebframework.vista.ui.crises</module>
 		<module>org.carewebframework.vista.ui.consultorders</module>
 		<module>org.carewebframework.vista.ui.crises</module>
 		<module>org.carewebframework.vista.ui.laborders</module>
