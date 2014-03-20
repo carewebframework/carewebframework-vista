@@ -22,5 +22,5 @@ Running:
 
 Additional configuration:
 
-1. To access the design mode feature of the CWF, assign the 'RGCWF DESIGNER' security key.
-2. To enable patient selection access, assign the 'RGCWPT PATIENT SELECT' security key.
+1. To access the design mode feature of the CWF, assign the <b>RGCWF DESIGNER</b> security key.
+2. To enable patient selection access, assign the <b>RGCWPT PATIENT SELECT</b> security key.
