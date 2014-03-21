@@ -145,7 +145,7 @@ public class SchedulingController extends FrameworkController {
         super.doAfterCompose(comp);
         lstScheduled.setItemRenderer(renderer);
         refresh();
-        getEventManager().subscribe("NOTIFICATION.SCHEDULE", alertEventListener);
+        getEventManager().subscribe("ALERT.SCHEDULE", alertEventListener);
     }
     
     /**
@@ -163,7 +163,7 @@ public class SchedulingController extends FrameworkController {
      * Unsubscribe on dialog closure.
      */
     public void onClose() {
-        getEventManager().unsubscribe("NOTIFICATION.SCHEDULE", alertEventListener);
+        getEventManager().unsubscribe("ALERT.SCHEDULE", alertEventListener);
     }
     
     /**

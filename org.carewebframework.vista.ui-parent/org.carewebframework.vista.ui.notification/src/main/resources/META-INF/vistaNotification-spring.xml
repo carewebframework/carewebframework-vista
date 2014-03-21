@@ -55,6 +55,7 @@
 		<bean id="vistaNotificationService" class="org.carewebframework.vista.ui.notification.NotificationService"
 			scope="prototype">
 			<constructor-arg ref="brokerSession" />
+			<constructor-arg value="${vistanotification.scheduled.prefix:RGCWXQ}" />
 		</bean>
 
 		<bean id="vistaNotificationMainController" class="org.carewebframework.vista.ui.notification.MainController"

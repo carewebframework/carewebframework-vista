@@ -14,12 +14,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.carewebframework.vista.mbroker.BrokerSession;
-
 import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.cal.api.domain.IPatient;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.vista.mbroker.BrokerSession;
 
 /**
  * Data access services for notifications.
@@ -31,8 +30,11 @@ public class NotificationService {
     
     private final BrokerSession broker;
     
-    public NotificationService(BrokerSession broker) {
+    private final String scheduledPrefix;
+    
+    public NotificationService(BrokerSession broker, String scheduledPrefix) {
         this.broker = broker;
+        this.scheduledPrefix = scheduledPrefix;
     }
     
     /**
@@ -181,7 +183,7 @@ public class NotificationService {
      * @param result The list to receive the results.
      */
     public void getScheduledNotifications(Collection<ScheduledNotification> result) {
-        List<String> lst = broker.callRPCList("RGCWXQ SCHLIST", null, "RGCWXQ");
+        List<String> lst = broker.callRPCList("RGCWXQ SCHLIST", null, scheduledPrefix);
         result.clear();
         
         for (String data : lst) {
@@ -240,7 +242,7 @@ public class NotificationService {
         }
         
         String extraInfo = StrUtil.fromList(Arrays.asList(notification.getExtraInfo()), StrUtil.U);
-        return broker.callRPCBool("RGCWXQ SCHALR", notification.getDeliveryDate(), "RGCWXQ", notification.getSubject(),
-            extraInfo, message, prepareRecipients(recipients));
+        return broker.callRPCBool("RGCWXQ SCHALR", notification.getDeliveryDate(), scheduledPrefix,
+            notification.getSubject(), extraInfo, message, prepareRecipients(recipients));
     }
 }

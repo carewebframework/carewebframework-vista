@@ -9,7 +9,7 @@ stages of development.
 
 Installation:
 
-1. Using KIDS, install the provided build <b>kids/cwf-1.0.kid</b>.
+1. Using KIDS, install the provided build <b>kids/cwf-vista-1.0.kid</b>.
 2. At the M command line, execute <b>D STARTALL^CIANBLIS</b> to start the broker on port 9300.
 3. If TaskMan is not running, it may be started from the M command line by entering <b>D ^ZTMB</b>.
 

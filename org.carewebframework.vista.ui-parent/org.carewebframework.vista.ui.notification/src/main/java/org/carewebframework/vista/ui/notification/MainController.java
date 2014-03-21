@@ -313,7 +313,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         
         if (alertThreshold != null && notification.getPriority().ordinal() <= alertThreshold.ordinal()) {
             MessageInfo mi = new MessageInfo(notification.getDisplayText(), "New Notification", notification.getPriority()
-                    .getColor(), alertDuration * 1000, null, "cwf.fireLocalEvent('NOTIFICATION.INFO', '"
+                    .getColor(), alertDuration * 1000, null, "cwf.fireLocalEvent('ALERT.INFO', '"
                     + notification.getAlertId() + "');");
             getEventManager().fireLocalEvent(MessageWindow.EVENT_SHOW, mi);
         }
@@ -543,7 +543,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
      */
     private void subscribe(boolean doSubscribe) {
         for (Action action : Action.values()) {
-            String eventName = "NOTIFICATION." + action.name();
+            String eventName = "ALERT." + action.name();
             
             if (doSubscribe) {
                 getEventManager().subscribe(eventName, actionListener);
