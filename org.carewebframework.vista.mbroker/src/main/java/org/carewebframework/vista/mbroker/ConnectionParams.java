@@ -14,8 +14,6 @@ import org.apache.commons.lang.math.NumberUtils;
 
 import org.carewebframework.common.StrUtil;
 
-import org.springframework.beans.BeanUtils;
-
 /**
  * Class representing all connection parameters that influence a broker connection.
  */
@@ -90,7 +88,14 @@ public class ConnectionParams {
      * @param source
      */
     public ConnectionParams(ConnectionParams source) {
-        BeanUtils.copyProperties(source, this);
+        appid = source.appid;
+        debug = source.debug;
+        namespace = source.namespace;
+        password = source.password;
+        port = source.port;
+        server = source.server;
+        timeout = source.timeout;
+        username = source.username;
     }
     
     /**
