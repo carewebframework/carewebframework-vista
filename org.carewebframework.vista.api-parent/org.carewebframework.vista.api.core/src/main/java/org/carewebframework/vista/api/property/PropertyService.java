@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import org.carewebframework.api.AliasTypeRegistry;
-import org.carewebframework.api.AliasTypeRegistry.AliasType;
+import org.carewebframework.api.alias.AliasType;
+import org.carewebframework.api.alias.AliasTypeRegistry;
 import org.carewebframework.api.property.IPropertyService;
 import org.carewebframework.api.security.SecurityUtil;
 import org.carewebframework.common.StrUtil;
