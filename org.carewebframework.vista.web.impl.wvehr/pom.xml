@@ -143,6 +143,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
+			<artifactId>org.carewebframework.vista.ui.vitals</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.vista.ui.notification</artifactId>
 			<version>${project.version}</version>
 		</dependency>
