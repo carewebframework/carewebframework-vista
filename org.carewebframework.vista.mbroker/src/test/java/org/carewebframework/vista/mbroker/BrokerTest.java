@@ -16,10 +16,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.carewebframework.vista.mbroker.BrokerSession;
-import org.carewebframework.vista.mbroker.ConnectionParams;
 import org.carewebframework.vista.mbroker.BrokerSession.IAsyncRPCEvent;
 import org.carewebframework.vista.mbroker.PollingThread.IHostEventHandler;
+import org.carewebframework.vista.mbroker.Security.AuthResult;
+import org.carewebframework.vista.mbroker.Security.AuthStatus;
 
 import org.junit.Test;
 
@@ -70,7 +70,8 @@ public class BrokerTest implements IHostEventHandler, IAsyncRPCEvent {
         String server = System.getenv("cwf-test-server");
         assertTrue("Environment variable 'cwf-test-server' not set.", server != null);
         BrokerSession session = getConnection(server);
-        session.connect();
+        AuthResult authResult = session.connect();
+        assertEquals(AuthStatus.SUCCESS, authResult.status);
         assertTrue(session.isConnected());
         assertTrue(session.isAuthenticated());
         print("Connected to " + session.getConnectionParams());

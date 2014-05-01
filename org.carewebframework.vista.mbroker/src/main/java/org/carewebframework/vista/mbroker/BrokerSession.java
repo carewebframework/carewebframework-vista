@@ -24,14 +24,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
-import org.carewebframework.vista.mbroker.PollingThread.IHostEventHandler;
-import org.carewebframework.vista.mbroker.Request.Action;
-import org.carewebframework.vista.mbroker.Response.ResponseType;
-
 import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.common.JSONUtil;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.vista.mbroker.PollingThread.IHostEventHandler;
+import org.carewebframework.vista.mbroker.Request.Action;
+import org.carewebframework.vista.mbroker.Response.ResponseType;
+import org.carewebframework.vista.mbroker.Security.AuthResult;
 
 public class BrokerSession {
     
@@ -162,8 +162,9 @@ public class BrokerSession {
         setConnectionParams(params);
     }
     
-    public void connect() {
+    public AuthResult connect() {
         ServerSocket listener = null;
+        AuthResult authResult = null;
         
         try {
             close();
@@ -190,7 +191,7 @@ public class BrokerSession {
                 socket = listener.accept();
             }
             
-            Security.authenticate(this);
+            authResult = Security.authenticate(this);
             
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -199,6 +200,7 @@ public class BrokerSession {
         }
         
         polling(true);
+        return authResult;
     }
     
     public void disconnect() {
