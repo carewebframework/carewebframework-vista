@@ -43,6 +43,9 @@
 								captionStyle="HIDDEN" deferUpdate="true" horizontal="true"
 								layout="50:0:true;0:33%;1:33%;2:33%" showDetailPane="false" />
 						</treepane>
+						<treepane label="Vitals">
+							<vistaVitalsDisplay />
+						</treepane>
 						<treepane label="User Alerts">
 							<vistaAlerts allowPrint="false" caption="Alerts"
 								captionStyle="HIDDEN" deferUpdate="true" horizontal="true"

@@ -20,5 +20,6 @@
 		<module>org.carewebframework.vista.ui.notification</module>
 		<module>org.carewebframework.vista.ui.esig</module>
 		<module>org.carewebframework.vista.ui.cwad</module>
+		<module>org.carewebframework.vista.ui.vitals</module>
 	</modules>
 </project>
