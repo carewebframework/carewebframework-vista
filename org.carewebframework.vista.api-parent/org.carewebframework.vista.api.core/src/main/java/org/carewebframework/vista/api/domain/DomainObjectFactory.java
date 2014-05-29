@@ -1,8 +1,8 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
- * If a copy of the MPL was not distributed with this file, You can obtain one at 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
  * http://mozilla.org/MPL/2.0/.
- * 
+ *
  * This Source Code Form is also subject to the terms of the Health-Related Additional
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
@@ -12,14 +12,14 @@ package org.carewebframework.vista.api.domain;
 import java.util.Collections;
 import java.util.List;
 
-import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.api.domain.DomainObject;
 import org.carewebframework.api.domain.IDomainFactory;
 import org.carewebframework.common.JSONUtil;
+import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
  * Factory for instantiating serialized domain objects from server.
- * 
+ *
  * @param <DomainClass>
  */
 public class DomainObjectFactory<DomainClass extends DomainObject> implements IDomainFactory<DomainClass> {
@@ -31,13 +31,27 @@ public class DomainObjectFactory<DomainClass extends DomainObject> implements ID
      * server in serialized form using standard JSON format and is then deserialized and
      * instantiated. The class of the requested domain object must have an alias registered with the
      * JSON deserializer. This is typically done in a static initializer within the class itself.
-     * 
+     *
+     * @param clazz The class of the domain object to be returned.
+     * @param id The internal record number of the requested domain object.
+     * @return An instance of the requested domain object.
+     */
+    public static <DomainClass extends DomainObject> DomainClass get(Class<DomainClass> clazz, long id) {
+        return get(clazz, Long.toString(id));
+    }
+    
+    /**
+     * Requests a domain object from the server. The domain object, if found, is returned by the
+     * server in serialized form using standard JSON format and is then deserialized and
+     * instantiated. The class of the requested domain object must have an alias registered with the
+     * JSON deserializer. This is typically done in a static initializer within the class itself.
+     *
      * @param clazz The class of the domain object to be returned.
      * @param id The internal record number of the requested domain object.
      * @return An instance of the requested domain object.
      */
     @SuppressWarnings("unchecked")
-    public static <DomainClass extends DomainObject> DomainClass get(Class<DomainClass> clazz, long id) {
+    public static <DomainClass extends DomainObject> DomainClass get(Class<DomainClass> clazz, String id) {
         String json = VistAUtil.getBrokerSession().callRPC("RGCWFSER GETBYIEN", getAlias(clazz), id);
         return (DomainClass) JSONUtil.deserialize(json);
     }
@@ -48,13 +62,13 @@ public class DomainObjectFactory<DomainClass extends DomainObject> implements ID
      * deserialized and instantiated. The class of the requested domain object must have an alias
      * registered with the JSON deserializer. This is typically done in a static initializer within
      * the class itself.
-     * 
+     *
      * @param clazz The class of the domain object to be returned.
      * @param ids An array of internal record numbers of the requested domain objects.
      * @return A list of instances of the requested domain objects.
      */
     @SuppressWarnings("unchecked")
-    public static <DomainClass extends DomainObject> List<DomainClass> get(Class<DomainClass> clazz, long[] ids) {
+    public static <DomainClass extends DomainObject> List<DomainClass> get(Class<DomainClass> clazz, String[] ids) {
         if (ids == null || ids.length == 0) {
             return Collections.emptyList();
         }
@@ -68,7 +82,7 @@ public class DomainObjectFactory<DomainClass extends DomainObject> implements ID
      * server in serialized form using standard JSON format and is then deserialized and
      * instantiated. The class of the requested domain object must have an alias registered with the
      * JSON deserializer. This is typically done in a static initializer within the class itself.
-     * 
+     *
      * @param clazz The class of the domain object to be returned.
      * @param key A unique lookup identifier for the requested object.
      * @param table The table (number or name) in which to perform the lookup.
@@ -85,7 +99,7 @@ public class DomainObjectFactory<DomainClass extends DomainObject> implements ID
      * static initializer block. If the initial attempt to retrieve an alias fails, this method
      * forces the class loader to load the class to ensure that any static initializers are
      * executed, and then tries again.
-     * 
+     *
      * @param clazz Domain class whose alias is sought.
      * @return The alias for the domain class.
      */
@@ -114,7 +128,7 @@ public class DomainObjectFactory<DomainClass extends DomainObject> implements ID
     
     /**
      * Create a factory instance for the specified domain class.
-     * 
+     *
      * @param domainClass
      */
     public DomainObjectFactory(Class<DomainClass> domainClass) {
@@ -137,15 +151,15 @@ public class DomainObjectFactory<DomainClass extends DomainObject> implements ID
      * Fetch an instance of the domain class from the data store.
      */
     @Override
-    public DomainClass fetchObject(long id) {
-        return id > 0 ? DomainObjectFactory.get(domainClass, id) : null;
+    public DomainClass fetchObject(String id) {
+        return VistAUtil.validateIEN(id) ? DomainObjectFactory.get(domainClass, id) : null;
     }
     
     /**
      * Fetch multiple instances of the domain class from the data store.
      */
     @Override
-    public List<DomainClass> fetchObjects(long[] ids) {
+    public List<DomainClass> fetchObjects(String[] ids) {
         return DomainObjectFactory.get(domainClass, ids);
     }
     

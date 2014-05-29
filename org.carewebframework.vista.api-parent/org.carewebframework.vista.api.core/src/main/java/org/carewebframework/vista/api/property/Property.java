@@ -1,8 +1,8 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
- * If a copy of the MPL was not distributed with this file, You can obtain one at 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
  * http://mozilla.org/MPL/2.0/.
- * 
+ *
  * This Source Code Form is also subject to the terms of the Health-Related Additional
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
@@ -15,6 +15,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.vista.api.util.VistAUtil;
 
 public class Property {
     
@@ -177,7 +178,7 @@ public class Property {
     }
     
     public boolean isDefined() {
-        return definition.getDomainId() > 0;
+        return VistAUtil.validateIEN(definition);
     }
     
     public void saveValues() {

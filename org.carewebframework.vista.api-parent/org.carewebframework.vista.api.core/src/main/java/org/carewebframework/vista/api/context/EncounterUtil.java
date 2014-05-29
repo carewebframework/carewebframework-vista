@@ -1,8 +1,8 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
- * If a copy of the MPL was not distributed with this file, You can obtain one at 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
  * http://mozilla.org/MPL/2.0/.
- * 
+ *
  * This Source Code Form is also subject to the terms of the Health-Related Additional
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
@@ -11,6 +11,8 @@ package org.carewebframework.vista.api.context;
 
 import java.util.List;
 
+import org.carewebframework.api.context.UserContext;
+import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.api.domain.DomainObjectFactory;
 import org.carewebframework.vista.api.domain.Encounter;
 import org.carewebframework.vista.api.domain.EncounterProvider;
@@ -18,11 +20,6 @@ import org.carewebframework.vista.api.domain.Patient;
 import org.carewebframework.vista.api.domain.Provider;
 import org.carewebframework.vista.api.domain.User;
 import org.carewebframework.vista.api.util.VistAUtil;
-
-import org.apache.commons.lang.math.NumberUtils;
-
-import org.carewebframework.api.context.UserContext;
-import org.carewebframework.common.StrUtil;
 
 /**
  * Encounter-related utility functions.
@@ -39,7 +36,7 @@ public class EncounterUtil {
      * applied. An encounter whose location matches the current location is selected preferentially.
      * Failing a match on location, non-inpatient encounters are given weight over inpatient
      * encounters. Failing all that, the first matching encounter is returned.
-     * 
+     *
      * @param patient Patient whose default encounter is sought.
      * @return The default encounter or null if one was not found.
      */
@@ -56,7 +53,7 @@ public class EncounterUtil {
             return false;
         }
         
-        if (encounter.getDomainId() > 0) {
+        if (VistAUtil.validateIEN(encounter)) {
             return true;
         }
         
@@ -68,9 +65,9 @@ public class EncounterUtil {
         
         String s = VistAUtil.getBrokerSession().callRPC("RGCWENCX FETCH", patient.getDomainId(), encounter.getEncoded(),
             encounter.getEncounterProvider().getCurrentProvider().getDomainId(), true);
-        long id = NumberUtils.toLong(StrUtil.piece(s, StrUtil.U, 6));
+        String id = StrUtil.piece(s, StrUtil.U, 6);
         
-        if (id <= 0) {
+        if (!VistAUtil.validateIEN(id)) {
             return false;
         }
         

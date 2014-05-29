@@ -1,8 +1,8 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
- * If a copy of the MPL was not distributed with this file, You can obtain one at 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
  * http://mozilla.org/MPL/2.0/.
- * 
+ *
  * This Source Code Form is also subject to the terms of the Health-Related Additional
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
@@ -11,29 +11,27 @@ package org.carewebframework.vista.security.mock;
 
 import java.util.List;
 
+import org.carewebframework.security.spring.CWFAuthenticationDetails;
 import org.carewebframework.vista.api.domain.User;
 import org.carewebframework.vista.security.base.BaseAuthenticationProvider;
-import org.carewebframework.security.spring.CWFAuthenticationDetails;
 
 /**
  * Provides authentication support for the framework. Takes provided authentication credentials and
  * authenticates them against the database.
- * 
- * 
  */
 public final class AuthenticationProvider extends BaseAuthenticationProvider {
-    
+
     public AuthenticationProvider() {
         super(true);
     }
-    
+
     public AuthenticationProvider(List<String> grantedAuthorities) {
         super(grantedAuthorities);
     }
-    
+
     /**
      * Performs a user login.
-     * 
+     *
      * @param details Authentication details
      * @param username Username for the login.
      * @param password Password for the login (ignored if the user is pre-authenticated).
@@ -42,11 +40,11 @@ public final class AuthenticationProvider extends BaseAuthenticationProvider {
      */
     @Override
     protected User login(CWFAuthenticationDetails details, String username, String password, String domain) {
-        User user = new User(1);
+        User user = new User("1");
         user.setFullName("USER,MOCK");
         user.setUsername(username);
         details.setDetail("user", user);
         return user;
     }
-    
+
 }

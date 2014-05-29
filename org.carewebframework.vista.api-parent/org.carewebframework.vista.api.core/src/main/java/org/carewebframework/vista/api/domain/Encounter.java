@@ -1,21 +1,23 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
- * If a copy of the MPL was not distributed with this file, You can obtain one at 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
  * http://mozilla.org/MPL/2.0/.
- * 
+ *
  * This Source Code Form is also subject to the terms of the Health-Related Additional
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
 package org.carewebframework.vista.api.domain;
 
-import org.carewebframework.vista.mbroker.FMDate;
-
 import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.api.domain.DomainObject;
 import org.carewebframework.common.JSONUtil;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.vista.api.util.VistAUtil;
+import org.carewebframework.vista.mbroker.FMDate;
 
 public class Encounter extends DomainObject {
     
@@ -41,11 +43,11 @@ public class Encounter extends DomainObject {
     
     public static Encounter decode(String value) {
         String pcs[] = StrUtil.split(value, ";", 4);
-        long id = StrUtil.toLong(pcs[3]);
-        long locid = StrUtil.toLong(pcs[0]);
+        String id = pcs[3];
+        String locid = pcs[0];
         Encounter encounter = null;
         
-        if (id > 0) {
+        if (VistAUtil.validateIEN(id)) {
             try {
                 encounter = DomainObjectFactory.get(Encounter.class, id);
             } catch (Exception e) {
@@ -57,7 +59,8 @@ public class Encounter extends DomainObject {
             encounter = new Encounter();
         }
         
-        if (locid > 0 && (encounter.getLocation() == null || encounter.getLocation().getDomainId() != locid)) {
+        if (VistAUtil.validateIEN(locid)
+                && (encounter.getLocation() == null || !StringUtils.equals(encounter.getLocation().getDomainId(), locid))) {
             try {
                 encounter.setLocation(DomainObjectFactory.get(Location.class, locid));
             } catch (Exception e) {}
@@ -76,7 +79,7 @@ public class Encounter extends DomainObject {
         super();
     }
     
-    public Encounter(long id) {
+    public Encounter(String id) {
         super(id);
     }
     
@@ -144,7 +147,7 @@ public class Encounter extends DomainObject {
         if (serviceCategory == null || serviceCategory.isEmpty()) {
             this.serviceCategory = null;
         } else {
-            this.serviceCategory = DomainObjectFactory.get(ServiceCategory.class, serviceCategory.charAt(0));
+            this.serviceCategory = DomainObjectFactory.get(ServiceCategory.class, serviceCategory);
         }
     }
     
@@ -160,6 +163,6 @@ public class Encounter extends DomainObject {
     
     public String getEncoded() {
         return location.getDomainId() + ";" + dateTime.getFMDate() + ";" + serviceCategory
-                + (getDomainId() > 0 ? ";" + getDomainId() : "");
+                + (VistAUtil.validateIEN(this) ? ";" + getDomainId() : "");
     }
 }
