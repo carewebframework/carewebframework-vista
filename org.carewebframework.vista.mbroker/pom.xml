@@ -7,6 +7,14 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>org.carewebframework.vista.mbroker</artifactId>
+	<name>CIA RPC Broker Client</name>
+	<description>
+		This is a Java implementation of the CIA RPC broker client.  It supports all
+		of the features of this client including asynchronous RPC's and global event
+		delivery.  It requires a slightly modified version of the CIA RPC broker
+		server code, which is provided in the KIDS installation package that is
+		part of this distribution.
+	</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.carewebframework</groupId>

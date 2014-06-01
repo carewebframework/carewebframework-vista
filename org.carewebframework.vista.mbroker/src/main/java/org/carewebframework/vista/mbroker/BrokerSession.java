@@ -1,8 +1,8 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
- * If a copy of the MPL was not distributed with this file, You can obtain one at 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
  * http://mozilla.org/MPL/2.0/.
- * 
+ *
  * This Source Code Form is also subject to the terms of the Health-Related Additional
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
@@ -35,11 +35,14 @@ import org.carewebframework.vista.mbroker.Security.AuthResult;
 
 public class BrokerSession {
     
+    /**
+     * Callback interface for asynchronous RPC's.
+     */
     public interface IAsyncRPCEvent {
         
         /**
          * Called when an asynchronous remote procedure request has completed.
-         * 
+         *
          * @param handle Unique handle of the request.
          * @param data Data returned by the request.
          */
@@ -47,7 +50,7 @@ public class BrokerSession {
         
         /**
          * Called when an asynchronous remote procedure terminated with an error.
-         * 
+         *
          * @param handle Unique handle of the request.
          * @param code Error code returned by the server.
          * @param text Error text returned by the server.
@@ -56,10 +59,16 @@ public class BrokerSession {
         
     }
     
+    /**
+     * Authentication method to be employed.
+     */
     public static enum AuthMethod {
         Normal, Cache, NT
     }
     
+    /**
+     * Server capabilities descriptor.
+     */
     public static class ServerCaps implements Cloneable {
         
         private AuthMethod authMethod = AuthMethod.Normal;
@@ -90,7 +99,7 @@ public class BrokerSession {
         }
         
         private void init(String init) {
-            String[] pcs = StrUtil.split(init, "^", 5, true);
+            String[] pcs = StrUtil.split(init, StrUtil.U, 5, true);
             concurrentMode = StrUtil.toBoolean(pcs[0]);
             authMethod = AuthMethod.values()[StrUtil.toInt(pcs[1])];
             serverVersion = new Version(pcs[2]);
@@ -326,10 +335,10 @@ public class BrokerSession {
     
     /**
      * Performs a remote procedure call.
-     * 
+     *
      * @param name Name of the remote procedure. This has the format:
      *            <p>
-     * 
+     *
      *            <pre>
      * &lt;remote procedure name&gt;[:&lt;remote procedure version&gt;][:&lt;calling context&gt;]
      * </pre>
@@ -339,7 +348,7 @@ public class BrokerSession {
      *            different calling context is desired, this may be specified to override the
      *            default. For example:
      *            <p>
-     * 
+     *
      *            <pre>
      * GET LAB RESULTS:2.4:LR CONTEXT
      * </pre>
@@ -385,7 +394,7 @@ public class BrokerSession {
     
     /**
      * Package parameters for RPC call. If parameters already packaged, simply return the package.
-     * 
+     *
      * @param params Parameters to be packaged.
      * @return
      */
@@ -447,7 +456,7 @@ public class BrokerSession {
     
     /**
      * Returns the client's host name. The session must have an active connection.
-     * 
+     *
      * @return Client's host name.
      */
     public String getLocalName() {
@@ -456,7 +465,7 @@ public class BrokerSession {
     
     /**
      * Returns the client's ip address. The session must have an active connection.
-     * 
+     *
      * @return Client's ip address.
      */
     public String getLocalAddress() {
@@ -465,7 +474,7 @@ public class BrokerSession {
     
     /**
      * Returns true if the session is currently connected.
-     * 
+     *
      * @return True if the session is currently connected.
      */
     public boolean isConnected() {
@@ -474,7 +483,7 @@ public class BrokerSession {
     
     /**
      * Returns true if the session has been authenticated.
-     * 
+     *
      * @return True if the session has been authenticated.
      */
     public boolean isAuthenticated() {
@@ -489,43 +498,80 @@ public class BrokerSession {
      * <li>Ping - Only ping is supported (updated server params only).</li>
      * <li>Query - Full query is supported (async events and RPCs)</li>
      * </ul>
-     * 
+     *
      * @return Supported polling action.
      */
     public Action pollingAction() {
         return !isConnected() ? null : !isAuthenticated() || hostEventHandlers.isEmpty() ? Action.PING : Action.QUERY;
     }
     
+    /**
+     * Returns server capabilities descriptor.
+     *
+     * @return Server capabilities.
+     */
     public ServerCaps getServerCaps() {
         return serverCaps;
     }
     
+    /**
+     * Returns current connection parameters.
+     *
+     * @return Connection parameters.
+     */
     public ConnectionParams getConnectionParams() {
         return connectionParams;
     }
     
+    /**
+     * Sets the connection parameters. Does not affect an existing connection.
+     *
+     * @param params New connection parameters.
+     */
     public void setConnectionParams(ConnectionParams params) {
         this.connectionParams = new ConnectionParams(params);
     }
     
+    /**
+     * Flushes the socket's input stream, discarding any pending input.
+     */
     private void netFlush() {
         try {
             socket.getInputStream().skip(Long.MAX_VALUE);
         } catch (Exception e) {}
     }
     
+    /**
+     * Initializes the broker session with information returned by the server.
+     *
+     * @param init Initialization data.
+     */
     protected void init(String init) {
-        String[] pcs = StrUtil.split(init, "^", 4);
+        String[] pcs = StrUtil.split(init, StrUtil.U, 4);
         id = StrUtil.toInt(pcs[0]);
         serverCaps.domainName = pcs[1];
         serverCaps.siteName = pcs[2];
         userId = StrUtil.toInt(pcs[3]);
     }
     
+    /**
+     * Issues a request to the server, returning the response. Uses the default timeout set in the
+     * connection parameters.
+     *
+     * @param request Request to be sent.
+     * @return Response returned by the server.
+     */
     protected synchronized Response netCall(Request request) {
         return netCall(request, connectionParams.getTimeout());
     }
     
+    /**
+     * Issues a request to the server, returning the response.
+     *
+     * @param request Request to be sent.
+     * @param timeout The timeout, in milliseconds, to await a response.
+     * @return Response returned by the server.
+     */
     protected synchronized Response netCall(Request request, int timeout) {
         Response response = null;
         try {
@@ -547,14 +593,29 @@ public class BrokerSession {
         return response;
     }
     
+    /**
+     * Returns the current session id.
+     *
+     * @return The session id.
+     */
     public int getId() {
         return id;
     }
     
+    /**
+     * Returns the authenticated user id (DUZ).
+     *
+     * @return The user id.
+     */
     public int getUserId() {
         return userId;
     }
     
+    /**
+     * Adds an event handler for background polling events.
+     *
+     * @param hostEventHandler An event handler.
+     */
     public void addHostEventHandler(IHostEventHandler hostEventHandler) {
         synchronized (hostEventHandlers) {
             if (!hostEventHandlers.contains(hostEventHandler)) {
@@ -563,36 +624,74 @@ public class BrokerSession {
         }
     }
     
+    /**
+     * Removes an event handler for background polling events.
+     *
+     * @param hostEventHandler An event handler.
+     */
     public void removeHostEventHandler(IHostEventHandler hostEventHandler) {
         synchronized (hostEventHandlers) {
             hostEventHandlers.remove(hostEventHandler);
         }
     }
     
+    /**
+     * Returns a list of registered event handlers for background polling events.
+     *
+     * @return List of registered event handlers.
+     */
     protected List<IHostEventHandler> getHostEventHandlers() {
         synchronized (hostEventHandlers) {
             return hostEventHandlers.isEmpty() ? null : new ArrayList<IHostEventHandler>(hostEventHandlers);
         }
     }
     
+    /**
+     * Returns the pre-login message text.
+     *
+     * @return Pre-login message text.
+     */
     public List<String> getPreLoginMessage() {
         return preLoginMessage;
     }
     
+    /**
+     * Sets the pre-login message text.
+     *
+     * @param message Pre-login message text.
+     */
     protected void setPreLoginMessage(List<String> message) {
         preLoginMessage.clear();
         preLoginMessage.addAll(message);
     }
     
+    /**
+     * Returns the post-login message text.
+     *
+     * @return Post-login message text.
+     */
     public List<String> getPostLoginMessage() {
         return postLoginMessage;
     }
     
+    /**
+     * Sets the post-login message text.
+     *
+     * @param message Post-login message text.
+     */
     protected void setPostLoginMessage(List<String> message) {
         this.postLoginMessage.clear();
         this.postLoginMessage.addAll(message);
     }
     
+    /**
+     * Invokes the callback for the specified handle when an error is encountered during an
+     * asynchronous RPC call.
+     *
+     * @param asyncHandle The unique handle for the asynchronous RPC call.
+     * @param asyncError The error code.
+     * @param text The error text.
+     */
     protected void onRPCError(int asyncHandle, int asyncError, String text) {
         IAsyncRPCEvent callback = getCallback(asyncHandle);
         
@@ -601,6 +700,13 @@ public class BrokerSession {
         }
     }
     
+    /**
+     * Invokes the callback for the specified handle upon successful completion of an asynchronous
+     * RPC call.
+     *
+     * @param asyncHandle The unique handle for the asynchronous RPC call.
+     * @param data The data returned by the RPC.
+     */
     protected void onRPCComplete(int asyncHandle, String data) {
         IAsyncRPCEvent callback = getCallback(asyncHandle);
         
@@ -609,22 +715,48 @@ public class BrokerSession {
         }
     }
     
+    /**
+     * Returns the asynchronous RPC callback for the specified handle.
+     *
+     * @param asyncHandle The unique handle for the asynchronous RPC call.
+     * @return The callback handler, or null if none found.
+     */
     private IAsyncRPCEvent getCallback(int asyncHandle) {
         return callbacks.remove(asyncHandle);
     }
     
+    /**
+     * Returns the time as reported by the server.
+     *
+     * @return The server time.
+     */
     public Date getHostTime() {
         return hostTime;
     }
     
+    /**
+     * Sets the time reported by the server.
+     *
+     * @param hostTime The server time.
+     */
     protected void setHostTime(Date hostTime) {
         this.hostTime = hostTime;
     }
     
+    /**
+     * Returns the executor service used by the session for handling background pollings.
+     *
+     * @return Executor service.
+     */
     public ExecutorService getExecutorService() {
         return executorService;
     }
     
+    /**
+     * Sets the executor service used by the session for handling background pollings.
+     *
+     * @param executorService Executor service.
+     */
     public void setExecutorService(ExecutorService executorService) {
         this.executorService = executorService;
     }
