@@ -1,8 +1,8 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
- * If a copy of the MPL was not distributed with this file, You can obtain one at 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
  * http://mozilla.org/MPL/2.0/.
- * 
+ *
  * This Source Code Form is also subject to the terms of the Health-Related Additional
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
@@ -16,6 +16,9 @@ import java.util.Map;
 
 import org.carewebframework.vista.mbroker.RPCParameter.HasData;
 
+/**
+ * Request to be sent to host.
+ */
 public class Request {
     
     private static final byte[] ACTION_CODE = { 'C', // connect
@@ -52,6 +55,11 @@ public class Request {
         this.action = action;
     }
     
+    /**
+     * Pack an argument and place in buffer.
+     *
+     * @param data Argument to pack.
+     */
     private void pack(String data) {
         byte[] bytes = data.getBytes(Constants.UTF8);
         buffer.put(getLengthDescriptor(bytes.length));
@@ -63,7 +71,7 @@ public class Request {
      * length byte whose high nybble is the number of additional bytes in the descriptor and whose
      * low nybble is the low nybble of the data length value. The additional descriptor bytes (if
      * any) form the rest of the data length value from low byte to high byte.
-     * 
+     *
      * @param length
      * @return The length descriptor.
      */
@@ -86,6 +94,11 @@ public class Request {
         return Arrays.copyOfRange(result, max - c, max + 1);
     }
     
+    /**
+     * Adds RPC parameters to the request.
+     *
+     * @param parameters RPC parameters.
+     */
     public void addParameters(RPCParameters parameters) {
         for (int i = 0; i < parameters.getCount(); i++) {
             RPCParameter parameter = parameters.get(i);
@@ -96,6 +109,12 @@ public class Request {
         }
     }
     
+    /**
+     * Adds map-based parameters to the request.
+     *
+     * @param parameters Map of parameters.
+     * @param suppressNull If true, ignore null parameters.
+     */
     public void addParameters(Map<String, Object> parameters, boolean suppressNull) {
         
         for (String name : parameters.keySet()) {
@@ -107,18 +126,37 @@ public class Request {
         }
     }
     
+    /**
+     * Adds a subscripted parameter to the request.
+     * 
+     * @param name Parameter name.
+     * @param sub Subscript(s).
+     * @param data Parameter value.
+     */
     public void addParameter(String name, String sub, Object data) {
         pack(name);
         pack(sub);
         pack(BrokerUtil.toString(data));
     }
     
+    /**
+     * Adds an RPC parameter to the request.
+     *
+     * @param name Parameter name.
+     * @param parameter RPC parameter.
+     */
     public void addParameter(String name, RPCParameter parameter) {
         for (String subscript : parameter) {
             addParameter(name, subscript, parameter.get(subscript));
         }
     }
     
+    /**
+     * Adds a parameter to the request.
+     *
+     * @param name Parameter name (optionally with subscripts).
+     * @param value Parameter value.
+     */
     public void addParameter(String name, Object value) {
         String subscript = "";
         
@@ -135,10 +173,22 @@ public class Request {
         addParameter(name, subscript, value);
     }
     
+    /**
+     * Returns the action associated with the request.
+     *
+     * @return An action.
+     */
     public Action getAction() {
         return action;
     }
-    
+
+    /**
+     * Write request components to output stream.
+     * 
+     * @param stream Output stream.
+     * @param sequenceId Sequence identifier for packet.
+     * @throws IOException
+     */
     public void write(DataOutputStream stream, byte sequenceId) throws IOException {
         stream.write(PREAMBLE);
         stream.write(sequenceId);

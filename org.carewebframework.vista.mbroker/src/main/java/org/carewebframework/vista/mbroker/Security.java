@@ -1,8 +1,8 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
- * If a copy of the MPL was not distributed with this file, You can obtain one at 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
  * http://mozilla.org/MPL/2.0/.
- * 
+ *
  * This Source Code Form is also subject to the terms of the Health-Related Additional
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
@@ -15,6 +15,10 @@ import java.util.List;
 import org.apache.commons.lang.math.NumberUtils;
 
 import org.carewebframework.common.StrUtil;
+
+/**
+ * Static class for security operations.
+ */
 
 public class Security {
     
@@ -46,6 +50,9 @@ public class Security {
         SUCCESS, EXPIRED, NOLOGINS, LOCKED, FAILURE, CANCELED
     };
     
+    /**
+     * Result of an authorization request.
+     */
     public static class AuthResult {
         
         public final AuthStatus status;
@@ -59,16 +66,37 @@ public class Security {
         }
     }
     
+    /**
+     * Validates the current user's password.
+     *
+     * @param session Broker session.
+     * @param password Password.
+     * @return True if the password is valid.
+     */
     public static boolean validatePassword(BrokerSession session, String password) {
         password = encrypt(password);
         return session.callRPCBool("RGCWFUSR VALIDPSW", password);
     }
     
+    /**
+     * Change a password.
+     *
+     * @param session Broker session.
+     * @param oldPassword Old password.
+     * @param newPassword New password.
+     * @return Status message from server.
+     */
     public static String changePassword(BrokerSession session, String oldPassword, String newPassword) {
         String result = session.callRPC("CIANBRPC CVC", encrypt(oldPassword), encrypt(newPassword));
         return result.startsWith("0") ? null : StrUtil.piece(result, StrUtil.U, 2);
     }
     
+    /**
+     * Encrypt a string value.
+     *
+     * @param value Value to encrypt.
+     * @return Encrypted value.
+     */
     protected static String encrypt(String value) {
         int associatorIndex = randomIndex();
         int identifierIndex;
@@ -81,6 +109,12 @@ public class Security {
                 + ((char) (identifierIndex + 32));
     }
     
+    /**
+     * Decrypt a string value.
+     *
+     * @param value Value to decrypt.
+     * @return Decrypted value.
+     */
     protected static final String decrypt(String value) {
         int len = value == null ? 0 : value.length();
         
@@ -93,15 +127,35 @@ public class Security {
         return StrUtil.xlate(value.substring(1, len - 1), cipher[associatorIndex], cipher[identifierIndex]);
     }
     
+    /**
+     * Return random index into cipher table.
+     * 
+     * @return Cipher table index.
+     */
     private static int randomIndex() {
         return (int) Math.floor(Math.random() * MAX_KEYS);
     }
     
+    /**
+     * Request authentication from the server.
+     *
+     * @param session Broker session.
+     * @return Result of authentication.
+     */
     public static AuthResult authenticate(BrokerSession session) {
         ConnectionParams params = session.getConnectionParams();
         return authenticate(session, params.getUsername(), params.getPassword(), null);
     }
     
+    /**
+     * Request authentication from the server.
+     *
+     * @param session Broker session.
+     * @param username User name.
+     * @param password Password.
+     * @param division Login division (may be null).
+     * @return Result of authentication.
+     */
     public static AuthResult authenticate(BrokerSession session, String username, String password, String division) {
         String av = username + ";" + password;
         List<String> results = session.callRPCList("CIANBRPC AUTH", null, session.getConnectionParams().getAppid(),
@@ -120,5 +174,11 @@ public class Security {
         }
         
         return authResult;
+    }
+    
+    /**
+     * Enforce singleton instance.
+     */
+    private Security() {
     }
 }
