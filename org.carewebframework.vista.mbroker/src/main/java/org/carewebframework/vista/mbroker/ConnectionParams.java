@@ -1,8 +1,8 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
- * If a copy of the MPL was not distributed with this file, You can obtain one at 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
  * http://mozilla.org/MPL/2.0/.
- * 
+ *
  * This Source Code Form is also subject to the terms of the Health-Related Additional
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
@@ -18,42 +18,42 @@ import org.carewebframework.common.StrUtil;
  * Class representing all connection parameters that influence a broker connection.
  */
 public class ConnectionParams {
-    
+
     private String server; // IP address or resolvable name of the server
-    
+
     private int port = 9200; // Port number of the listener on the server
-    
+
     private String namespace; // Login namespace (defaults to listener's namespace)
-    
+
     private String username; // Username of authenticating user (optional)
-    
+
     private String password; // Password of authenticating user (optional)
-    
+
     private String appid; // Identifier of application requesting connection
-    
+
     private int timeout; // Default connection timeout
-    
+
     private boolean debug; // Debug mode flag
-    
+
     /**
      * Create with all default values
      */
     public ConnectionParams() {
         this("");
     }
-    
+
     /**
      * Create from a connection parameter string.
-     * 
+     *
      * @param value
      */
     public ConnectionParams(String value) {
         this(value, null, 10000, false);
     }
-    
+
     /**
      * Create specifying all connection parameters.
-     * 
+     *
      * @param value The connection parameter string.
      * @param appid The id of the application requesting the connection.
      * @param timeout Default timeout value, in milliseconds.
@@ -61,7 +61,7 @@ public class ConnectionParams {
      */
     public ConnectionParams(String value, String appid, int timeout, boolean debug) {
         String[] pcs = value.split("\\@", 2);
-        
+
         if (pcs.length == 1) {
             server = pcs[0];
             username = "";
@@ -72,7 +72,7 @@ public class ConnectionParams {
             username = pcs[0];
             password = pcs[1];
         }
-        
+
         pcs = StrUtil.split(server, ":", 3, true);
         server = pcs[0];
         port = NumberUtils.toInt(pcs[1], port);
@@ -81,10 +81,10 @@ public class ConnectionParams {
         this.debug = debug;
         this.appid = StringUtils.isEmpty(appid) ? Constants.DEFAULT_APP_ID : appid;
     }
-    
+
     /**
      * Copy constructor.
-     * 
+     *
      * @param source
      */
     public ConnectionParams(ConnectionParams source) {
@@ -97,36 +97,46 @@ public class ConnectionParams {
         timeout = source.timeout;
         username = source.username;
     }
-    
+
     /**
      * Returns the default timeout, in milliseconds.
-     * 
+     *
      * @return Default timeout.
      */
     public int getTimeout() {
         return timeout;
     }
-    
+
     /**
      * Sets the default timeout, in milliseconds.
-     * 
+     *
      * @param timeout
      */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
-    
+
+    /**
+     * Returns true if debug mode is active.
+     * 
+     * @return
+     */
     public boolean isDebug() {
         return debug;
     }
-    
+
+    /**
+     * Sets debug mode.
+     * 
+     * @param debug Debug mode state.
+     */
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
-    
+
     /**
      * Displays the connection string reflecting the current connection parameters.
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -139,10 +149,10 @@ public class ConnectionParams {
         addPiece(namespace, ":", sb);
         return sb.toString();
     }
-    
+
     /**
      * Used to build a connection string for display.
-     * 
+     *
      * @param pc A connection string field.
      * @param prefix The prefix to include if the field is not empty.
      * @param sb String builder instance.
@@ -152,56 +162,116 @@ public class ConnectionParams {
             if (sb.length() > 0) {
                 sb.append(prefix);
             }
-            
+
             sb.append(pc);
         }
     }
-    
+
+    /**
+     * Returns the server name.
+     *
+     * @return Server name.
+     */
     public String getServer() {
         return server;
     }
-    
+
+    /**
+     * Sets the server name.
+     *
+     * @param server Server name.
+     */
     public void setServer(String server) {
         this.server = server;
     }
-    
+
+    /**
+     * Returns the broker port #.
+     *
+     * @return Broker port #.
+     */
     public int getPort() {
         return port;
     }
-    
+
+    /**
+     * Sets the broker port #.
+     *
+     * @param port Broker port #.
+     */
     public void setPort(int port) {
         this.port = port;
     }
-    
+
+    /**
+     * Returns the target M namespace.
+     *
+     * @return M namespace.
+     */
     public String getNamespace() {
         return namespace;
     }
-    
+
+    /**
+     * Sets the target M namespace.
+     *
+     * @param namespace M namespace.
+     */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
-    
+
+    /**
+     * Returns the user name for authentication.
+     *
+     * @return User name.
+     */
     public String getUsername() {
         return username;
     }
-    
+
+    /**
+     * Sets the user name for authentication.
+     *
+     * @param username User name.
+     */
     public void setUsername(String username) {
         this.username = username;
     }
-    
+
+    /**
+     * Returns the password for authentication.
+     *
+     * @return Password.
+     */
     public String getPassword() {
         return password;
     }
-    
+
+    /**
+     * Sets the password for authentication.
+     *
+     * @param password Password.
+     */
     public void setPassword(String password) {
         this.password = password;
     }
     
-    public void setAppid(String appid) {
-        this.appid = appid;
-    }
-    
+    /**
+     * Returns the application id.
+     *
+     * @return Application id.
+     */
     public String getAppid() {
         return appid;
+    }
+
+    /**
+     * Sets the application id.
+     *
+     * @param appid Application id.
+     */
+    public void setAppid(String appid) {
+        this.appid = appid;
     }
 }
