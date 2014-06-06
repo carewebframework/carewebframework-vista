@@ -81,11 +81,6 @@
 				<artifactId>org.carewebframework.vista.mbroker</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.carewebframework</groupId>
-				<artifactId>org.carewebframework.vista.api.core</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>

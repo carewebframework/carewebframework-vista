@@ -13,17 +13,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.api</artifactId>
+			<artifactId>org.carewebframework.vista.api.core</artifactId>
 		</dependency>
 		<!-- Tests -->
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.api</artifactId>
-			<type>test-jar</type>
-		</dependency>
-		<dependency>
-			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.vista.api.core</artifactId>
 			<type>test-jar</type>
 		</dependency>
 		<dependency>

@@ -9,7 +9,6 @@
 	<artifactId>org.carewebframework.vista.ui-parent</artifactId>
 	<packaging>pom</packaging>
 	<modules>
-		<module>org.carewebframework.vista.ui.resultsdisplay</module>
 		<module>org.carewebframework.vista.ui.core</module>
 		<module>org.carewebframework.vista.ui.alerts</module>
 		<module>org.carewebframework.vista.ui.allergies</module>
