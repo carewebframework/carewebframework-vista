@@ -1,0 +1,30 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+	<panel id="panel" height="100%" width="100%">
+		<toolbar align="center">
+			<span style="float:left;">
+				<combobox id="cboHeader" placeholder="Quick find..." readonly="true" width="400px"/>
+			</span>
+			<label id="lblInfo" style="font-size:12px; font-weight:bold"/>
+			<span style="float:right;">
+				<button id="btnReturn"
+					label="Return to Document Selection"
+					tooltiptext="Click to return to document selection page." />
+				<button id="btnPrint" label="${labels.reporting.plugin.btn.print.label}"
+					tooltiptext="${labels.reporting.plugin.btn.print.tooltiptext}" />
+			</span>
+		</toolbar>
+		<panelchildren>
+			<div id="printRoot" height="100%" width="100%">
+				<label id="lblMessage" visible="false" />
+				<listbox id="listBox" nonselectableTags="*"
+					sclass="vista-documents-lstDisplay"
+					oddRowSclass="none" hflex="1" vflex="1" disabled="true">
+				</listbox>
+			</div>
+		</panelchildren>
+	</panel>
+</zk>

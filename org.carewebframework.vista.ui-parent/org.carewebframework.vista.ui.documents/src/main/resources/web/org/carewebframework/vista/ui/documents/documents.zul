@@ -1,0 +1,49 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+	<div apply="${vistaDocumentsMainController}" height="100%" width="100%">
+		<include id="documentList" height="100%" width="100%"
+			src="~./org/carewebframework/vista/ui/documents/documentsList.zul" />
+		<include id="documentDisplay" height="100%" width="100%"
+			src="~./org/carewebframework/vista/ui/documents/documentsDisplay.zul" />
+	</div>
+
+	<style>
+		.vista-documents-oddRow {
+			background-color: #E4EBF8;
+		}
+
+		.vista-documents * {
+			cursor: default !important;
+		}
+
+		.vista-documents-lstDisplay tr.z-listitem-over,
+		.vista-documents-lstDisplay tr.z-listitem-seld,
+		.vista-documents-lstDisplay tr.z-listitem-over-seld {
+			background-image: none;
+		}
+		
+		.vista-documents-lstDisplay tr.z-listitem-over,
+		.vista-documents-lstDisplay tr.z-listitem-over-seld {
+			background-color: ivory;
+		}
+		
+		.vista-documents-lstDisplay tr.z-listitem-over .z-listcell,
+		.vista-documents-lstDisplay tr.z-listitem-over-seld .z-listcell {
+			border: 1px solid gray;
+		}
+
+		.vista-documents-sep {
+			background-color: gray;
+    		height: 3px;
+    		margin: 10px 0 10px 0;
+    	}
+
+    	.z-listitem:first-child .vista-documents-sep {
+    		display: none;
+    	}
+
+	</style>
+</zk>

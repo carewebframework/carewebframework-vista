@@ -9,11 +9,13 @@
 	<artifactId>org.carewebframework.vista.ui-parent</artifactId>
 	<packaging>pom</packaging>
 	<modules>
+		<module>org.carewebframework.vista.ui.resultsdisplay</module>
 		<module>org.carewebframework.vista.ui.core</module>
 		<module>org.carewebframework.vista.ui.alerts</module>
 		<module>org.carewebframework.vista.ui.allergies</module>
 		<module>org.carewebframework.vista.ui.consultorders</module>
 		<module>org.carewebframework.vista.ui.crises</module>
+		<module>org.carewebframework.vista.ui.documents</module>
 		<module>org.carewebframework.vista.ui.laborders</module>
 		<module>org.carewebframework.vista.ui.settings</module>
 		<module>org.carewebframework.vista.ui.context.encounter</module>

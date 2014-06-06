@@ -1,0 +1,56 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+	<panel id="panel" height="100%" width="100%">
+		<toolbar align="center">
+			<span id="options" style="float:left;">
+				<label id="lblFilter" sclass="z-panel-header" visible="false" style="font-size:12px;padding-right:15px;border:none; background:none"/>
+				<combobox id="cboFilter" readonly="true"
+					text="All Categories" width="15em"
+					tooltiptext="Restrict displayed documents by category.">
+					<comboitem label="${cboFilter.text}"
+						tooltiptext="${cboFilter.tooltiptext}" />
+				</combobox>
+				<datepicker id="dateRangePicker" allowCustom="true"
+					width="10em"
+					tooltiptext="Restrict to documents within this date range." />
+			</span>
+			<label id="lblInfo" style="font-size:12px; font-weight:bold"/>
+			<span style="float:right;">
+				<button id="btnClear" label="${labels.vistadocuments.plugin.btn.clear.label}"
+					tooltiptext="${labels.vistadocuments.plugin.btn.clear.tooltip}" />
+				<button id="btnView" label="${labels.vistadocuments.plugin.btn.view.selected.label}"
+					tooltiptext="${labels.vistadocuments.plugin.btn.view.tooltip}" />
+				<button id="btnRefresh" label="${labels.reporting.plugin.refresh.view.label}"
+					tooltiptext="${labels.reporting.plugin.refresh.view.tooltiptext}" />
+				<button id="btnPrint" label="${labels.reporting.plugin.btn.print.label}"
+					tooltiptext="${labels.reporting.plugin.btn.print.tooltiptext}" />
+			</span>
+		</toolbar>
+		<panelchildren>
+			<div height="100%" width="100%">
+				<label id="lblMessage" visible="false" />
+				<listbox id="listBox" sizedByContent="false"
+					hflex="1" vflex="1"
+					sclass="vista-documents-lstList"
+					oddRowSclass="vista-documents-oddRow"
+					checkmark="true" multiple="true" >
+					<listhead sizable="true">
+						<listheader width="4%"
+							sclass="cwf-listheader-nocheckbox" />
+						<listheader width="24%" label="Date"
+							id="DateTime" />
+						<listheader width="24%" label="Title"
+							id="Title" />
+						<listheader width="24%" label="Source"
+							id="LocationName" />
+						<listheader width="24%" label="Author"
+							id="AuthorName" />
+					</listhead>
+				</listbox>
+			</div>
+		</panelchildren>
+	</panel>
+</zk>

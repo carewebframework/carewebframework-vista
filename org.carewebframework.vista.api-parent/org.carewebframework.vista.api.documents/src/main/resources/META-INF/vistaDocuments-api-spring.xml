@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		 http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<beans profile="root">
+
+		<bean id="documentService"
+			class="org.carewebframework.vista.api.documents.DocumentService">
+			<constructor-arg ref="brokerSession" />
+		</bean>
+
+		<bean id="documentsCategoryEnumerator"
+			class="org.carewebframework.vista.api.documents.DocumentCategoryEnumerator" />
+
+
+	</beans>
+
+</beans>
