@@ -7,31 +7,18 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.smart.patient;
+package org.carewebframework.vista.smart;
 
 import org.carewebframework.vista.api.context.PatientContext;
 import org.carewebframework.vista.api.domain.Patient;
 import org.carewebframework.smart.SmartContextBase;
 
-/**
- * Implements SMART context scope "record".
- * 
- * 
- */
-public class SmartContextRecord extends SmartContextBase {
+public class SmartContextRecordTest extends SmartContextBase {
     
-    /**
-     * Binds patient context changes to the SMART record context scope.
-     */
-    public SmartContextRecord() {
+    public SmartContextRecordTest() {
         super("record", "CONTEXT.CHANGED.Patient");
     }
     
-    /**
-     * Populate context map with information about currently selected patient.
-     * 
-     * @param context Context map to be populated.
-     */
     @Override
     protected void updateContext(ContextMap context) {
         Patient patient = PatientContext.getCurrentPatient();

@@ -6,22 +6,36 @@
 
 	<beans profile="root">
 
-		<bean class="org.carewebframework.vista.smart.medication.SmartMedications" />
+		<bean class="org.carewebframework.vista.smart.SmartAPI">
+			<constructor-arg value="/records/{record_id}/demographics" />
+			<constructor-arg value="Demographics" />
+			<constructor-arg value="patient" />
+		</bean>
 
-		<bean class="org.carewebframework.vista.smart.patient.SmartDemographics" />
+		<bean class="org.carewebframework.vista.smart.SmartAPI">
+			<constructor-arg value="/records/{record_id}/lab_results" />
+			<constructor-arg value="LabResults" />
+			<constructor-arg value="lab" />
+		</bean>
 
-		<bean class="org.carewebframework.vista.smart.problem.SmartProblems" />
+		<bean class="org.carewebframework.vista.smart.SmartAPI">
+			<constructor-arg value="/records/{record_id}/problems" />
+			<constructor-arg value="Problems" />
+			<constructor-arg value="problem" />
+		</bean>
 
-		<bean class="org.carewebframework.vista.smart.lab.SmartLabs" />
-
-		<bean class="org.carewebframework.vista.smart.immunization.SmartImmunizations" />
+		<bean class="org.carewebframework.vista.smart.SmartAPI">
+			<constructor-arg value="/records/{record_id}/medications" />
+			<constructor-arg value="Medications" />
+			<constructor-arg value="med" />
+		</bean>
 
 	</beans>
 
 	<beans profile="desktop">
 
 		<bean id="smart.context.record" parent="smart.context.base"
-			class="org.carewebframework.vista.smart.patient.SmartContextRecord" depends-on="patientContext" />
+			class="org.carewebframework.vista.smart.SmartContextRecord" depends-on="patientContext" />
 
 	</beans>
 </beans>

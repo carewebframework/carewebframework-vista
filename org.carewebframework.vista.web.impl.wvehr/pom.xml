@@ -103,6 +103,11 @@
 			<artifactId>org.carewebframework.cal.ui.patientheader</artifactId>
 			<version>${org.carewebframework.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.carewebframework</groupId>
+			<artifactId>org.carewebframework.smart.ui</artifactId>
+			<version>${org.carewebframework.version}</version>
+		</dependency>
 		<!-- VistA Plugins -->
 		<!-- 
 		<dependency>
@@ -165,6 +170,11 @@
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.vista.api.patientlist</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.carewebframework</groupId>
+			<artifactId>org.carewebframework.vista.smart.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- Security -->

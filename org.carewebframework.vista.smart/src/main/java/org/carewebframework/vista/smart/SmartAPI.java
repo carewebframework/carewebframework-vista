@@ -9,37 +9,56 @@
  */
 package org.carewebframework.vista.smart;
 
+import java.util.List;
 import java.util.Map;
 
-import org.carewebframework.smart.rdf.RDFAPIBase;
+import org.carewebframework.common.StrUtil;
+import org.carewebframework.smart.SmartAPIBase;
 import org.carewebframework.vista.api.context.PatientContext;
 import org.carewebframework.vista.api.domain.Patient;
+import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
- * Convenience base class for API's that return RDF-formatted results.
+ * Adapter for VISTA SMART CONTAINER.
  */
-public abstract class AbstractAPIBase extends RDFAPIBase {
+public class SmartAPI extends SmartAPIBase {
+
+    private final String ztyp;
     
-    public AbstractAPIBase(String pattern, String capability) {
-        super(pattern, capability);
+    public SmartAPI(String pattern, String capability, String ztyp) {
+        super(pattern, ContentType.RDF, capability);
+        this.ztyp = ztyp;
     }
-    
+
     /**
      * API entry point. If a record id is specified, verifies that it is the same as the currently
      * selected patient.
+     *
+     * @param params
+     * @return
      */
-    @Override
-    public final boolean validateRequest(Map<String, String> params) {
+    public boolean validateRequest(Map<String, String> params) {
         String patientId = params.get("record_id");
-        
+
         if (patientId != null) {
             Patient patient = PatientContext.getCurrentPatient();
-            
+
             if (!patientId.equals(patient.getDomainId())) {
                 return false;
             }
         }
-        
+
         return true;
+    }
+
+    @Override
+    public Object handleAPI(Map<String, String> params) {
+        if (!validateRequest(params)) {
+            return null;
+        }
+        
+        List<String> data = VistAUtil.getBrokerSession().callRPCList("RGCWSMRT GET", null, params.get("record_id"), ztyp,
+            "rdf");
+        return StrUtil.fromList(data);
     }
 }
