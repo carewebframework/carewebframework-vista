@@ -1,0 +1,18 @@
+{
+    "author": "Josh Mandel, Children's Hospital Boston", 
+    "description": "Determines whether patient is taking a statin", 
+    "icon": "http://sample-apps.smartplatforms.org/framework/got_statins/icon.png", 
+    "id": "got-statins@apps.smartplatforms.org", 
+    "index": "http://sample-apps.smartplatforms.org/framework/got_statins/index.html", 
+    "mode": "ui", 
+    "name": "Got Statins?", 
+    "requires": {
+        "http://smartplatforms.org/terms#Medication": {
+            "methods": [
+                "GET"
+            ]
+        }
+    }, 
+    "scope": "record", 
+    "version": ".1a"
+}

@@ -1,0 +1,18 @@
+{
+    "author": "Josh Mandel, Children's Hospital Boston", 
+    "description": "Display Adherence History for Chronic Meds", 
+    "icon": "http://sample-apps.smartplatforms.org/framework/med_adherence/icon.png", 
+    "id": "med-adherence@apps.smartplatforms.org", 
+    "index": "http://sample-apps.smartplatforms.org/framework/med_adherence/index.html", 
+    "mode": "ui", 
+    "name": "Med Adherence", 
+    "requires": {
+        "http://smartplatforms.org/terms#Medication": {
+            "methods": [
+                "GET"
+            ]
+        }
+    }, 
+    "scope": "record", 
+    "version": ".1a"
+}

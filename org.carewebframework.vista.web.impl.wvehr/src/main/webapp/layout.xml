@@ -56,6 +56,22 @@
 						</treepane>
 					</treeview>
 				</tabpane>
+				<tabpane label="SMART Apps">
+					<treeview open="true">
+						<treepane label="Got Statins?">
+							<got-statins_apps.smartplatforms.org />
+						</treepane>
+						<treepane label="Med Adherence">
+							<med-adherence_apps.smartplatforms.org />
+						</treepane>
+						<treepane label="Meducation">
+							<meducation_apps.smartplatforms.org />
+						</treepane>
+						<treepane label="Problem List">
+							<problem-list_apps.smartplatforms.org />
+						</treepane>
+					</treeview>
+				</tabpane>
 				<tabpane label="Settings">
 					<settingsEditor group="CIANB SITE PARAMETERS"
 						provider="settingsProvider" />
