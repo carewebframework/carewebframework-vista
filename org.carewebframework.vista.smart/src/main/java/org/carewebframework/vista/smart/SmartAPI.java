@@ -12,10 +12,10 @@ package org.carewebframework.vista.smart;
 import java.util.List;
 import java.util.Map;
 
+import org.carewebframework.cal.api.domain.IPatient;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.smart.SmartAPIBase;
 import org.carewebframework.vista.api.context.PatientContext;
-import org.carewebframework.vista.api.domain.Patient;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
@@ -25,11 +25,6 @@ public class SmartAPI extends SmartAPIBase {
 
     private final String ztyp;
     
-    public SmartAPI(String pattern, String capability, String ztyp) {
-        super(pattern, ContentType.RDF, capability);
-        this.ztyp = ztyp;
-    }
-
     /**
      * API entry point. If a record id is specified, verifies that it is the same as the currently
      * selected patient.
@@ -37,11 +32,11 @@ public class SmartAPI extends SmartAPIBase {
      * @param params
      * @return
      */
-    public boolean validateRequest(Map<String, String> params) {
+    public static boolean validateRequest(Map<String, String> params) {
         String patientId = params.get("record_id");
 
         if (patientId != null) {
-            Patient patient = PatientContext.getCurrentPatient();
+            IPatient patient = PatientContext.getActivePatient();
 
             if (!patientId.equals(patient.getDomainId())) {
                 return false;
@@ -49,6 +44,11 @@ public class SmartAPI extends SmartAPIBase {
         }
 
         return true;
+    }
+
+    public SmartAPI(String pattern, String capability, String ztyp) {
+        super(pattern, ContentType.RDF, capability);
+        this.ztyp = ztyp;
     }
 
     @Override
