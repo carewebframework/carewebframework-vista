@@ -17,11 +17,11 @@ import org.carewebframework.smart.rdf.RDFAPIBase;
  * Base API for building RDF responses.
  */
 public abstract class SmartRDFAPI extends RDFAPIBase {
-    
+
     public SmartRDFAPI(String pattern, String capability) {
         super(pattern, capability);
     }
-    
+
     /**
      * Validate the request.
      *
@@ -29,8 +29,8 @@ public abstract class SmartRDFAPI extends RDFAPIBase {
      * @return True if the request is valid.
      */
     @Override
-    protected boolean validateRequest(Map<String, String> params) {
-        return SmartAPI.validateRequest(params);
+    public boolean validateRequest(Map<String, String> params) {
+        return SmartAPI.isValid(params);
     }
-
+    
 }

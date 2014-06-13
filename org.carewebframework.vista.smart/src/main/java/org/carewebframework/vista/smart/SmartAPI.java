@@ -22,9 +22,9 @@ import org.carewebframework.vista.api.util.VistAUtil;
  * Adapter for VISTA SMART CONTAINER.
  */
 public class SmartAPI extends SmartAPIBase {
-
-    private final String ztyp;
     
+    private final String ztyp;
+
     /**
      * API entry point. If a record id is specified, verifies that it is the same as the currently
      * selected patient.
@@ -32,33 +32,40 @@ public class SmartAPI extends SmartAPIBase {
      * @param params
      * @return
      */
-    public static boolean validateRequest(Map<String, String> params) {
+    public static boolean isValid(Map<String, String> params) {
         String patientId = params.get("record_id");
-
+        
         if (patientId != null) {
             IPatient patient = PatientContext.getActivePatient();
-
+            
             if (!patientId.equals(patient.getDomainId())) {
                 return false;
             }
         }
-
+        
         return true;
     }
-
+    
     public SmartAPI(String pattern, String capability, String ztyp) {
         super(pattern, ContentType.RDF, capability);
         this.ztyp = ztyp;
     }
-
+    
+    /**
+     * Validate the request.
+     *
+     * @param params The associated request parameters.
+     * @return True if the request is valid.
+     */
+    @Override
+    public boolean validateRequest(Map<String, String> params) {
+        return isValid(params);
+    }
+    
     @Override
     public Object handleAPI(Map<String, String> params) {
-        if (!validateRequest(params)) {
-            return null;
-        }
-        
         List<String> data = VistAUtil.getBrokerSession().callRPCList("RGCWSMRT GET", null, params.get("record_id"), ztyp,
-            "rdf");
+                "rdf");
         return StrUtil.fromList(data);
     }
 }
