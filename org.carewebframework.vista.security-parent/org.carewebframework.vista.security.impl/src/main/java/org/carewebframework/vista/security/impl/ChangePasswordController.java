@@ -9,14 +9,12 @@
  */
 package org.carewebframework.vista.security.impl;
 
-import org.carewebframework.vista.api.domain.User;
-
 import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.api.FrameworkUtil;
-import org.carewebframework.api.context.UserContext;
-import org.carewebframework.api.domain.IUser;
 import org.carewebframework.api.security.ISecurityService;
+import org.carewebframework.cal.api.context.UserContext;
+import org.carewebframework.fhir.model.resource.User;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.ZKUtil;
@@ -32,8 +30,6 @@ import org.zkoss.zul.Toolbar;
 
 /**
  * Controller for the login component.
- * 
- * 
  */
 public class ChangePasswordController extends GenericForwardComposer<Component> {
     
@@ -58,7 +54,7 @@ public class ChangePasswordController extends GenericForwardComposer<Component> 
     
     private Toolbar tbMessage;
     
-    private IUser user;
+    private User user;
     
     private boolean forced;
     
@@ -95,7 +91,7 @@ public class ChangePasswordController extends GenericForwardComposer<Component> 
         if (user == null) {
             doCancel();
         } else {
-            panel.setTitle(Labels.getLabel(title) + " - " + user.getFullName());
+            panel.setTitle(Labels.getLabel(title) + " - " + user.getName());
             lblInfo.setValue(Labels.getLabel(label, new String[] { MESSAGE_PASSWORD_RULES }));
         }
     }
@@ -171,8 +167,8 @@ public class ChangePasswordController extends GenericForwardComposer<Component> 
                 if (result != null && !result.isEmpty()) {
                     showMessage(result);
                 } else if (forced) {
-                    String inst = ((User) user.getProxiedObject()).getInstitution().getName();
-                    j_username.setValue(inst + "\\" + user.getUsername());
+                    String inst = user.getOrganization().getDomainId();
+                    j_username.setValue(inst + "\\" + user.getLogin());
                     Events.sendEvent("onSubmit", panel.getRoot(), null);
                 } else {
                     doCancel();
@@ -182,7 +178,7 @@ public class ChangePasswordController extends GenericForwardComposer<Component> 
             } catch (Exception e) {
                 Throwable e1 = e.getCause() == null ? e : e.getCause();
                 showMessage(Labels
-                        .getLabel("change.password.dialog.password.change.error", new String[] { e1.getMessage() }));
+                    .getLabel("change.password.dialog.password.change.error", new String[] { e1.getMessage() }));
             }
         }
         j_password.setValue("");

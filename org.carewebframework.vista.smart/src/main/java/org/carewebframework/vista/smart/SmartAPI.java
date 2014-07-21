@@ -12,10 +12,10 @@ package org.carewebframework.vista.smart;
 import java.util.List;
 import java.util.Map;
 
-import org.carewebframework.cal.api.domain.IPatient;
+import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.smart.SmartAPIBase;
-import org.carewebframework.vista.api.context.PatientContext;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
@@ -24,7 +24,7 @@ import org.carewebframework.vista.api.util.VistAUtil;
 public class SmartAPI extends SmartAPIBase {
     
     private final String ztyp;
-
+    
     /**
      * API entry point. If a record id is specified, verifies that it is the same as the currently
      * selected patient.
@@ -36,7 +36,7 @@ public class SmartAPI extends SmartAPIBase {
         String patientId = params.get("record_id");
         
         if (patientId != null) {
-            IPatient patient = PatientContext.getActivePatient();
+            Patient patient = PatientContext.getActivePatient();
             
             if (!patientId.equals(patient.getDomainId())) {
                 return false;
@@ -65,7 +65,7 @@ public class SmartAPI extends SmartAPIBase {
     @Override
     public Object handleAPI(Map<String, String> params) {
         List<String> data = VistAUtil.getBrokerSession().callRPCList("RGCWSMRT GET", null, params.get("record_id"), ztyp,
-                "rdf");
+            "rdf");
         return StrUtil.fromList(data);
     }
 }

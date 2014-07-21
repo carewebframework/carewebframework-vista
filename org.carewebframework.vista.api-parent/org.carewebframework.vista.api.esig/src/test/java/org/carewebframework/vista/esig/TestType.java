@@ -11,9 +11,7 @@ package org.carewebframework.vista.esig;
 
 import java.util.List;
 
-import org.carewebframework.vista.api.context.PatientContext;
-import org.carewebframework.vista.esig.ESigItem;
-import org.carewebframework.vista.esig.ESigType;
+import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.vista.esig.ESigItem.ESigItemIssueSeverity;
 
 public abstract class TestType extends ESigType {
@@ -50,7 +48,7 @@ public abstract class TestType extends ESigType {
     
     @Override
     public void loadESigItems(List<ESigItem> items) {
-        if (PatientContext.getCurrentPatient() != null) {
+        if (PatientContext.getActivePatient() != null) {
             for (int i = 0; i < 5; i++) {
                 newItem(items);
             }

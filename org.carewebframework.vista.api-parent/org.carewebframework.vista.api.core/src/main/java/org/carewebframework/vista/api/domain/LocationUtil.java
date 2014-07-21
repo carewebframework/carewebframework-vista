@@ -7,16 +7,14 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.api.context;
-
-import org.carewebframework.vista.api.domain.Location;
+package org.carewebframework.vista.api.domain;
 
 import java.util.List;
 
+import org.carewebframework.fhir.model.resource.Location;
+
 /**
  * Location-related utility functions.
- * 
- * 
  */
 public class LocationUtil {
     

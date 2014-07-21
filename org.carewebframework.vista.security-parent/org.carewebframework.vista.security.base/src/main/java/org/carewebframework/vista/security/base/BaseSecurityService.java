@@ -13,14 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.Organization;
 import org.carewebframework.security.spring.AbstractSecurityService;
-import org.carewebframework.vista.api.domain.Institution;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.Security;
 
@@ -30,27 +29,27 @@ import org.zkoss.util.resource.Labels;
  * Security service implementation.
  */
 public abstract class BaseSecurityService extends AbstractSecurityService {
-
+    
     private static final Log log = LogFactory.getLog(BaseSecurityService.class);
-
+    
     /**
      * Cached list of available login domains
      */
-    private static List<Institution> domains;
-
+    private static List<Organization> domains;
+    
     /**
-     * Get domains (institutions) that a user may log into.
+     * Get domains (organizations) that a user may log into.
      *
-     * @return A list of institution objects.
+     * @return A list of organization objects.
      */
-    public List<Institution> getDomains() {
+    public List<Organization> getDomains() {
         if (domains == null) {
             initDomains();
         }
-
+        
         return domains;
     }
-
+    
     /**
      * Initialize domain list.
      */
@@ -58,25 +57,26 @@ public abstract class BaseSecurityService extends AbstractSecurityService {
         if (domains != null) {
             return;
         }
-
+        
         log.trace("Retrieving Security Authorities");
         List<String> results = VistAUtil.getBrokerSession().callRPCList("CIANBRPC DIVGET", null);
-        List<Institution> institutions = new ArrayList<Institution>();
-
+        List<Organization> organizations = new ArrayList<Organization>();
+        
         for (String result : results) {
             String[] pcs = StrUtil.split(result, StrUtil.U, 4);
-
+            
             if (!pcs[2].isEmpty()) {
-                Institution inst = new Institution(pcs[0]);
-                inst.setName(pcs[1]);
-                inst.setAbbreviation(StringUtils.isEmpty(pcs[3]) ? pcs[1] : pcs[3]);
-                institutions.add(inst);
+                Organization organization = new Organization();
+                organization.setDomainId(pcs[0]);
+                organization.setNameSimple(pcs[1]);
+                //organization.setAbbreviation(StringUtils.isEmpty(pcs[3]) ? pcs[1] : pcs[3]);
+                organizations.add(organization);
             }
         }
-
-        domains = institutions;
+        
+        domains = organizations;
     }
-
+    
     /**
      * Validates the current user's password.
      *
@@ -87,7 +87,7 @@ public abstract class BaseSecurityService extends AbstractSecurityService {
     public boolean validatePassword(final String password) {
         return Security.validatePassword(VistAUtil.getBrokerSession(), password);
     }
-
+    
     /**
      * Changes the user's password.
      *
@@ -99,7 +99,7 @@ public abstract class BaseSecurityService extends AbstractSecurityService {
     public String changePassword(final String oldPassword, final String newPassword) {
         return Security.changePassword(VistAUtil.getBrokerSession(), oldPassword, newPassword);
     }
-
+    
     /**
      * Generates a new random password Length of password dictated by
      * {@link org.carewebframework.vista.security.base.Constants#LBL_PASSWORD_RANDOM_CHARACTER_LENGTH}
@@ -111,5 +111,5 @@ public abstract class BaseSecurityService extends AbstractSecurityService {
         int len = NumberUtils.toInt(Labels.getLabel(Constants.LBL_PASSWORD_RANDOM_CHARACTER_LENGTH), 12);
         return RandomStringUtils.random(len);
     }
-
+    
 }

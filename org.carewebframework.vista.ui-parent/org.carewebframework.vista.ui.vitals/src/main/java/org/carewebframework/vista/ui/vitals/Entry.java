@@ -10,6 +10,7 @@
 package org.carewebframework.vista.ui.vitals;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,19 +21,19 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 
 import org.carewebframework.api.security.SecurityUtil;
+import org.carewebframework.cal.api.context.EncounterContext;
+import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.Encounter;
+import org.carewebframework.fhir.model.resource.Encounter.EncounterStatus;
+import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.shell.plugins.IPluginEvent;
 import org.carewebframework.shell.plugins.PluginContainer;
 import org.carewebframework.ui.zk.DateTimebox;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.ZKUtil;
-import org.carewebframework.vista.api.context.EncounterContext;
-import org.carewebframework.vista.api.context.PatientContext;
-import org.carewebframework.vista.api.domain.DomainObjectFactory;
-import org.carewebframework.vista.api.domain.Encounter;
-import org.carewebframework.vista.api.domain.Location;
-import org.carewebframework.vista.api.domain.Patient;
+import org.carewebframework.vista.api.domain.EncounterUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
@@ -95,7 +96,7 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
     
     private boolean fetched;
     
-    private FMDate lastDateTime;
+    private Date lastDateTime;
     
     private final List<String> template = new ArrayList<String>();
     
@@ -137,11 +138,13 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
         warned = false;
         lastDateTime = null;
         modified = false;
-        patient = PatientContext.getCurrentPatient();
-        encounter = EncounterContext.getCurrentEncounter();
+        patient = PatientContext.getActivePatient();
+        encounter = EncounterContext.getActiveEncounter();
         try {
-            Location loc = DomainObjectFactory.get(Location.class, 3);
-            encounter = new Encounter(new FMDate(), loc, "A");
+            //Encounter_Location loc = new Encounter_Location(new Resource_(FhirObjectFactory.get(Location.class, 3)), null);
+            encounter = new Encounter(); //new FMDate(), loc, "A");
+            //encounter.addLocation(loc);
+            //encounter.addType(new CodeableConcept("A"));
         } catch (Exception e) {}
         loadGrid();
     }
@@ -156,7 +159,7 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
             template.clear();
             fetched = true;
             VistAUtil.getBrokerSession().callRPCList("RGCWVM TEMPLATE", template, patient.getDomainId(),
-                encounter.getEncoded(), defaultUnits.ordinal() - 1);
+                EncounterUtil.encode(encounter), defaultUnits.ordinal() - 1);
         }
         
         return template.size();
@@ -172,14 +175,15 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
             return;
         }
         
-        imgLocked.setVisible(encounter != null && encounter.isLocked());
+        imgLocked.setVisible(encounter != null && encounter.getStatusSimple() == EncounterStatus.finished);
         btnNew.setDisabled(!imgLocked.isVisible());
         btnCancel.setDisabled(btnNew.isDisabled());
         btnOK.setDisabled(false);
-        lastDateTime = lastDateTime != null ? lastDateTime : useEncounterDate ? encounter.getDateTime() : new FMDate();
-        loadGrid();
-        val = getValue(colIndex, rowIndex);
-        moveTo(rangeCol - 1, 1);
+        lastDateTime = lastDateTime != null ? lastDateTime : useEncounterDate ? encounter.getPeriod().getStart().getValue()
+                .toDate() : new FMDate();
+                loadGrid();
+                val = getValue(colIndex, rowIndex);
+                moveTo(rangeCol - 1, 1);
     }
     
     private int getRowCount() {
@@ -261,28 +265,28 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
      * tests: control ien^test ien^test name^test abbrv^units^low norm^hi norm^percentile RPC
      * dates: date id^FM date results: date id^row #^value^result ien
      * 
-     * For example: 
+     * For example:
      * 
      * 8^2^7
      * 
-     * 3^3^TEMPERATURE^TMP^F^^^ 
+     * 3^3^TEMPERATURE^TMP^F^^^
      * 5^5^PULSE^PU^/min^60^100^
-     * 15^15^RESPIRATIONS^RS^/min^^^ 
+     * 15^15^RESPIRATIONS^RS^/min^^^
      * 4^4^BLOOD PRESSURE^BP^mmHg^90^150^
-     * 1^1^HEIGHT^HT^in^^^CIAOCVVM PCTILE 
+     * 1^1^HEIGHT^HT^in^^^CIAOCVVM PCTILE
      * 2^2^WEIGHT^WT^lb^^^CIAOCVVM PCTILE
-     * 21^21^PAIN^PA^^^^ 
+     * 21^21^PAIN^PA^^^^
      * 6^6^HEAD CIRCUMFERENCE^HC^in^^^CIAOCVVM PCTILE
      * 
-     * 2^3041018.1446 
+     * 2^3041018.1446
      * 1^3041022.1446
      * 
-     * 1^2^77^^2445227 
-     * 1^4^101/65^^2445224 
-     * 1^5^27^^2445222 
+     * 1^2^77^^2445227
+     * 1^4^101/65^^2445224
+     * 1^5^27^^2445222
      * 2^5^26.5^^2445220
-     * 1^6^16.5^^2445223 
-     * 2^6^16^^2445218 
+     * 1^6^16.5^^2445223
+     * 2^6^16^^2445218
      * 1^8^17.5^^2445225
      * </pre>
      */

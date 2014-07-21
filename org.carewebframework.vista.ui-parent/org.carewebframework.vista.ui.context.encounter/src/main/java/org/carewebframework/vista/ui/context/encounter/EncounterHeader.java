@@ -9,16 +9,16 @@
  */
 package org.carewebframework.vista.ui.context.encounter;
 
-import org.carewebframework.vista.api.context.EncounterContext;
-import org.carewebframework.vista.api.context.PatientContext;
-import org.carewebframework.vista.api.domain.Encounter;
-import org.carewebframework.vista.api.domain.Provider;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.carewebframework.cal.api.context.EncounterContext;
+import org.carewebframework.cal.api.context.PatientContext;
+import org.carewebframework.fhir.common.FhirUtil;
+import org.carewebframework.fhir.model.resource.Encounter;
+import org.carewebframework.fhir.model.resource.Practitioner;
 import org.carewebframework.ui.FrameworkController;
+import org.carewebframework.vista.api.domain.EncounterUtil;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Clients;
@@ -30,8 +30,6 @@ import org.zkoss.zul.Label;
  * listeners, one implemented by the controller itself (encounter context listener) and one inner
  * (patient context listener). This is done because Java does not permit disambiguation of
  * conflicting interface method names.
- * 
- * 
  */
 public class EncounterHeader extends FrameworkController implements EncounterContext.IEncounterContextEvent {
     
@@ -57,7 +55,7 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
      * Invoke encounter selection dialog when select button is clicked.
      */
     public void onClick$root() {
-        if (PatientContext.getCurrentPatient() != null) {
+        if (PatientContext.getActivePatient() != null) {
             EncounterSelection.execute();
         }
     }
@@ -82,7 +80,7 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
      */
     @Override
     public void committed() {
-        Encounter encounter = EncounterContext.getCurrentEncounter();
+        Encounter encounter = EncounterContext.getActiveEncounter();
         
         if (log.isDebugEnabled()) {
             log.debug("encounter: " + encounter);
@@ -95,18 +93,18 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
             lblServiceCategory.setValue(null);
             imgLocked.setVisible(false);
         } else {
-            String text = encounter.getLocation() == null ? "" : encounter.getLocation().getName();
-            
+            String text = encounter.getLocation().isEmpty() ? "" : FhirUtil.getLast(encounter.getLocation()).toString();
+            /*
             if (!StringUtils.isEmpty(encounter.getBed())) {
                 text += " (" + encounter.getBed() + ")";
-            }
+            } */
             
             lblLocation.setValue(text);
-            lblDate.setValue(encounter.getDateTime() == null ? null : encounter.getDateTime().toString());
-            Provider provider = encounter.getEncounterProvider().getCurrentProvider();
-            lblProvider.setValue(provider == null ? null : provider.getFullName());
-            lblServiceCategory.setValue(encounter.getServiceCategory().getShortDescription());
-            imgLocked.setVisible(encounter.isLocked());
+            lblDate.setValue(encounter.getPeriod() == null ? null : encounter.getPeriod().getStart().toString());
+            Practitioner provider = EncounterUtil.getCurrentProvider(encounter);
+            lblProvider.setValue(provider == null ? null : provider.getName().toString());
+            lblServiceCategory.setValue(encounter.getType().toString());
+            imgLocked.setVisible(EncounterUtil.isLocked(encounter));
         }
         
         Clients.resize(root);

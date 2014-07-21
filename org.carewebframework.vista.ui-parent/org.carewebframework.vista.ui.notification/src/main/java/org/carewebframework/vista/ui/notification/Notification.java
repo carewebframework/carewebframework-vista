@@ -13,11 +13,8 @@ import static org.carewebframework.common.StrUtil.U;
 
 import java.util.Arrays;
 
-import org.carewebframework.vista.mbroker.FMDate;
-
-import org.apache.commons.lang.math.NumberUtils;
-
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.vista.mbroker.FMDate;
 
 /**
  * A delivered notification.
@@ -28,7 +25,7 @@ public class Notification extends AbstractNotification {
     
     private boolean actionable;
     
-    private Long dfn;
+    private String dfn;
     
     private String patientLocation;
     
@@ -61,7 +58,7 @@ public class Notification extends AbstractNotification {
         setSubject(pcs[4]);
         setDeliveryDate(FMDate.fromString(pcs[5]));
         setSenderName(pcs[6]);
-        setDfn(NumberUtils.toLong(pcs[7]));
+        setDfn(pcs[7]);
         setType(pcs[8]);
         setAlertId(pcs[9]);
         setCanDelete(StrUtil.toBoolean(pcs[10]));
@@ -105,7 +102,7 @@ public class Notification extends AbstractNotification {
      * Returns the DFN of the associated patient, if any.
      */
     @Override
-    public Long getDfn() {
+    public String getDfn() {
         return dfn;
     }
     
@@ -113,7 +110,7 @@ public class Notification extends AbstractNotification {
      * Sets the DFN of the associated patient, if any.
      */
     @Override
-    protected void setDfn(Long dfn) {
+    protected void setDfn(String dfn) {
         this.dfn = dfn;
     }
     

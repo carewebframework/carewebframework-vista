@@ -10,11 +10,10 @@
 package org.carewebframework.vista.api.domain;
 
 import org.carewebframework.api.domain.DomainObject;
+import org.carewebframework.fhir.model.resource.Encounter;
 
 /**
  * Abstract base class for encounter-associated domain objects.
- * 
- * 
  */
 public abstract class EncounterRelated extends DomainObject {
     

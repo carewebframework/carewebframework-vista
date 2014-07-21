@@ -14,18 +14,18 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.carewebframework.vista.api.domain.DomainObjectFactory;
-import org.carewebframework.vista.api.domain.Patient;
-import org.carewebframework.vista.ui.notification.ViewerController.Action;
-import org.carewebframework.vista.ui.notification.ViewerController.ActionEvent;
+import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.api.spring.SpringUtil;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.ZKUtil;
+import org.carewebframework.vista.ui.notification.ViewerController.Action;
+import org.carewebframework.vista.ui.notification.ViewerController.ActionEvent;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.EventListener;
@@ -170,16 +170,16 @@ public class ProcessingController extends FrameworkController implements IPatien
             case SKIP:
             case SKIP_ALL:
                 break;
-            
+                
             case DELETE:
             case DELETE_ALL:
                 service.deleteNotification(notification);
                 break;
-            
+                
             case CANCEL:
                 close();
                 break;
-            
+                
             case VIEW:
                 changePatient(notification);
                 return;
@@ -241,7 +241,8 @@ public class ProcessingController extends FrameworkController implements IPatien
                     getEventManager().fireLocalEvent(eventName, notification);
                 }
             } else {
-                viewer.process(notification, ZKUtil.getLabel("vistanotification.processing.nohandler", notification.getType()));
+                viewer.process(notification,
+                    ZKUtil.getLabel("vistanotification.processing.nohandler", notification.getType()));
             }
         }
     }
@@ -254,7 +255,7 @@ public class ProcessingController extends FrameworkController implements IPatien
      */
     private boolean changePatient(Notification notification) {
         if (notification.hasPatient()) {
-            Patient patient = DomainObjectFactory.get(Patient.class, notification.getDfn());
+            Patient patient = DomainFactoryRegistry.fetchObject(Patient.class, notification.getDfn());
             
             try {
                 requestingContextChange = true;

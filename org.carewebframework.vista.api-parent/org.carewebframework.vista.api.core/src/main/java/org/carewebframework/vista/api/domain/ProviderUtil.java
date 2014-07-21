@@ -7,57 +7,59 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.api.context;
+package org.carewebframework.vista.api.domain;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.vista.api.domain.DomainObjectFactory;
-import org.carewebframework.vista.api.domain.Provider;
+import org.carewebframework.fhir.model.resource.Practitioner;
+import org.carewebframework.fhir.model.type.HumanName;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
- * Provider-related utilities.
+ * Practitioner-related utilities.
  */
 public class ProviderUtil {
-
-    public static Provider fetchProvider(String value) {
+    
+    public static Practitioner fetchProvider(String value) {
         String id = StrUtil.piece(value, StrUtil.U);
-        return DomainObjectFactory.get(Provider.class, id);
+        return DomainFactoryRegistry.fetchObject(Practitioner.class, id);
     }
-
-    public static List<Provider> search(String text, int maxHits, List<Provider> hits) {
+    
+    public static List<Practitioner> search(String text, int maxHits, List<Practitioner> hits) {
         if (hits == null) {
-            hits = new ArrayList<Provider>();
+            hits = new ArrayList<Practitioner>();
         } else {
             hits.clear();
         }
-
+        
         text = text == null ? null : text.trim().toUpperCase();
-
+        
         if (text == null || text.isEmpty()) {
             return hits;
         }
-
+        
         List<String> list = VistAUtil.getBrokerSession().callRPCList("RGCWFUSR LOOKUP", null, text, 1, "@RGCWENCX PROVIDER",
             maxHits);
-
+        
         for (String prv : list) {
             String[] pcs = prv.split("\\^");
-
+            
             if (pcs[1].toUpperCase().startsWith(text)) {
-                Provider provider = new Provider(pcs[0]);
-                provider.setFullName(pcs[1]);
+                Practitioner provider = new Practitioner();
+                provider.setDomainId(pcs[0]);
+                provider.setName(new HumanName(pcs[1]));
                 hits.add(provider);
             } else {
                 break;
             }
         }
-
+        
         return hits;
     }
-
+    
     /**
      * Enforces static class.
      */

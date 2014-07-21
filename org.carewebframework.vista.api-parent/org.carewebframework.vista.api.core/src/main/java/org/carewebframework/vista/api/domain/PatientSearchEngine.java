@@ -11,12 +11,13 @@ package org.carewebframework.vista.api.domain;
 
 import java.util.List;
 
-import org.carewebframework.cal.api.domain.IPatient;
+import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.cal.api.domain.IPatientSearch;
-import org.carewebframework.cal.api.domain.Name;
 import org.carewebframework.cal.api.domain.PatientSearchCriteria;
 import org.carewebframework.cal.api.domain.PatientSearchException;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.Patient;
+import org.carewebframework.fhir.model.type.HumanName;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
@@ -25,7 +26,7 @@ import org.carewebframework.vista.mbroker.FMDate;
  * Patient search services.
  */
 public class PatientSearchEngine implements IPatientSearch {
-
+    
     /**
      * Perform search, using the specified criteria.
      *
@@ -34,41 +35,40 @@ public class PatientSearchEngine implements IPatientSearch {
      *         null if no search criteria are provided or the search exceeds the maximum allowable
      *         matches and the user chooses to cancel the search.
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public List<IPatient> search(PatientSearchCriteria criteria) {
+    public List<Patient> search(PatientSearchCriteria criteria) {
         BrokerSession broker = VistAUtil.getBrokerSession();
-
-        Name name = criteria.getName();
-        String lastName = name == null ? "" : name.getLastName();
-        String firstName = name == null ? "" : name.getFirstName();
+        
+        HumanName name = criteria.getName();
+        String familyName = name == null ? "" : name.getFamily().get(0).asString();
+        String givenName = name == null ? "" : name.getGiven().get(0).asString();
         String mrn = criteria.getMRN();
         String ssn = criteria.getSSN();
         String gender = criteria.getGender();
         String dob = criteria.getBirth() == null ? "" : new FMDate(criteria.getBirth()).getFMDate();
         Long dfn = criteria.getId();
-        List<String> hits = broker
-                .callRPCList("RGCWPTPS SEARCH", null, 200, lastName, firstName, mrn, ssn, dfn, gender, dob);
-
+        List<String> hits = broker.callRPCList("RGCWPTPS SEARCH", null, 200, familyName, givenName, mrn, ssn, dfn, gender,
+            dob);
+        
         if (hits == null || hits.size() == 0) {
             return null;
         }
-
+        
         String[] ids = new String[hits.size()];
         int i = 0;
-
+        
         for (String hit : hits) {
             String[] pcs = StrUtil.split(hit, StrUtil.U, 2);
             String patientId = pcs[0];
-
+            
             if (!VistAUtil.validateIEN(patientId)) {
                 throw new PatientSearchException(pcs[1]);
             }
-
+            
             ids[i++] = patientId;
-
+            
         }
-
-        return (List<IPatient>) (List<?>) DomainObjectFactory.get(Patient.class, ids);
+        
+        return DomainFactoryRegistry.fetchObjects(Patient.class, ids);
     }
 }

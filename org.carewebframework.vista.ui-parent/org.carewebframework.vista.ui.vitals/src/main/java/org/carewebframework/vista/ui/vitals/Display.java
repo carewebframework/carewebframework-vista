@@ -22,8 +22,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.carewebframework.api.FrameworkUtil;
+import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.common.FhirUtil;
+import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.shell.plugins.IPluginEvent;
 import org.carewebframework.shell.plugins.PluginContainer;
 import org.carewebframework.ui.highcharts.Chart;
@@ -34,8 +37,6 @@ import org.carewebframework.ui.highcharts.Series;
 import org.carewebframework.ui.highcharts.ZoomType;
 import org.carewebframework.ui.zk.DateRangePicker;
 import org.carewebframework.ui.zk.ZKUtil;
-import org.carewebframework.vista.api.context.PatientContext;
-import org.carewebframework.vista.api.domain.Patient;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
@@ -65,7 +66,7 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
     private static final String[] rangeSeries = new String[] { "low", "high" };
     
     private static final String DATE_FORMAT = "%d-%b-%y";
-
+    
     private static final String TIME_FORMAT = DATE_FORMAT + " %H:%M";
     
     private Chart chart;
@@ -144,17 +145,17 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
         dtlf.setDateFormats(DATE_FORMAT);
         dtlf.setTimeFormats(TIME_FORMAT);
     }
-
+    
     private Date ageToDate(double age) {
         if (chkAge.isVisible() && chkAge.isChecked()) {
-            return DateUtil.addDays(patient.getBirthDate(), (int) (age * 365.25 / 12.0), true);
+            return DateUtil.addDays(FhirUtil.asDate(patient.getBirthDate()), (int) (age * 365.25 / 12.0), true);
         } else {
             return new Date();
         }
     }
     
     private double dateToAge(Date date) {
-        double diff = date.getTime() - patient.getBirthDate().getTime();
+        double diff = date.getTime() - FhirUtil.asDate(patient.getBirthDate()).getTime();
         return diff / 2592000000.0;
     }
     
@@ -552,7 +553,7 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
      */
     @Override
     public void committed() {
-        patient = PatientContext.getCurrentPatient();
+        patient = PatientContext.getActivePatient();
         chkAge.setVisible(patient != null && dateToAge(today) < 37);
         loadGrid();
     }

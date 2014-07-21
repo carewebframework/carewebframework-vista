@@ -14,10 +14,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.carewebframework.api.domain.IUser;
 import org.carewebframework.api.spring.SpringUtil;
-import org.carewebframework.cal.api.domain.IPatient;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.Patient;
+import org.carewebframework.fhir.model.resource.User;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
 
@@ -25,24 +25,24 @@ import org.carewebframework.vista.mbroker.FMDate;
  * This is the documents api implementation.
  */
 public class DocumentService {
-
+    
     private final BrokerSession broker;
     
     public static DocumentService getInstance() {
         return SpringUtil.getBean("documentService", DocumentService.class);
     }
-
+    
     public DocumentService(BrokerSession broker) {
         this.broker = broker;
     };
-
-    public boolean hasDocuments(IPatient patient) {
+    
+    public boolean hasDocuments(Patient patient) {
         return patient != null;
     }
     
     public List<DocumentCategory> getCategories() {
         List<DocumentCategory> categories = new ArrayList<DocumentCategory>();
-
+        
         for (String result : broker.callRPCList("CIAURPC FILGET", null, 8925.1, null, null, "I $P(^(0),U,4)=\"CL\"")) {
             String[] pcs = StrUtil.split(result, StrUtil.U);
             DocumentCategory cat = new DocumentCategory();
@@ -60,11 +60,11 @@ public class DocumentService {
      *
      * <pre>
      *     Get the textual portion of a TIU Document.
-     *
+     * 
      *     Input parameters:
      *         IEN     -  IEN[8925] in the TIU Document file.
      *         ACTION  -  Defaults to VIEW.  .01 Field for file USR ACTION.
-     *
+     * 
      *     Return format:
      *         An array of text.
      *           Example (partial):
@@ -92,19 +92,19 @@ public class DocumentService {
             }
         }
     }
-
+    
     /**
      * RPC: TIU DOCUMENTS BY CONTEXT
      *
      * <pre>
      *     Returns lists of TIU Documents that satisfy the following search criteria:
-     *
+     * 
      *     1 - signed documents (all)
      *     2 - unsigned documents
      *     3 - uncosigned documents
      *     4 - signed documents/author
      *     5 - signed documents/date range
-     *
+     * 
      *     Input parameters:
      *         DocClass -  Pointer to TIU DOCUMENT DEFINITION #8925.1
      *     Context  -  1=All Signed (by PT),
@@ -120,7 +120,7 @@ public class DocumentService {
      *     SortSeq  -  Direction to search through dates, "A" - ascending, "D" - descending
      *     ShowAdd  -  parameter determines whether addenda will be included in the return array
      *     IncUnd   -  Flag to include undictated and untranscribed.  Only applies when CONTEXT=2
-     *
+     * 
      *     Return format:
      *         An array in the following format:
      *        1    2             3                            4                       5                6
@@ -138,8 +138,7 @@ public class DocumentService {
      * @param category
      * @return
      */
-    public List<Document> retrieveHeaders(IPatient patient, IUser user, Date startDate, Date endDate,
-        DocumentCategory category) {
+    public List<Document> retrieveHeaders(Patient patient, User user, Date startDate, Date endDate, DocumentCategory category) {
         List<DocumentCategory> categories = category == null ? getCategories() : Collections.singletonList(category);
         List<Document> results = new ArrayList<Document>();
         
@@ -158,7 +157,7 @@ public class DocumentService {
                 results.add(doc);
             }
         }
-
+        
         return results;
     }
 }

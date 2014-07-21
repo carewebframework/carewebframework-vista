@@ -16,19 +16,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.carewebframework.vista.api.context.PatientContext;
+import org.apache.commons.lang.StringUtils;
+
+import org.carewebframework.api.FrameworkUtil;
+import org.carewebframework.api.security.SecurityUtil;
+import org.carewebframework.cal.api.context.PatientContext;
+import org.carewebframework.ui.zk.SelectionGrid;
+import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.esig.ESigFilter;
 import org.carewebframework.vista.esig.ESigItem;
 import org.carewebframework.vista.esig.ESigItem.SignState;
 import org.carewebframework.vista.esig.IESigService;
 import org.carewebframework.vista.esig.IESigType;
-
-import org.apache.commons.lang.StringUtils;
-
-import org.carewebframework.api.FrameworkUtil;
-import org.carewebframework.api.security.SecurityUtil;
-import org.carewebframework.ui.zk.SelectionGrid;
-import org.carewebframework.ui.zk.ZKUtil;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.HtmlBasedComponent;
@@ -42,8 +41,6 @@ import org.zkoss.zul.Window;
 
 /**
  * Controller for the signature review dialog.
- * 
- * 
  */
 public class ESigViewer extends Window implements PatientContext.IPatientContextEvent {
     

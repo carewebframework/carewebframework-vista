@@ -19,70 +19,83 @@ import java.text.SimpleDateFormat;
 
 import org.carewebframework.api.context.ContextMarshaller;
 import org.carewebframework.api.context.UserContext;
-import org.carewebframework.api.domain.EntityIdentifier;
 import org.carewebframework.api.test.CommonTest;
+import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
-import org.carewebframework.vista.api.domain.Patient;
-import org.carewebframework.vista.api.domain.User;
+import org.carewebframework.fhir.common.FhirUtil;
+import org.carewebframework.fhir.model.core.DateAndTime;
+import org.carewebframework.fhir.model.resource.Patient;
+import org.carewebframework.fhir.model.resource.User;
+import org.carewebframework.fhir.model.type.HumanName;
+import org.carewebframework.fhir.model.type.Identifier;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class PatientContextTest extends CommonTest {
-
+    
     /**
      * Should accept context change on first survey and refuse on all subsequent surveys.
      */
     private class ContextChangeSubscriber implements IPatientContextEvent {
-
+        
         private String reason = "";
-
+        
         @Override
         public void canceled() {
         }
-
+        
         @Override
         public void committed() {
         }
-
+        
         @Override
         public String pending(boolean silent) {
             String result = reason;
             reason = "refuse change";
             return result;
         }
-
+        
     }
-
+    
     DateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
-
+    
     @Test
     public void changePatientContext() throws Exception {
         changeUserContext();
-        Patient patient1 = new Patient("456");
-        patient1.setFullName("Smith, Joe");
-        patient1.setIdentifier(new EntityIdentifier("999-99-9999", "SSN"));
-        patient1.setBirthDate(dateFormat.parse("7/27/1958"));
-        Patient patient2 = new Patient("123");
-        patient2.setFullName("Doe, Jane");
-        patient2.setIdentifier(new EntityIdentifier("123-45-6789", "SSN"));
-        patient2.setBirthDate(dateFormat.parse("5/1/1963"));
+        Patient patient1 = new Patient();
+        patient1.setDomainId("321");
+        patient1.addName(new HumanName("Smith, Joe"));
+        Identifier ssn = new Identifier();
+        ssn.setLabelSimple("SSN");
+        ssn.setValueSimple("999-99-9999");
+        patient1.addIdentifier(ssn);
+        patient1.setBirthDateSimple(new DateAndTime("1958-07-27"));
+        Patient patient2 = new Patient();
+        patient2.setDomainId("123");
+        patient2.addName(new HumanName("Doe, Jane"));
+        Identifier ssn2 = new Identifier();
+        ssn2.setLabelSimple("SSN");
+        ssn2.setValueSimple("123-45-6789");
+        patient2.addIdentifier(ssn2);
+        patient2.setBirthDateSimple(new DateAndTime("1963-5-1"));
         Object subscriber = new ContextChangeSubscriber(); // Create a patient context change subscriber
         appFramework.registerObject(subscriber); // Register it with the context manager
         PatientContext.changePatient(patient1); // Request a context change
-        assertSame(patient1, PatientContext.getCurrentPatient()); // This time should succeed
+        assertSame(patient1, PatientContext.getActivePatient()); // This time should succeed
         PatientContext.changePatient(patient2); // Reattempt the context change
-        assertNotSame(patient2, PatientContext.getCurrentPatient()); // Subscriber should have refused the context change
+        assertNotSame(patient2, PatientContext.getActivePatient()); // Subscriber should have refused the context change
         appFramework.unregisterObject(subscriber); // Unregister the subscriber
         PatientContext.changePatient(patient2); // Reattempt the context change
-        assertSame(patient2, PatientContext.getCurrentPatient()); // This time should succeed
+        assertSame(patient2, PatientContext.getActivePatient()); // This time should succeed
     }
-
+    
     public void changeUserContext() throws Exception {
-        User user = new User("999");
+        User user = new User();
+        user.setDomainId("999");
         UserContext.changeUser(user);
     }
-
+    
     @Test
     @Ignore
     public void marshalling() throws Exception {
@@ -91,10 +104,10 @@ public class PatientContextTest extends CommonTest {
         String ctx = marshaller.marshal(contextManager.getMarshaledContext());
         String sig = marshaller.sign(ctx);
         PatientContext.changePatient(null);
-        assertNull(PatientContext.getCurrentPatient());
+        assertNull(PatientContext.getActivePatient());
         marshaller.unmarshal(ctx, sig);
-        Patient patient = PatientContext.getCurrentPatient();
-        assertTrue("Doe, Jane".equalsIgnoreCase(patient.getFullName()));
+        Patient patient = PatientContext.getActivePatient();
+        assertTrue("Doe, Jane".equalsIgnoreCase(FhirUtil.formatName(patient.getName())));
     }
-
+    
 }

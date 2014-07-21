@@ -13,12 +13,13 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-import org.carewebframework.vista.mbroker.FMDate;
-
 import org.apache.commons.lang.ArrayUtils;
 
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.vista.mbroker.FMDate;
+
+import org.springframework.util.StringUtils;
 
 /**
  * Base class for notifications.
@@ -72,14 +73,14 @@ public abstract class AbstractNotification implements Serializable {
      * 
      * @return DFN of the associated patient (null if no patient association).
      */
-    public abstract Long getDfn();
+    public abstract String getDfn();
     
     /**
      * Sets the DFN of the associated patient.
      * 
      * @param dfn DFN of the associated patient (null if no patient association).
      */
-    protected abstract void setDfn(Long dfn);
+    protected abstract void setDfn(String dfn);
     
     /**
      * Returns the name of the associated patient.
@@ -105,8 +106,7 @@ public abstract class AbstractNotification implements Serializable {
      * @return True if there is a patient association.
      */
     public boolean hasPatient() {
-        Long dfn = getDfn();
-        return dfn != null && dfn > 0;
+        return !StringUtils.isEmpty(getDfn());
     }
     
     /**

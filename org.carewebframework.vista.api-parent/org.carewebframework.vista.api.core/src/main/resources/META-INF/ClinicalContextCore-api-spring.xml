@@ -10,29 +10,11 @@
 
 	<beans profile="root">
 
-		<bean id="patientFactory" class="org.carewebframework.vista.api.domain.DomainObjectFactory">
-			<constructor-arg value="org.carewebframework.vista.api.domain.Patient" />
-		</bean>
-
 		<bean id="patientSearchEngine" class="org.carewebframework.vista.api.domain.PatientSearchEngine" />
 
 	</beans>
 
 	<beans profile="desktop">
-
-		<!-- Shared clinical contexts. -->
-
-		<bean id="patientContext" parent="managedContext"
-			class="org.carewebframework.vista.api.context.PatientContext" cwf:override="always">
-		</bean>
-
-		<bean id="encounterContext" parent="managedContext"
-			class="org.carewebframework.vista.api.context.EncounterContext">
-		</bean>
-
-		<bean id="locationContext" parent="managedContext"
-			class="org.carewebframework.vista.api.context.LocationContext" depends-on="userContext">
-		</bean>
 
 	</beans>
 </beans>

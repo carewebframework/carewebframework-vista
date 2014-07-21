@@ -13,11 +13,8 @@ import static org.carewebframework.common.StrUtil.U;
 
 import java.util.Arrays;
 
-import org.carewebframework.vista.mbroker.FMDate;
-
-import org.apache.commons.lang.math.NumberUtils;
-
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.vista.mbroker.FMDate;
 
 /**
  * A scheduled notification.
@@ -88,16 +85,15 @@ public class ScheduledNotification extends AbstractNotification {
      * patient.
      */
     @Override
-    public Long getDfn() {
-        String value = getParam("DFN");
-        return value == null ? null : NumberUtils.toLong(value);
+    public String getDfn() {
+        return getParam("DFN");
     }
     
     /**
      * Sets the internal entry number of the associated patient. Use null if no associated patient.
      */
     @Override
-    protected void setDfn(Long dfn) {
+    protected void setDfn(String dfn) {
         setParam("DFN", dfn);
     }
     

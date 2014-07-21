@@ -9,12 +9,11 @@
  */
 package org.carewebframework.vista.ui.context.location;
 
-import org.carewebframework.vista.api.context.LocationContext;
-import org.carewebframework.vista.api.domain.Location;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.carewebframework.cal.api.context.LocationContext;
+import org.carewebframework.fhir.model.resource.Location;
 import org.carewebframework.ui.FrameworkController;
 
 import org.zkoss.zk.ui.Component;
@@ -23,8 +22,6 @@ import org.zkoss.zul.Label;
 
 /**
  * Controller for location header component.
- * 
- * 
  */
 public class LocationHeader extends FrameworkController implements LocationContext.ILocationContextEvent {
     
@@ -65,13 +62,13 @@ public class LocationHeader extends FrameworkController implements LocationConte
      */
     @Override
     public void committed() {
-        Location location = LocationContext.getCurrentLocation();
+        Location location = LocationContext.getActiveLocation();
         
         if (log.isDebugEnabled()) {
             log.debug("location: " + location);
         }
         
-        String text = location == null ? noSelectionMessage : location.getName();
+        String text = location == null ? noSelectionMessage : location.getNameSimple();
         locationHeader.setValue(text);
         Clients.resize(root);
     }

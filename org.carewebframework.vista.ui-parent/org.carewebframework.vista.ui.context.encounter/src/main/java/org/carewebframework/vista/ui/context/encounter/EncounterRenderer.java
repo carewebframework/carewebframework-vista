@@ -9,9 +9,10 @@
  */
 package org.carewebframework.vista.ui.context.encounter;
 
-import org.carewebframework.vista.api.domain.Encounter;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.Encounter;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
+import org.carewebframework.vista.api.domain.EncounterUtil;
 
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listitem;
@@ -23,13 +24,13 @@ public class EncounterRenderer extends AbstractListitemRenderer<Object, Object> 
         Encounter encounter = data instanceof Encounter ? (Encounter) data : parse((String) data);
         item.setValue(encounter);
         item.addForward(Events.ON_DOUBLE_CLICK, item.getListbox(), null);
-        item.setImage(encounter.isLocked() ? Constants.ICON_LOCKED : null);
+        item.setImage(EncounterUtil.isLocked(encounter) ? Constants.ICON_LOCKED : null);
         createCell(item, encounter.getLocation());
-        createCell(item, encounter.getDateTime());
-        createCell(item, encounter.getServiceCategory());
+        createCell(item, encounter.getPeriod());
+        createCell(item, encounter.getType());
     }
     
     private Encounter parse(String value) {
-        return Encounter.decode(StrUtil.piece(value, StrUtil.U));
+        return EncounterUtil.decode(StrUtil.piece(value, StrUtil.U));
     }
 }

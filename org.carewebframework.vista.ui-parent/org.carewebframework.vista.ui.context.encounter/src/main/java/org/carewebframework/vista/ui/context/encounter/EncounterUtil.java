@@ -11,14 +11,11 @@ package org.carewebframework.vista.ui.context.encounter;
 
 import java.util.Set;
 
-import org.carewebframework.vista.ui.context.encounter.EncounterSelection.EncounterFlag;
-
 import org.carewebframework.ui.zk.PromptDialog;
+import org.carewebframework.vista.ui.context.encounter.EncounterSelection.EncounterFlag;
 
 /**
  * Encounter-related utilities.
- * 
- * 
  */
 public class EncounterUtil {
     
@@ -42,5 +39,6 @@ public class EncounterUtil {
      * Enforces static class.
      */
     private EncounterUtil() {
-    };
+    }
+    
 }

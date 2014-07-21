@@ -11,15 +11,14 @@ package org.carewebframework.vista.ui.cwad;
 
 import java.util.List;
 
-import org.carewebframework.vista.mbroker.BrokerSession;
-
 import org.carewebframework.api.event.IGenericEvent;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
-import org.carewebframework.cal.api.domain.IPatient;
+import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.shell.plugins.PluginContainer;
 import org.carewebframework.shell.plugins.PluginController;
 import org.carewebframework.ui.zk.ReportBox;
+import org.carewebframework.vista.mbroker.BrokerSession;
 
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Window;
@@ -60,7 +59,7 @@ public class MainController extends PluginController implements IPatientContextE
             dlgFlags = null;
         }
         
-        IPatient patient = PatientContext.getActivePatient();
+        Patient patient = PatientContext.getActivePatient();
         String cwad = patient == null ? "" : broker.callRPC("RGCWCACV CWAD", patient.getDomainId());
         lblCWAD.setValue(cwad);
         lblPostings.setValue(cwad.isEmpty() ? "No Postings" : "Postings");

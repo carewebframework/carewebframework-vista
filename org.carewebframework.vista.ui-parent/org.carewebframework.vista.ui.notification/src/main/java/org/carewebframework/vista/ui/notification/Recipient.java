@@ -11,29 +11,29 @@ package org.carewebframework.vista.ui.notification;
 
 import org.apache.commons.lang.math.NumberUtils;
 
-import org.carewebframework.api.domain.IUser;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.User;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
  * Notification recipient.
  */
 public class Recipient {
-
+    
     private final String name;
-
+    
     private final long ien;
-
+    
     /**
      * Creates a recipient based on the specified user.
      *
      * @param user A user.
      */
-    protected Recipient(IUser user) {
-        this.name = user.getFullName();
+    protected Recipient(User user) {
+        this.name = user.getName().toString();
         this.ien = VistAUtil.parseIEN(user);
     }
-
+    
     /**
      * Creates a recipient based on raw data.
      *
@@ -47,7 +47,7 @@ public class Recipient {
         this.ien = isGroup && val > 0 ? -val : val;
         this.name = pcs[1];
     }
-
+    
     /**
      * Creates a recipient based on raw data.
      *
@@ -56,7 +56,7 @@ public class Recipient {
     protected Recipient(String data) {
         this(data, false);
     }
-
+    
     /**
      * Returns true if this recipient is a mail group.
      *
@@ -65,7 +65,7 @@ public class Recipient {
     public boolean isGroup() {
         return ien < 0;
     }
-
+    
     /**
      * Returns the recipient name.
      *
@@ -74,7 +74,7 @@ public class Recipient {
     public String getName() {
         return name;
     }
-
+    
     /**
      * Returns the recipient's internal entry number. Note that a negative value means that this is
      * a mail group, while a positive value means it is a user.
@@ -84,5 +84,5 @@ public class Recipient {
     public long getIen() {
         return ien;
     }
-
+    
 };

@@ -9,11 +9,11 @@
  */
 package org.carewebframework.vista.ui.context.encounter;
 
-import org.carewebframework.vista.api.context.ProviderUtil;
-import org.carewebframework.vista.api.domain.EncounterProvider;
-import org.carewebframework.vista.api.domain.Provider;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.Practitioner;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
+import org.carewebframework.vista.api.domain.EncounterProvider;
+import org.carewebframework.vista.api.domain.ProviderUtil;
 
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listitem;
@@ -24,11 +24,11 @@ public class ProviderRenderer extends AbstractListitemRenderer<Object, Object> {
     
     @Override
     public void renderItem(Listitem item, Object data) {
-        Provider provider = data instanceof Provider ? (Provider) data : ProviderUtil.fetchProvider(StrUtil.piece(
-            (String) data, StrUtil.U));
+        Practitioner provider = data instanceof Practitioner ? (Practitioner) data : ProviderUtil.fetchProvider(StrUtil
+                .piece((String) data, StrUtil.U));
         item.setValue(provider);
-        createCell(item, provider.getFullName());
-        Provider primaryProvider = encounterProvider.getPrimaryProvider();
+        createCell(item, provider.getName());
+        Practitioner primaryProvider = encounterProvider.getPrimaryProvider();
         item.setSclass(primaryProvider == null || !provider.equals(primaryProvider) ? null : Constants.SCLASS_PRIMARY);
         item.addForward(Events.ON_DOUBLE_CLICK, item.getListbox(), null);
     }

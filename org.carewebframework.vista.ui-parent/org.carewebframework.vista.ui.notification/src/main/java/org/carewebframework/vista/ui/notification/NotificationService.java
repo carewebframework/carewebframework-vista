@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import org.carewebframework.cal.api.domain.IPatient;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.vista.mbroker.BrokerSession;
 
 /**
@@ -68,7 +68,7 @@ public class NotificationService {
      *            Otherwise, all notifications for the current user are returned.
      * @param result The list to receive the results.
      */
-    public void getNotifications(IPatient patient, Collection<Notification> result) {
+    public void getNotifications(Patient patient, Collection<Notification> result) {
         List<String> lst = null;
         result.clear();
         

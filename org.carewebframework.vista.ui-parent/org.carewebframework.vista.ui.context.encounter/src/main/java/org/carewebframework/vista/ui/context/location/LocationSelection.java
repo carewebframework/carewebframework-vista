@@ -11,15 +11,14 @@ package org.carewebframework.vista.ui.context.location;
 
 import java.util.List;
 
-import org.carewebframework.vista.api.context.LocationContext;
-import org.carewebframework.vista.api.context.LocationUtil;
-import org.carewebframework.vista.api.domain.Location;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.carewebframework.cal.api.context.LocationContext;
+import org.carewebframework.fhir.model.resource.Location;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.ZKUtil;
+import org.carewebframework.vista.api.domain.LocationUtil;
 
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listbox;
@@ -30,8 +29,6 @@ import org.zkoss.zul.Textbox;
 /**
  * Location selection controller. Supports selecting a location from a list of known locations and
  * requesting that the location context be changed to that selection.
- * 
- * 
  */
 public class LocationSelection extends Panel {
     
@@ -67,7 +64,7 @@ public class LocationSelection extends Panel {
      * @throws Exception
      */
     public void onClick$btnLocation() throws Exception {
-        locationLookup(txtLocation.getValue(), lstLocation, LocationContext.getCurrentLocation());
+        locationLookup(txtLocation.getValue(), lstLocation, LocationContext.getActiveLocation());
     }
     
     /**
@@ -110,7 +107,7 @@ public class LocationSelection extends Panel {
      * @return The added list item.
      */
     public static Listitem locationAdd(Location location, Listbox lstLocation) {
-        Listitem item = new Listitem(location.getName());
+        Listitem item = new Listitem(location.getNameSimple());
         item.setValue(location);
         //item.setTooltiptext(location.getDescription());
         item.addForward(Events.ON_DOUBLE_CLICK, "btnOK", Events.ON_CLICK);
@@ -125,7 +122,7 @@ public class LocationSelection extends Panel {
      * @param lstLocation
      */
     public static void locationInit(Listbox lstLocation) {
-        Location location = LocationContext.getCurrentLocation();
+        Location location = LocationContext.getActiveLocation();
         
         if (location != null) {
             locationAdd(location, lstLocation).setSelected(true);

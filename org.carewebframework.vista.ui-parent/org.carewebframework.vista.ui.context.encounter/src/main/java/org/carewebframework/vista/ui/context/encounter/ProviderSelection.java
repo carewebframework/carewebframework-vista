@@ -9,15 +9,13 @@
  */
 package org.carewebframework.vista.ui.context.encounter;
 
-import org.carewebframework.vista.api.context.EncounterUtil;
-import org.carewebframework.vista.api.context.ProviderUtil;
-import org.carewebframework.vista.api.domain.Encounter;
-import org.carewebframework.vista.api.domain.EncounterProvider;
-import org.carewebframework.vista.api.domain.Patient;
-import org.carewebframework.vista.api.domain.Provider;
 import org.carewebframework.api.context.UserContext;
+import org.carewebframework.fhir.model.resource.Encounter;
+import org.carewebframework.fhir.model.resource.Practitioner;
 import org.carewebframework.ui.zk.ListUtil;
 import org.carewebframework.ui.zk.ZKUtil;
+import org.carewebframework.vista.api.domain.EncounterProvider;
+import org.carewebframework.vista.api.domain.ProviderUtil;
 
 import org.zkoss.zk.ui.IdSpace;
 import org.zkoss.zul.Borderlayout;
@@ -43,7 +41,7 @@ public class ProviderSelection extends Borderlayout implements IdSpace {
     
     private final ProviderRenderer providerRenderer = new ProviderRenderer();
     
-    private final ListModelList<Provider> modelProviders = new ListModelList<Provider>();
+    private final ListModelList<Practitioner> modelProviders = new ListModelList<Practitioner>();
     
     public void onCreate() {
         ZKUtil.wireController(this, this);
@@ -60,12 +58,12 @@ public class ProviderSelection extends Borderlayout implements IdSpace {
         encounterProvider.setCurrentProvider(getSelectedProvider(lstEncounterProviders));
     }
     
-    private Provider getSelectedProvider(Listbox lb) {
+    private Practitioner getSelectedProvider(Listbox lb) {
         Listitem item = lb.getSelectedItem();
-        return item == null ? null : (Provider) item.getValue();
+        return item == null ? null : (Practitioner) item.getValue();
     }
     
-    private void setPrimaryProvider(Provider provider) {
+    private void setPrimaryProvider(Practitioner provider) {
         encounterProvider.setPrimaryProvider(provider);
         refreshProviders();
         modified = true;
@@ -75,17 +73,16 @@ public class ProviderSelection extends Borderlayout implements IdSpace {
         return modified;
     }
     
-    public void loadProviders(Patient patient, Encounter encounter) {
-        encounterProvider = encounter == null ? new EncounterProvider(null) : EncounterUtil.getEncounterProvider(patient,
-            encounter);
+    public void loadProviders(Encounter encounter) {
+        encounterProvider = new EncounterProvider(encounter);
         providerRenderer.setEncounterProvider(encounterProvider);
         modified = false;
         refreshProviders();
     }
     
     public void refreshProviders() {
-        Provider provider = getSelectedProvider(lstEncounterProviders);
-        ListModel<Provider> model = new ListModelList<Provider>(encounterProvider.providers());
+        Practitioner provider = getSelectedProvider(lstEncounterProviders);
+        ListModel<Practitioner> model = new ListModelList<Practitioner>(encounterProvider.getProviders());
         lstEncounterProviders.setModel((ListModel<?>) null);
         lstEncounterProviders.setModel(model);
         
@@ -124,7 +121,7 @@ public class ProviderSelection extends Borderlayout implements IdSpace {
     }
     
     public void onClick$btnPrimary() {
-        Provider provider = getSelectedProvider(lstEncounterProviders);
+        Practitioner provider = getSelectedProvider(lstEncounterProviders);
         
         if (provider != null) {
             setPrimaryProvider(provider);
@@ -132,7 +129,7 @@ public class ProviderSelection extends Borderlayout implements IdSpace {
     }
     
     public void onClick$btnProviderAdd() {
-        Provider provider = getSelectedProvider(lstAllProviders);
+        Practitioner provider = getSelectedProvider(lstAllProviders);
         
         if (encounterProvider.add(provider)) {
             refreshProviders();
@@ -141,7 +138,7 @@ public class ProviderSelection extends Borderlayout implements IdSpace {
     }
     
     public void onClick$btnProviderRemove() {
-        Provider provider = getSelectedProvider(lstEncounterProviders);
+        Practitioner provider = getSelectedProvider(lstEncounterProviders);
         
         if (encounterProvider.remove(provider)) {
             refreshProviders();

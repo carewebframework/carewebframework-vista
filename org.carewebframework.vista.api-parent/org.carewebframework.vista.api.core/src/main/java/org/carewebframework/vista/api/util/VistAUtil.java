@@ -24,62 +24,62 @@ import org.carewebframework.vista.mbroker.FMDate;
  * Static utility class for the VistA extensions.
  */
 public class VistAUtil {
-
+    
     public static long parseIEN(String ien) {
         return NumberUtils.toLong(ien);
     }
-
+    
     public static long parseIEN(IDomainObject object) {
         return object == null ? 0 : parseIEN(object.getDomainId());
     }
-
+    
     public static boolean validateIEN(String ien) {
         return parseIEN(ien) > 0;
     }
-
+    
     public static boolean validateIEN(IDomainObject object) {
         return parseIEN(object) > 0;
     }
-
+    
     public static BrokerSession getBrokerSession() {
         return SpringUtil.getBean("brokerSession", BrokerSession.class);
     }
-
+    
     public static String normalizeDate(String value) {
         return normalizeDate(value, false);
     }
-
+    
     public static String normalizeDate(String value, boolean includeTime) {
         Date date = parseDate(value);
         return date == null ? "" : DateUtil.formatDate(date, false, !includeTime);
     }
-
+    
     public static Date parseDate(String value) {
         if (value == null || value.isEmpty()) {
             return null;
         }
-
+        
         if (NumberUtils.isNumber(value)) {
             return new FMDate(value);
         }
-
+        
         return DateUtil.parseDate(value);
     }
-
+    
     public static String trimNarrative(String narrative) {
         return StrUtil.xlate(narrative == null ? "" : narrative, "^\n\r", "   ").trim();
     }
-
+    
     public static String getSysParam(String param, String dflt, String instance) {
         String s = getBrokerSession().callRPC("RGCWFPAR GETPAR", param, "", instance == null ? "1" : instance);
         return s.isEmpty() ? dflt : s;
     }
-
+    
     public static boolean setSysParam(String param, String value) {
         String s = StrUtil.piece(getBrokerSession().callRPC("RGCWFPAR SETPAR", param, value, "USR"), StrUtil.U, 2);
         return s.isEmpty();
     }
-
+    
     /**
      * Converts a parameter list into a ^-delimited string
      *
@@ -89,22 +89,22 @@ public class VistAUtil {
     public static String concatParams(Object... params) {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
-
+        
         for (Object param : params) {
             if (!first) {
                 sb.append(StrUtil.U);
             } else {
                 first = false;
             }
-
+            
             if (param != null) {
                 sb.append(param);
             }
         }
-
+        
         return sb.toString();
     }
-
+    
     /**
      * Enforces static class.
      */

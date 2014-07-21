@@ -9,14 +9,13 @@
  */
 package org.carewebframework.vista.smart;
 
-import org.carewebframework.vista.api.context.PatientContext;
-import org.carewebframework.vista.api.domain.Patient;
+import org.carewebframework.cal.api.context.PatientContext;
+import org.carewebframework.fhir.common.FhirUtil;
+import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.smart.SmartContextBase;
 
 /**
  * Implements SMART context scope "record".
- * 
- * 
  */
 public class SmartContextRecord extends SmartContextBase {
     
@@ -34,10 +33,10 @@ public class SmartContextRecord extends SmartContextBase {
      */
     @Override
     protected void updateContext(ContextMap context) {
-        Patient patient = PatientContext.getCurrentPatient();
+        Patient patient = PatientContext.getActivePatient();
         
         if (patient != null) {
-            context.put("full_name", patient.getFullName());
+            context.put("full_name", FhirUtil.formatName(patient.getName()));
             context.put("id", patient.getDomainId());
         }
     }

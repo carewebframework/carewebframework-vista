@@ -18,9 +18,10 @@ import java.util.Set;
 import org.carewebframework.api.event.IGenericEvent;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
-import org.carewebframework.cal.api.domain.IPatient;
 import org.carewebframework.common.NumUtil;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.common.FhirUtil;
+import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.ui.icons.IconUtil;
 import org.carewebframework.ui.sharedforms.CaptionedForm;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
@@ -29,7 +30,6 @@ import org.carewebframework.ui.zk.MessageWindow.MessageInfo;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.RowComparator;
 import org.carewebframework.ui.zk.ZKUtil;
-import org.carewebframework.vista.api.util.VistAUtil;
 
 import org.springframework.util.StringUtils;
 
@@ -51,26 +51,26 @@ import org.zkoss.zul.Radiogroup;
  * Controller for main notification display.
  */
 public class MainController extends CaptionedForm implements IPatientContextEvent {
-
+    
     private static final long serialVersionUID = 1L;
-
+    
     private static final String BOLD = "font-weight:bold";
-
+    
     private static final String NO_BOLD = "color:lightgray";
-
+    
     public static final String ICON_INFO = IconUtil.getIconPath("silk:16x16:information.png");
-
+    
     public static final String ICON_ACTIONABLE = IconUtil.getIconPath("silk:16x16:bullet_go.png");
-
+    
     public static final String ICON_TYPE = IconUtil.getIconPath("silk:16x16:help.png");
-
+    
     public static final String ICON_PRIORITY = IconUtil.getIconPath("silk:16x16:bullet_error.png");
-
+    
     public static final String ICON_INDICATOR = IconUtil.getIconPath("silk:16x16:asterisk_orange.png");
-
+    
     // This is the renderer for the notification display.
     private final AbstractListitemRenderer<Notification, Object> renderer = new AbstractListitemRenderer<Notification, Object>() {
-
+        
         @Override
         protected void renderItem(Listitem item, Notification notification) {
             createCell(item, null);
@@ -85,102 +85,102 @@ public class MainController extends CaptionedForm implements IPatientContextEven
             item.addForward(Events.ON_DOUBLE_CLICK, item.getListbox(), "onProcessItem");
         }
     };
-
+    
     // This is the listener for notification action messages.
     private final IGenericEvent<String> actionListener = new IGenericEvent<String>() {
-
+        
         @Override
         public void eventCallback(String eventName, String eventData) {
             Action action = Action.valueOf(StrUtil.piece(eventName, ".", 2));
             Notification notification;
-
+            
             switch (action) {
                 case ADD:
                     addNotification(eventData);
                     break;
-
+                    
                 case INFO:
                     notification = findNotification(eventData);
-
+                    
                     if (notification != null) {
                         highlightNotification(notification);
                         getContainer().bringToFront();
                     }
-
+                    
                     break;
-
+                    
                 case REFRESH:
                     refresh();
                     break;
-
+                    
                 case DELETE:
                     notification = findNotification(eventData);
-
+                    
                     if (notification != null) {
                         model.remove(notification);
                     }
-
+                    
                     break;
             }
         }
-
+        
     };
-
+    
     /**
      * Response types for information-only message processing.
      */
     private enum Response {
         YES, NO, ALL, CANCEL;
-
+        
         @Override
         public String toString() {
             return Labels.getLabel("vistanotification.response.label." + name());
         }
     }
-
+    
     /**
      * Recognized notification actions.
      */
     private enum Action {
         CHECK, ADD, SCHEDULE, INFO, REFRESH, DELETE, MONITOR;
     }
-
+    
     private Listbox lstNotification;
-
+    
     private Radiogroup rgFilter;
-
+    
     private Radio radAll;
-
+    
     private Radio radPatient;
-
+    
     private Button btnAll;
-
+    
     private Button btnSelected;
-
+    
     private Button btnInfoAll;
-
+    
     private Button btnForward;
-
+    
     private Button btnDelete;
-
+    
     private Image imgIndicator;
-
+    
     private NotificationService service;
-
+    
     private ProcessingController processingController;
-
+    
     private final ListModelList<Notification> model = new ListModelList<Notification>();
-
+    
     private boolean showAll = true;
-
+    
     private Priority alertThreshold = Priority.HIGH;
-
+    
     private int alertDuration = 30;
-
+    
     private boolean isProcessing;
-
-    private IPatient patient;
-
+    
+    private Patient patient;
+    
     /**
      * Expose icon urls for auto-wiring.
      */
@@ -196,7 +196,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         comp.setAttribute("iconPriorityMedium", Priority.MEDIUM.getImage());
         comp.setAttribute("iconPriorityLow", Priority.LOW.getImage());
     }
-
+    
     /**
      * Set up display.
      */
@@ -212,30 +212,30 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         updatePatient(true);
         subscribe(true);
     }
-
+    
     @Override
     public void cleanup() {
         subscribe(false);
     }
-
+    
     /**
      * Refresh the display.
      */
     @Override
     public void refresh() {
         lstNotification.setModel((ListModel<?>) null);
-
+        
         if (radAll.isChecked() || patient != null) {
             service.getNotifications(radAll.isChecked() ? null : patient, model);
         } else {
             model.clear();
         }
-
+        
         lstNotification.setModel(model);
         Clients.resize(lstNotification);
         updateControls(false);
     }
-
+    
     /**
      * Update controls to reflect the current selection state.
      *
@@ -249,13 +249,13 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         btnForward.setDisabled(isProcessing || btnSelected.isDisabled());
         radAll.setStyle(radAll.isChecked() ? BOLD : NO_BOLD);
         radPatient.setStyle(radPatient.isChecked() ? BOLD : NO_BOLD);
-
+        
         if (processingUpdate) {
             lstNotification.setDisabled(isProcessing);
             ZKUtil.disableChildren(lstNotification, isProcessing);
         }
     }
-
+    
     /**
      * Returns true if any selected notification may be deleted.
      *
@@ -267,10 +267,10 @@ public class MainController extends CaptionedForm implements IPatientContextEven
                 return true;
             }
         }
-
+        
         return false;
     }
-
+    
     /**
      * Returns true if any selected notification is information only.
      *
@@ -282,10 +282,10 @@ public class MainController extends CaptionedForm implements IPatientContextEven
                 return true;
             }
         }
-
+        
         return false;
     }
-
+    
     /**
      * Prompts user for input, returning the response.
      *
@@ -296,7 +296,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     private Response getResponse(String prompt, Response... responses) {
         return PromptDialog.show(prompt, null, responses);
     }
-
+    
     /**
      * Creates a notification from raw data. Will be added to the model unless filtered. Will
      * generate a slide-down message alert if its priority exceeds the set threshold.
@@ -306,12 +306,12 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     private void addNotification(String data) {
         Notification notification = new Notification(data);
         service.getNotificationMessage(notification);
-
+        
         if (radAll.isChecked()
-                || (notification.hasPatient() && patient != null && notification.getDfn() == VistAUtil.parseIEN(patient))) {
+                || (notification.hasPatient() && patient != null && notification.getDfn().equals(patient.getDomainId()))) {
             model.add(notification);
         }
-
+        
         if (alertThreshold != null && notification.getPriority().ordinal() <= alertThreshold.ordinal()) {
             MessageInfo mi = new MessageInfo(notification.getDisplayText(), "New Notification", notification.getPriority()
                 .getColor(), alertDuration * 1000, null, "cwf.fireLocalEvent('ALERT.INFO', '"
@@ -319,7 +319,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
             getEventManager().fireLocalEvent(MessageWindow.EVENT_SHOW, mi);
         }
     }
-
+    
     /**
      * Locates and returns a notification based on its unique alert id.
      *
@@ -332,10 +332,10 @@ public class MainController extends CaptionedForm implements IPatientContextEven
                 return notification;
             }
         }
-
+        
         return null;
     }
-
+    
     /**
      * Places the highlight indicator next to the specified notification. If the notification is not
      * found or is null, the indicator is hidden.
@@ -344,7 +344,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
      */
     protected void highlightNotification(Notification notification) {
         int i = notification == null ? -1 : model.indexOf(notification);
-
+        
         if (i >= 0) {
             Listitem item = lstNotification.getItemAtIndex(i);
             imgIndicator.setParent(item.getFirstChild());
@@ -354,7 +354,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
             imgIndicator.setVisible(false);
         }
     }
-
+    
     /**
      * Clears all selections.
      */
@@ -362,42 +362,42 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         lstNotification.clearSelection();
         updateControls(false);
     }
-
+    
     /**
      * Update controls when the selection changes.
      */
     public void onSelect$lstNotification() {
         updateControls(false);
     }
-
+    
     /**
      * Refresh the display.
      */
     public void onClick$btnRefresh() {
         refresh();
     }
-
+    
     /**
      * Delete selected notifications.
      */
     public void onClick$btnDelete() {
         boolean silent = false;
-
+        
         LOOP: for (Notification notification : model.getSelection()) {
             String s = notification.getDisplayText();
-
+            
             if (notification.canDelete()) {
                 if (!silent) {
                     String msg = ZKUtil.getLabel("vistanotification.main.delete.confirm.prompt", s);
-
+                    
                     switch (getResponse(msg, Response.YES, Response.NO, Response.ALL, Response.CANCEL)) {
                         case NO:
                             continue;
-
+                            
                         case ALL:
                             silent = true;
                             break;
-
+                            
                         case CANCEL:
                             break LOOP;
                     }
@@ -405,56 +405,56 @@ public class MainController extends CaptionedForm implements IPatientContextEven
                 service.deleteNotification(notification);
             } else {
                 String msg = ZKUtil.getLabel("vistanotification.main.delete.unable.prompt", s);
-
+                
                 if (getResponse(msg, Response.YES, Response.CANCEL) != Response.YES) {
                     break;
                 }
             }
         }
     }
-
+    
     /**
      * Refresh the display when the filter changes.
      */
     public void onCheck$radAll() {
         refresh();
     }
-
+    
     /**
      * Refresh the display when the filter changes.
      */
     public void onCheck$radPatient() {
         refresh();
     }
-
+    
     /**
      * Invoke the scheduled notification management dialog.
      */
     public void onClick$btnSchedule() {
         SchedulingController.show();
     }
-
+    
     /**
      * Process all notifications.
      */
     public void onClick$btnAll() {
         processingController.process(model);
     }
-
+    
     /**
      * Process all information-only notifications.
      */
     public void onClick$btnInfoAll() {
         processingController.process(getNotificationsToProcess(true));
     }
-
+    
     /**
      * Process selected notifications.
      */
     public void onClick$btnSelected() {
         processingController.process(getNotificationsToProcess(false));
     }
-
+    
     /**
      * Process a double-clicked notification.
      *
@@ -466,20 +466,20 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         Notification notification = (Notification) item.getValue();
         processingController.process(Collections.singleton(notification));
     }
-
+    
     /**
      * Forward selected notifications.
      */
     public void onClick$btnForward() {
         Set<Recipient> recipients = new HashSet<Recipient>();
         String comment = RecipientsController.showWithComment(recipients);
-
+        
         if (comment != null && !recipients.isEmpty()) {
             service.forwardNotifications(getNotificationsToProcess(false), recipients, comment);
             clearSelection();
         }
     }
-
+    
     /**
      * Return notifications to be processed.
      *
@@ -489,7 +489,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
      */
     private List<Notification> getNotificationsToProcess(boolean infoOnly) {
         List<Notification> list = new ArrayList<Notification>();
-
+        
         for (Notification notification : model) {
             if (!infoOnly && model.isSelected(notification)) {
                 list.add(notification);
@@ -497,10 +497,10 @@ public class MainController extends CaptionedForm implements IPatientContextEven
                 list.add(notification);
             }
         }
-
+        
         return list;
     }
-
+    
     /**
      * Conditionally suppress patient context changes.
      */
@@ -508,7 +508,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     public String pending(boolean silent) {
         return null;
     }
-
+    
     /**
      * Update display when patient context changes.
      */
@@ -516,7 +516,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     public void committed() {
         updatePatient(radPatient.isChecked());
     }
-
+    
     /**
      * Update display for currently selected patient.
      *
@@ -524,19 +524,19 @@ public class MainController extends CaptionedForm implements IPatientContextEven
      */
     private void updatePatient(boolean refresh) {
         patient = PatientContext.getActivePatient();
-
-        radPatient.setLabel(patient == null ? Labels.getLabel("vistanotification.main.patient.not.selected") : patient
-                .getFullName());
-
+        
+        radPatient.setLabel(patient == null ? Labels.getLabel("vistanotification.main.patient.not.selected") : FhirUtil
+                .formatName(patient.getName()));
+        
         if (refresh) {
             refresh();
         }
     }
-
+    
     @Override
     public void canceled() {
     }
-
+    
     /**
      * Subscribe to/unsubscribe from selected events.
      *
@@ -545,7 +545,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     private void subscribe(boolean doSubscribe) {
         for (Action action : Action.values()) {
             String eventName = "ALERT." + action.name();
-
+            
             if (doSubscribe) {
                 getEventManager().subscribe(eventName, actionListener);
             } else {
@@ -553,7 +553,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
             }
         }
     }
-
+    
     /**
      * Allows IOC container to inject notification service.
      *
@@ -562,7 +562,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     public void setNotificationService(NotificationService service) {
         this.service = service;
     }
-
+    
     /**
      * Returns show all setting. If true, all notifications are displayed, regardless of any patient
      * association. If false, only notifications associated with the selected patient are displayed.
@@ -572,7 +572,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     public boolean getShowAll() {
         return showAll;
     }
-
+    
     /**
      * Sets the show all setting. If true, all notifications are displayed, regardless of any
      * patient association. If false, only notifications associated with the selected patient are
@@ -582,13 +582,13 @@ public class MainController extends CaptionedForm implements IPatientContextEven
      */
     public void setShowAll(boolean value) {
         showAll = value;
-
+        
         if (rgFilter != null) {
             rgFilter.setSelectedItem(showAll ? radAll : radPatient);
             refresh();
         }
     }
-
+    
     /**
      * Returns the alert threshold as a string value. This threshold determines which newly arriving
      * notifications cause a slide-down message alert to be displayed.
@@ -598,7 +598,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     public String getAlertThreshold() {
         return alertThreshold == null ? "" : alertThreshold.name();
     }
-
+    
     /**
      * Sets the alert threshold as a string value. This threshold determines which newly arriving
      * notifications cause a slide-down message alert to be displayed.
@@ -608,7 +608,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     public void setAlertThreshold(String value) {
         this.alertThreshold = StringUtils.isEmpty(value) ? null : Priority.fromString(value);
     }
-
+    
     /**
      * Returns the duration, in seconds, of any slide-down message alert.
      *
@@ -617,7 +617,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     public int getAlertDuration() {
         return alertDuration;
     }
-
+    
     /**
      * Sets the duration, in seconds, of any slide-down message alert.
      *
@@ -626,7 +626,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     public void setAlertDuration(int alertDuration) {
         this.alertDuration = NumUtil.enforceRange(alertDuration, 1, 999999);
     }
-
+    
     public void setProcessing(boolean isProcessing) {
         this.isProcessing = isProcessing;
         updateControls(true);

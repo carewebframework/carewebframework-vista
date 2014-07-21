@@ -35,6 +35,11 @@
 			<property name="password" value="${broker.password}" />
 			<property name="appid" value="${broker.appid:RGCWF CAREWEB FRAMEWORK}" />
 		</bean>
+		
+		<!-- Domain factories  -->
+		<bean class="org.carewebframework.vista.api.domain.FhirDomainFactory" />
+		
+		<bean class="org.carewebframework.vista.api.domain.JsonDomainFactory" />
 
 	</beans>
 

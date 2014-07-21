@@ -11,8 +11,9 @@ package org.carewebframework.vista.security.mock;
 
 import java.util.List;
 
+import org.carewebframework.fhir.model.resource.User;
+import org.carewebframework.fhir.model.type.HumanName;
 import org.carewebframework.security.spring.CWFAuthenticationDetails;
-import org.carewebframework.vista.api.domain.User;
 import org.carewebframework.vista.security.base.BaseAuthenticationProvider;
 
 /**
@@ -20,15 +21,15 @@ import org.carewebframework.vista.security.base.BaseAuthenticationProvider;
  * authenticates them against the database.
  */
 public final class AuthenticationProvider extends BaseAuthenticationProvider {
-
+    
     public AuthenticationProvider() {
         super(true);
     }
-
+    
     public AuthenticationProvider(List<String> grantedAuthorities) {
         super(grantedAuthorities);
     }
-
+    
     /**
      * Performs a user login.
      *
@@ -40,11 +41,12 @@ public final class AuthenticationProvider extends BaseAuthenticationProvider {
      */
     @Override
     protected User login(CWFAuthenticationDetails details, String username, String password, String domain) {
-        User user = new User("1");
-        user.setFullName("USER,MOCK");
-        user.setUsername(username);
+        User user = new User();
+        user.setDomainId("1");
+        user.setName(new HumanName("USER,MOCK"));
+        user.setLoginSimple(username);
         details.setDetail("user", user);
         return user;
     }
-
+    
 }
