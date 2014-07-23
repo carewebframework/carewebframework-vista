@@ -18,6 +18,7 @@ import org.carewebframework.cal.api.domain.PatientSearchException;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.fhir.model.type.HumanName;
+import org.carewebframework.fhir.model.type.String_;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
@@ -40,8 +41,8 @@ public class PatientSearchEngine implements IPatientSearch {
         BrokerSession broker = VistAUtil.getBrokerSession();
         
         HumanName name = criteria.getName();
-        String familyName = name == null ? "" : name.getFamily().get(0).asString();
-        String givenName = name == null ? "" : name.getGiven().get(0).asString();
+        String familyName = name == null ? null : concatNames(name.getFamily());
+        String givenName = name == null ? null : concatNames(name.getGiven());
         String mrn = criteria.getMRN();
         String ssn = criteria.getSSN();
         String gender = criteria.getGender();
@@ -70,5 +71,27 @@ public class PatientSearchEngine implements IPatientSearch {
         }
         
         return DomainFactoryRegistry.fetchObjects(Patient.class, ids);
+    }
+    
+    /**
+     * Concatenate all names in list, separating with spaces.
+     * 
+     * @param names
+     * @return
+     */
+    private String concatNames(List<String_> names) {
+        StringBuilder sb = null;
+        
+        for (String_ name : names) {
+            if (sb == null) {
+                sb = new StringBuilder();
+            } else {
+                sb.append(' ');
+            }
+            
+            sb.append(name.getValue());
+        }
+        
+        return sb == null ? null : sb.toString();
     }
 }

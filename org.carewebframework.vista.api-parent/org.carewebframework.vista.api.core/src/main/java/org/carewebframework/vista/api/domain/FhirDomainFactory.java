@@ -16,7 +16,6 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import org.carewebframework.api.domain.IDomainFactory;
-import org.carewebframework.api.domain.IDomainObject;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.fhir.format.xml.XmlParser;
 import org.carewebframework.fhir.model.bundle.AtomEntry;
@@ -28,11 +27,11 @@ import org.carewebframework.vista.api.util.VistAUtil;
 /**
  * Factory for instantiating serialized domain objects from server.
  */
-public class FhirDomainFactory implements IDomainFactory {
+public class FhirDomainFactory implements IDomainFactory<Resource> {
     
-    private static final IDomainFactory instance = new FhirDomainFactory();
+    private static final IDomainFactory<Resource> instance = new FhirDomainFactory();
     
-    public static IDomainFactory getInstance() {
+    public static IDomainFactory<Resource> getInstance() {
         return instance;
     }
     
@@ -57,7 +56,7 @@ public class FhirDomainFactory implements IDomainFactory {
      * Create a new instance of the domain class.
      */
     @Override
-    public <T extends IDomainObject> T newObject(Class<T> clazz) {
+    public Resource newObject(Class<Resource> clazz) {
         try {
             return clazz.newInstance();
         } catch (Exception e) {
@@ -68,43 +67,40 @@ public class FhirDomainFactory implements IDomainFactory {
     /**
      * Fetch an instance of the domain class from the data store.
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public <T extends IDomainObject> T fetchObject(Class<T> clazz, String id) {
+    public Resource fetchObject(Class<Resource> clazz, String id) {
         if (!VistAUtil.validateIEN(id)) {
             return null;
         }
         
         String fhir = VistAUtil.getBrokerSession().callRPC("RGCWFHIR GETBYIEN", getAlias(clazz), id);
-        return (T) parse(fhir).getResource();
+        return parse(fhir).getResource();
     }
     
     /**
      * Fetch a keyed instance of the domain class from the data store.
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends IDomainObject> T fetchObject(Class<T> clazz, String key, String table) {
+    public Resource fetchObject(Class<Resource> clazz, String key, String table) {
         String fhir = VistAUtil.getBrokerSession().callRPC("RGCWFHIR GETBYKEY", getAlias(clazz), key, table);
-        return (T) parse(fhir).getResource();
+        return parse(fhir).getResource();
     }
     
     /**
      * Fetch multiple instances of the domain class from the data store.
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public <T extends IDomainObject> List<T> fetchObjects(Class<T> clazz, String[] ids) {
+    public List<Resource> fetchObjects(Class<Resource> clazz, String[] ids) {
         if (ids == null || ids.length == 0) {
             return Collections.emptyList();
         }
         
         String fhir = VistAUtil.getBrokerSession().callRPC("RGCWFHIR GETBYIEN", getAlias(clazz), ids);
         AtomFeed feed = parse(fhir).getFeed();
-        List<T> list = new ArrayList<T>();
+        List<Resource> list = new ArrayList<Resource>();
         
         for (AtomEntry<?> entry : feed.getEntryList()) {
-            list.add((T) entry.getResource());
+            list.add(entry.getResource());
         }
         
         return list;
@@ -117,7 +113,7 @@ public class FhirDomainFactory implements IDomainFactory {
      * @return The alias for the domain class.
      */
     @Override
-    public String getAlias(Class<? extends IDomainObject> clazz) {
+    public String getAlias(Class<?> clazz) {
         return Resource.class.isAssignableFrom(clazz) ? clazz.getSimpleName().replace("_", "") : null;
     }
     
