@@ -28,7 +28,6 @@ import org.carewebframework.ui.zk.ListUtil;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.ZKUtil;
-import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.FMDate;
 
 import org.zkoss.util.resource.Labels;
@@ -136,7 +135,7 @@ public class ScheduleController extends FrameworkController {
                 String name = FhirUtil.formatName(patient.getName());
                 Identifier mrn = patient.getIdentifier().find("MRN");
                 lblPatient.setValue(name + " (" + (mrn == null ? "" : mrn.getValueSimple()) + ")");
-                chkAssociate.setValue(VistAUtil.parseIEN(patient));
+                chkAssociate.setValue(patient.getDomainId());
             }
         }
         
