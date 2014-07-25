@@ -8,6 +8,9 @@
 	<splitterview orientation="vertical">
 		<splitterpane relative="false" size="47.0">
 			<splitterview orientation="horizontal">
+				<splitterpane relative="false" size="40">
+					<patientPhoto />
+				</splitterpane>
 				<splitterpane relative="true" size="50">
 					<patientHeader color="lightyellow" />
 				</splitterpane>

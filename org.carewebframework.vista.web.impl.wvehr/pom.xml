@@ -105,6 +105,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
+			<artifactId>org.carewebframework.cal.ui.patientphoto</artifactId>
+			<version>${org.carewebframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.smart.ui</artifactId>
 			<version>${org.carewebframework.version}</version>
 		</dependency>
