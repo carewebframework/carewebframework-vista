@@ -10,7 +10,7 @@
 
 	<beans profile="root">
 
-		<bean id="patientSearchEngine" class="org.carewebframework.vista.api.domain.PatientSearchEngine" />
+		<bean id="patientSearchEngine" class="org.carewebframework.vista.api.query.PatientSearchEngine" />
 
 	</beans>
 
