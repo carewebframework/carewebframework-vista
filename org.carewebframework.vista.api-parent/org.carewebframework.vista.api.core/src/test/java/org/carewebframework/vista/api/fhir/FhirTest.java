@@ -26,9 +26,14 @@ public class FhirTest extends CommonTest {
     public void test() throws URISyntaxException {
         FhirClient rest = FhirClient.getInstance();
         rest.registerClientHttpRequestFactory("broker://*", new BrokerRequestFactory());
-        String url = "broker://RGCWFHIR+REST/Patient/1";
-        ResourceOrFeed result = rest.get(url);
+        ResourceOrFeed result = rest.get("broker://RGCWFHIR+REST/Patient/1");
         assertNotNull(result.getResource());
+        result = rest.get("broker://RGCWFHIR+REST/Patient?_id=1,2");
+        assertNotNull(result.getFeed());
+        result = rest.get("broker://RGCWFHIR+REST/Document/1");
+        assertNotNull(result.getFeed());
+        //result = rest.get("broker://RGCWFHIR+REST/Document?_id=1,2");
+        //assertNotNull(result.getFeed());
     }
     
 }
