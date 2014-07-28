@@ -9,19 +9,20 @@
  */
 package org.carewebframework.vista.api.domain;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
 import org.carewebframework.api.domain.IDomainFactory;
+import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.common.FhirClient;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.fhir.format.xml.XmlParser;
-import org.carewebframework.fhir.model.bundle.AtomEntry;
-import org.carewebframework.fhir.model.bundle.AtomFeed;
 import org.carewebframework.fhir.model.core.ResourceOrFeed;
 import org.carewebframework.fhir.model.resource.Resource;
+import org.carewebframework.vista.api.mbroker.BrokerRequestFactory;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
@@ -30,6 +31,12 @@ import org.carewebframework.vista.api.util.VistAUtil;
 public class FhirDomainFactory implements IDomainFactory<Resource> {
     
     private static final IDomainFactory<Resource> instance = new FhirDomainFactory();
+    
+    private static final String REST_ROOT = "broker://RGCWFHIR+REST/";
+    
+    static {
+        FhirClient.getInstance().registerClientHttpRequestFactory("broker://*", new BrokerRequestFactory());
+    }
     
     public static IDomainFactory<Resource> getInstance() {
         return instance;
@@ -73,8 +80,7 @@ public class FhirDomainFactory implements IDomainFactory<Resource> {
             return null;
         }
         
-        String fhir = VistAUtil.getBrokerSession().callRPC("RGCWFHIR GETBYIEN", getAlias(clazz), id);
-        return parse(fhir).getResource();
+        return FhirClient.getInstance().get(REST_ROOT + getAlias(clazz) + "/" + id).getResource();
     }
     
     /**
@@ -95,15 +101,8 @@ public class FhirDomainFactory implements IDomainFactory<Resource> {
             return Collections.emptyList();
         }
         
-        String fhir = VistAUtil.getBrokerSession().callRPC("RGCWFHIR GETBYIEN", getAlias(clazz), ids);
-        AtomFeed feed = parse(fhir).getFeed();
-        List<Resource> list = new ArrayList<Resource>();
-        
-        for (AtomEntry<?> entry : feed.getEntryList()) {
-            list.add(entry.getResource());
-        }
-        
-        return list;
+        String qs = "?_id=" + StrUtil.fromList(Arrays.asList(ids), ",");
+        return FhirUtil.getEntries(FhirClient.getInstance().get(REST_ROOT + getAlias(clazz) + qs).getFeed(), clazz);
     }
     
     /**

@@ -7,14 +7,14 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.api.domain;
+package org.carewebframework.vista.api.query;
 
 import java.util.List;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
-import org.carewebframework.cal.api.domain.IPatientSearch;
-import org.carewebframework.cal.api.domain.PatientSearchCriteria;
-import org.carewebframework.cal.api.domain.PatientSearchException;
+import org.carewebframework.cal.api.query.patient.IPatientSearch;
+import org.carewebframework.cal.api.query.patient.PatientSearchCriteria;
+import org.carewebframework.cal.api.query.patient.PatientSearchException;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.fhir.model.type.HumanName;
