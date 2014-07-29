@@ -152,13 +152,13 @@ public class BrokerRequestFactory implements ClientHttpRequestFactory {
         @Override
         public int getRawStatusCode() throws IOException {
             String status = response.get(0);
-            return Integer.parseInt(status.split("\\ ")[1]);
+            return Integer.parseInt(status.split("\\ ", 3)[1]);
         }
         
         @Override
         public String getStatusText() throws IOException {
             String status = response.get(0);
-            return status.split("\\ ")[2];
+            return status.split("\\ ", 3)[2];
         }
         
         @Override

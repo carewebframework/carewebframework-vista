@@ -9,7 +9,9 @@
  */
 package org.carewebframework.vista.api.fhir;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.net.URISyntaxException;
 
@@ -17,6 +19,9 @@ import org.carewebframework.api.test.CommonTest;
 import org.carewebframework.fhir.common.FhirClient;
 import org.carewebframework.fhir.model.core.ResourceOrFeed;
 import org.carewebframework.vista.api.mbroker.BrokerRequestFactory;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 
 import org.junit.Test;
 
@@ -32,8 +37,21 @@ public class FhirTest extends CommonTest {
         assertNotNull(result.getFeed());
         result = rest.get("broker://RGCWFHIR+REST/Document/1");
         assertNotNull(result.getFeed());
+        testException("broker://RGCWFHIR+REST/ICD9/1", HttpStatus.FORBIDDEN);
+        testException("broker://RGCWFHIR+REST/xxxxxx/1", HttpStatus.NOT_FOUND);
         //result = rest.get("broker://RGCWFHIR+REST/Document?_id=1,2");
         //assertNotNull(result.getFeed());
+    }
+    
+    private void testException(String url, HttpStatus status) {
+        try {
+            FhirClient.getInstance().get(url);
+            fail("Expected exception not thrown.");
+        } catch (HttpClientErrorException e) {
+            assertEquals(status, e.getStatusCode());
+        } catch (Exception e) {
+            fail("Unexpected exception thrown: " + e.getMessage());
+        }
     }
     
 }
