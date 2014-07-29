@@ -37,6 +37,8 @@ public class FhirTest extends CommonTest {
         assertNotNull(result.getFeed());
         result = rest.get("broker://RGCWFHIR+REST/Document/1");
         assertNotNull(result.getFeed());
+        result = rest.get("broker://RGCWFHIR+REST/Condition/1");
+        assertNotNull(result.getResource());
         testException("broker://RGCWFHIR+REST/ICD9/1", HttpStatus.FORBIDDEN);
         testException("broker://RGCWFHIR+REST/xxxxxx/1", HttpStatus.NOT_FOUND);
         //result = rest.get("broker://RGCWFHIR+REST/Document?_id=1,2");
