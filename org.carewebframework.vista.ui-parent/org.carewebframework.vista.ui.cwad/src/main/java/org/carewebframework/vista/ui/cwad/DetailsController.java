@@ -38,36 +38,36 @@ import org.zkoss.zul.Window;
  * Controller for CWAD detail display.
  */
 public class DetailsController extends GenericForwardComposer<Window> implements IPatientContextEvent {
-
+    
     private static final long serialVersionUID = 1L;
-
+    
     private static final String DIALOG = ZKUtil.getResourcePath(DetailsController.class) + "details.zul";
-
+    
     private BrokerSession broker;
-
+    
     private Listbox lstAllergies;
-
+    
     private Listbox lstNotes;
-
+    
     private Window root;
-
+    
     private boolean allowPrint;
-
+    
     private String patientId;
-
+    
     private final AbstractListitemRenderer<String, Object> lstAllergiesRenderer = new AbstractListitemRenderer<String, Object>() {
-
+        
         @Override
         protected void renderItem(Listitem item, String data) {
             createCell(item, StrUtil.piece(data, U, 2));
             createCell(item, StrUtil.piece(data, U, 3));
             createCell(item, StrUtil.piece(data, U, 4));
         }
-
+        
     };
-
+    
     private final AbstractListitemRenderer<String, Object> lstNotesRenderer = new AbstractListitemRenderer<String, Object>() {
-
+        
         @Override
         protected void renderItem(Listitem item, String data) {
             createCell(item, StrUtil.piece(data, U, 2));
@@ -75,15 +75,15 @@ public class DetailsController extends GenericForwardComposer<Window> implements
             FMDate date = FMDate.fromString(StrUtil.piece(data, U, 5));
             createCell(item, DateUtil.formatDate(date));
         }
-
+        
     };
-
+    
     public static void show(boolean allowPrint) {
         Map<Object, Object> args = new HashMap<Object, Object>();
         args.put("allowPrint", allowPrint);
         PopupDialog.popup(DIALOG, args, true, true, true);
     }
-
+    
     @Override
     public void doAfterCompose(Window comp) throws Exception {
         super.doAfterCompose(comp);
@@ -96,66 +96,73 @@ public class DetailsController extends GenericForwardComposer<Window> implements
         broker.callRPCList("RGCWCACV LIST", lst, patientId);
         initListbox(lstNotes, lst, lstNotesRenderer);
     }
-
+    
     private void initListbox(Listbox lb, List<String> data, ListitemRenderer<?> renderer) {
         lb.setItemRenderer(renderer);
         lb.setModel(new ListModelList<String>(data));
     }
-
-    public void onSelect$lstAllergies() {
+    
+    public void onClick$lstAllergies() {
         Listitem item = lstAllergies.getSelectedItem();
-        String s = item.getValue();
-        List<String> lst = broker.callRPCList("RGCWARCV DETAIL", null, patientId, StrUtil.piece(s, U));
-        ReportBox.modal(lst, code2Text('A'), allowPrint);
-
+        
+        if (item != null) {
+            lstAllergies.clearSelection();
+            String s = item.getValue();
+            List<String> lst = broker.callRPCList("RGCWARCV DETAIL", null, patientId, StrUtil.piece(s, U));
+            ReportBox.modal(lst, code2Text('A'), allowPrint);
+        }
     }
-
-    public void onSelect$lstNotes() {
+    
+    public void onClick$lstNotes() {
         Listitem item = lstNotes.getSelectedItem();
-        String s = item.getValue();
-        char c = StrUtil.piece(s, StrUtil.U, 2).charAt(0);
-        List<String> lst = null;
-        String patientId = PatientContext.getActivePatient().getDomainId();
-
-        switch (c) {
-            case 'A':
-                lst = broker.callRPCList("RGCWCACV DETAIL", null, patientId);
-                break;
-
-            case 'F':
-                lst = broker.callRPCList("RGCWCACV PRF", null, patientId, StrUtil.piece(s, StrUtil.U));
-                break;
-
-            default:
-                lst = broker.callRPCList("TIU GET RECORD TEXT", null, StrUtil.piece(s, StrUtil.U));
-                break;
-        }
-
-        if (lst != null && !lst.isEmpty()) {
-            ReportBox.modal(lst, code2Text(c), allowPrint);
+        
+        if (item != null) {
+            lstNotes.clearSelection();
+            String s = item.getValue();
+            char c = StrUtil.piece(s, StrUtil.U, 2).charAt(0);
+            List<String> lst = null;
+            String patientId = PatientContext.getActivePatient().getDomainId();
+            
+            switch (c) {
+                case 'A':
+                    lst = broker.callRPCList("RGCWCACV DETAIL", null, patientId);
+                    break;
+                
+                case 'F':
+                    lst = broker.callRPCList("RGCWCACV PRF", null, patientId, StrUtil.piece(s, StrUtil.U));
+                    break;
+                
+                default:
+                    lst = broker.callRPCList("TIU GET RECORD TEXT", null, StrUtil.piece(s, StrUtil.U));
+                    break;
+            }
+            
+            if (lst != null && !lst.isEmpty()) {
+                ReportBox.modal(lst, code2Text(c), allowPrint);
+            }
         }
     }
-
+    
     private String code2Text(char c) {
         return Labels.getLabel("vistaCWAD.code.label." + c);
     }
-
+    
     @Override
     public String pending(boolean silent) {
         return null;
     }
-
+    
     @Override
     public void committed() {
         root.detach();
     }
-
+    
     @Override
     public void canceled() {
     }
-
+    
     public void setBrokerSession(BrokerSession broker) {
         this.broker = broker;
     }
-
+    
 }
