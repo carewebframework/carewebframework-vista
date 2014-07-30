@@ -16,6 +16,7 @@ import org.carewebframework.cal.api.query.patient.IPatientSearch;
 import org.carewebframework.cal.api.query.patient.PatientSearchCriteria;
 import org.carewebframework.cal.api.query.patient.PatientSearchException;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.core.DateAndTime;
 import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.fhir.model.type.HumanName;
 import org.carewebframework.fhir.model.type.String_;
@@ -46,8 +47,9 @@ public class PatientSearchEngine implements IPatientSearch {
         String mrn = criteria.getMRN();
         String ssn = criteria.getSSN();
         String gender = criteria.getGender();
-        String dob = criteria.getBirth() == null ? "" : new FMDate(criteria.getBirth()).getFMDate();
-        Long dfn = criteria.getId();
+        DateAndTime date = criteria.getBirth();
+        String dob = date == null ? "" : new FMDate(date.toDate()).getFMDate();
+        String dfn = criteria.getId();
         List<String> hits = broker.callRPCList("RGCWPTPS SEARCH", null, 200, familyName, givenName, mrn, ssn, dfn, gender,
             dob);
         
