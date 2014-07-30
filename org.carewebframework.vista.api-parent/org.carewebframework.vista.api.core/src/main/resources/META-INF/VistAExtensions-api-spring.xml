@@ -37,7 +37,9 @@
 		</bean>
 		
 		<!-- Domain factories  -->
-		<bean class="org.carewebframework.vista.api.domain.FhirDomainFactory" />
+		<bean class="org.carewebframework.vista.api.domain.FhirDomainFactory">
+			<property name="serviceRoot" value="${fhir.service.root.url}" />
+		</bean>
 		
 		<bean class="org.carewebframework.vista.api.domain.JsonDomainFactory" />
 

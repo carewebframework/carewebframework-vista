@@ -9,14 +9,13 @@
  */
 package org.carewebframework.vista.api.domain;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
 import org.carewebframework.api.domain.IDomainFactory;
-import org.carewebframework.common.StrUtil;
+import org.carewebframework.common.QueryStringBuilder;
 import org.carewebframework.fhir.common.FhirClient;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.fhir.format.xml.XmlParser;
@@ -32,7 +31,7 @@ public class FhirDomainFactory implements IDomainFactory<Resource> {
     
     private static final IDomainFactory<Resource> instance = new FhirDomainFactory();
     
-    private static final String REST_ROOT = "broker://RGCWFHIR+REST/";
+    private String serviceRoot;
     
     static {
         FhirClient.getInstance().registerClientHttpRequestFactory("broker://*", new BrokerRequestFactory());
@@ -80,7 +79,7 @@ public class FhirDomainFactory implements IDomainFactory<Resource> {
             return null;
         }
         
-        return FhirClient.getInstance().get(REST_ROOT + getAlias(clazz) + "/" + id).getResource();
+        return FhirClient.getInstance().get(serviceRoot + getAlias(clazz) + "/" + id).getResource();
     }
     
     /**
@@ -101,8 +100,9 @@ public class FhirDomainFactory implements IDomainFactory<Resource> {
             return Collections.emptyList();
         }
         
-        String qs = "?_id=" + StrUtil.fromList(Arrays.asList(ids), ",");
-        return FhirUtil.getEntries(FhirClient.getInstance().get(REST_ROOT + getAlias(clazz) + qs).getFeed(), clazz);
+        QueryStringBuilder qs = new QueryStringBuilder();
+        qs.append("_id", (Object[]) ids);
+        return FhirUtil.getEntries(FhirClient.getInstance().get(serviceRoot + getAlias(clazz) + "?" + qs).getFeed(), clazz);
     }
     
     /**
@@ -114,6 +114,24 @@ public class FhirDomainFactory implements IDomainFactory<Resource> {
     @Override
     public String getAlias(Class<?> clazz) {
         return Resource.class.isAssignableFrom(clazz) ? clazz.getSimpleName().replace("_", "") : null;
+    }
+    
+    /**
+     * Returns the FHIR service root.
+     * 
+     * @return FHIR service root.
+     */
+    public String getServiceRoot() {
+        return serviceRoot;
+    }
+    
+    /**
+     * Sets the FHIR service root.
+     * 
+     * @param serviceRoot FHIR service root.
+     */
+    public void setServiceRoot(String serviceRoot) {
+        this.serviceRoot = serviceRoot;
     }
     
 }
