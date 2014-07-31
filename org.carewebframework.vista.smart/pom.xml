@@ -13,7 +13,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.smart.api</artifactId>
+			<artifactId>org.carewebframework.cal.api.smart</artifactId>
 			<version>${org.carewebframework.version}</version>
 		</dependency>
 	</dependencies>

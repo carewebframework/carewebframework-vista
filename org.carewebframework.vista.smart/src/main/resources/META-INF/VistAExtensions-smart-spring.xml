@@ -32,10 +32,4 @@
 
 	</beans>
 
-	<beans profile="desktop">
-
-		<bean id="smart.context.record" parent="smart.context.base"
-			class="org.carewebframework.vista.smart.SmartContextRecord" depends-on="patientContext" />
-
-	</beans>
 </beans>

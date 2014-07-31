@@ -12,54 +12,19 @@ package org.carewebframework.vista.smart;
 import java.util.List;
 import java.util.Map;
 
-import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.resource.Patient;
-import org.carewebframework.smart.SmartAPIBase;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
  * Adapter for VISTA SMART CONTAINER.
  */
-public class SmartAPI extends SmartAPIBase {
+public class SmartAPI extends org.carewebframework.cal.api.smart.SmartAPIBase {
     
     private final String ztyp;
     
-    /**
-     * API entry point. If a record id is specified, verifies that it is the same as the currently
-     * selected patient.
-     *
-     * @param params
-     * @return
-     */
-    public static boolean isValid(Map<String, String> params) {
-        String patientId = params.get("record_id");
-        
-        if (patientId != null) {
-            Patient patient = PatientContext.getActivePatient();
-            
-            if (!patientId.equals(patient.getDomainId())) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
     public SmartAPI(String pattern, String capability, String ztyp) {
-        super(pattern, ContentType.RDF, capability);
+        super(pattern, capability);
         this.ztyp = ztyp;
-    }
-    
-    /**
-     * Validate the request.
-     *
-     * @param params The associated request parameters.
-     * @return True if the request is valid.
-     */
-    @Override
-    public boolean validateRequest(Map<String, String> params) {
-        return isValid(params);
     }
     
     @Override
