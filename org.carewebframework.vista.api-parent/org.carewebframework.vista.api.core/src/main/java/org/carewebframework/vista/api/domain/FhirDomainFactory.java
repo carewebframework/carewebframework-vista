@@ -9,17 +9,8 @@
  */
 package org.carewebframework.vista.api.domain;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-
 import org.carewebframework.api.domain.IDomainFactory;
-import org.carewebframework.common.QueryStringBuilder;
 import org.carewebframework.fhir.common.FhirClient;
-import org.carewebframework.fhir.common.FhirUtil;
-import org.carewebframework.fhir.format.xml.XmlParser;
-import org.carewebframework.fhir.model.core.ResourceOrFeed;
 import org.carewebframework.fhir.model.resource.Resource;
 import org.carewebframework.vista.api.mbroker.BrokerRequestFactory;
 import org.carewebframework.vista.api.util.VistAUtil;
@@ -27,11 +18,9 @@ import org.carewebframework.vista.api.util.VistAUtil;
 /**
  * Factory for instantiating serialized domain objects from server.
  */
-public class FhirDomainFactory implements IDomainFactory<Resource> {
+public class FhirDomainFactory extends org.carewebframework.cal.api.domain.FhirDomainFactory {
     
     private static final IDomainFactory<Resource> instance = new FhirDomainFactory();
-    
-    private String serviceRoot;
     
     static {
         FhirClient.getInstance().registerClientHttpRequestFactory("broker://*", new BrokerRequestFactory());
@@ -41,47 +30,6 @@ public class FhirDomainFactory implements IDomainFactory<Resource> {
         return instance;
     }
     
-    public static ResourceOrFeed parse(String fhir) {
-        try {
-            return new XmlParser().parseGeneral(IOUtils.toInputStream(fhir, FhirUtil.UTF8));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <T extends Resource> T parse(String fhir, Class<T> clazz) {
-        try {
-            return (T) new XmlParser().parse(IOUtils.toInputStream(fhir, FhirUtil.UTF8));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
-    /**
-     * Create a new instance of the domain class.
-     */
-    @Override
-    public Resource newObject(Class<Resource> clazz) {
-        try {
-            return clazz.newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
-    /**
-     * Fetch an instance of the domain class from the data store.
-     */
-    @Override
-    public Resource fetchObject(Class<Resource> clazz, String id) {
-        if (!VistAUtil.validateIEN(id)) {
-            return null;
-        }
-        
-        return FhirClient.getInstance().get(serviceRoot + getAlias(clazz) + "/" + id).getResource();
-    }
-    
     /**
      * Fetch a keyed instance of the domain class from the data store.
      */
@@ -89,49 +37,6 @@ public class FhirDomainFactory implements IDomainFactory<Resource> {
     public Resource fetchObject(Class<Resource> clazz, String key, String table) {
         String fhir = VistAUtil.getBrokerSession().callRPC("RGCWFHIR GETBYKEY", getAlias(clazz), key, table);
         return parse(fhir).getResource();
-    }
-    
-    /**
-     * Fetch multiple instances of the domain class from the data store.
-     */
-    @Override
-    public List<Resource> fetchObjects(Class<Resource> clazz, String[] ids) {
-        if (ids == null || ids.length == 0) {
-            return Collections.emptyList();
-        }
-        
-        QueryStringBuilder qs = new QueryStringBuilder();
-        qs.append("_id", (Object[]) ids);
-        return FhirUtil.getEntries(FhirClient.getInstance().get(serviceRoot + getAlias(clazz) + "?" + qs).getFeed(), clazz);
-    }
-    
-    /**
-     * Returns the alias for the domain class.
-     *
-     * @param clazz Domain class whose alias is sought.
-     * @return The alias for the domain class.
-     */
-    @Override
-    public String getAlias(Class<?> clazz) {
-        return Resource.class.isAssignableFrom(clazz) ? clazz.getSimpleName().replace("_", "") : null;
-    }
-    
-    /**
-     * Returns the FHIR service root.
-     * 
-     * @return FHIR service root.
-     */
-    public String getServiceRoot() {
-        return serviceRoot;
-    }
-    
-    /**
-     * Sets the FHIR service root.
-     * 
-     * @param serviceRoot FHIR service root.
-     */
-    public void setServiceRoot(String serviceRoot) {
-        this.serviceRoot = serviceRoot;
     }
     
 }
