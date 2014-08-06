@@ -7,7 +7,7 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.api.fhir;
+package org.carewebframework.vista.api.domain;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,6 +18,10 @@ import java.net.URISyntaxException;
 import org.carewebframework.api.test.CommonTest;
 import org.carewebframework.fhir.common.FhirClient;
 import org.carewebframework.fhir.model.core.ResourceOrFeed;
+import org.carewebframework.fhir.model.resource.Binary;
+import org.carewebframework.fhir.model.resource.DocumentReference;
+import org.carewebframework.fhir.model.type.Base64Binary;
+import org.carewebframework.fhir.model.type.Uri;
 import org.carewebframework.vista.api.mbroker.BrokerRequestFactory;
 
 import org.springframework.http.HttpStatus;
@@ -27,22 +31,27 @@ import org.junit.Test;
 
 public class FhirTest extends CommonTest {
     
+    private static final String ROOT = "broker://RGCWSER+REST/FHIR/";
+    
     @Test
     public void test() throws URISyntaxException {
         FhirClient rest = FhirClient.getInstance();
         rest.registerClientHttpRequestFactory("broker://*", new BrokerRequestFactory());
-        ResourceOrFeed result = rest.get("broker://RGCWFHIR+REST/Patient/1");
+        ResourceOrFeed result = rest.get(ROOT + "Patient/1");
         assertNotNull(result.getResource());
-        result = rest.get("broker://RGCWFHIR+REST/Patient?_id=1,2");
+        result = rest.get(ROOT + "Patient?_id=1,2");
         assertNotNull(result.getFeed());
-        result = rest.get("broker://RGCWFHIR+REST/Document/1");
-        assertNotNull(result.getFeed());
-        result = rest.get("broker://RGCWFHIR+REST/Condition/1");
+        result = rest.get(ROOT + "DocumentReference/1");
         assertNotNull(result.getResource());
-        testException("broker://RGCWFHIR+REST/ICD9/1", HttpStatus.FORBIDDEN);
-        testException("broker://RGCWFHIR+REST/xxxxxx/1", HttpStatus.NOT_FOUND);
-        //result = rest.get("broker://RGCWFHIR+REST/Document?_id=1,2");
-        //assertNotNull(result.getFeed());
+        Uri uri = ((DocumentReference) result.getResource()).getLocation();
+        result = rest.get(uri.getValue());
+        assertNotNull(result.getResource());
+        Base64Binary text = ((Binary) result.getResource()).getContent();
+        System.out.println(new String(text.getValue()));
+        result = rest.get(ROOT + "Condition/1");
+        assertNotNull(result.getResource());
+        testException(ROOT + "ICD9/1", HttpStatus.FORBIDDEN);
+        testException(ROOT + "xxxxxx/1", HttpStatus.NOT_FOUND);
     }
     
     private void testException(String url, HttpStatus status) {

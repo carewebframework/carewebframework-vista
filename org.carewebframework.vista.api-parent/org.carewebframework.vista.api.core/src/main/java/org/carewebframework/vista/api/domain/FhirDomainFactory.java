@@ -35,7 +35,7 @@ public class FhirDomainFactory extends org.carewebframework.cal.api.domain.FhirD
      */
     @Override
     public Resource fetchObject(Class<Resource> clazz, String key, String table) {
-        String fhir = VistAUtil.getBrokerSession().callRPC("RGCWFHIR GETBYKEY", getAlias(clazz), key, table);
+        String fhir = VistAUtil.getBrokerSession().callRPC("RGCWSER GETBYKEY", "FHIR/" + getAlias(clazz), key, table);
         return parse(fhir).getResource();
     }
     

@@ -24,6 +24,8 @@ public class JsonDomainFactory implements IDomainFactory<IDomainObject> {
     
     private static final IDomainFactory<IDomainObject> instance = new JsonDomainFactory();
     
+    private static final String JSON_PREFIX = "JSON/";
+    
     public static IDomainFactory<IDomainObject> getInstance() {
         return instance;
     }
@@ -50,7 +52,7 @@ public class JsonDomainFactory implements IDomainFactory<IDomainObject> {
             return null;
         }
         
-        String json = VistAUtil.getBrokerSession().callRPC("RGCWFSER GETBYIEN", getAlias(clazz), id);
+        String json = VistAUtil.getBrokerSession().callRPC("RGCWSER GETBYIEN", JSON_PREFIX + getAlias(clazz), id);
         return (IDomainObject) JSONUtil.deserialize(json);
     }
     
@@ -59,7 +61,7 @@ public class JsonDomainFactory implements IDomainFactory<IDomainObject> {
      */
     @Override
     public IDomainObject fetchObject(Class<IDomainObject> clazz, String key, String table) {
-        String json = VistAUtil.getBrokerSession().callRPC("RGCWFSER GETBYKEY", getAlias(clazz), key, table);
+        String json = VistAUtil.getBrokerSession().callRPC("RGCWSER GETBYKEY", JSON_PREFIX + getAlias(clazz), key, table);
         return (IDomainObject) JSONUtil.deserialize(json);
     }
     
@@ -73,7 +75,7 @@ public class JsonDomainFactory implements IDomainFactory<IDomainObject> {
             return Collections.emptyList();
         }
         
-        String json = VistAUtil.getBrokerSession().callRPC("RGCWFSER GETBYIEN", getAlias(clazz), ids);
+        String json = VistAUtil.getBrokerSession().callRPC("RGCWSER GETBYIEN", JSON_PREFIX + getAlias(clazz), ids);
         return (List<IDomainObject>) JSONUtil.deserialize(json);
     }
     
