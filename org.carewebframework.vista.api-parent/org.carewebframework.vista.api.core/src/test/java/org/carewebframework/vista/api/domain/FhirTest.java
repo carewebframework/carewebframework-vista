@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 
 import org.carewebframework.api.test.CommonTest;
 import org.carewebframework.fhir.common.FhirClient;
+import org.carewebframework.fhir.model.core.Extension;
 import org.carewebframework.fhir.model.core.ResourceOrFeed;
 import org.carewebframework.fhir.model.resource.Binary;
 import org.carewebframework.fhir.model.resource.DocumentReference;
@@ -39,6 +40,9 @@ public class FhirTest extends CommonTest {
         rest.registerClientHttpRequestFactory("broker://*", new BrokerRequestFactory());
         ResourceOrFeed result = rest.get(ROOT + "Patient/1");
         assertNotNull(result.getResource());
+        for (Extension extension : result.getResource().getExtensions().iterable("http://hl7.org/fhir/Profile/us-core#race")) {
+            System.out.println(extension.getValue());
+        }
         result = rest.get(ROOT + "Patient?_id=1,2");
         assertNotNull(result.getFeed());
         result = rest.get(ROOT + "DocumentReference/1");
