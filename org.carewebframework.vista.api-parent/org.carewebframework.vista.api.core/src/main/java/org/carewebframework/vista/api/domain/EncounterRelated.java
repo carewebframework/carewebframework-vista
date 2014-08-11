@@ -9,6 +9,7 @@
  */
 package org.carewebframework.vista.api.domain;
 
+import org.carewebframework.cal.api.domain.DomainObject;
 import org.carewebframework.fhir.model.resource.Encounter;
 
 /**
