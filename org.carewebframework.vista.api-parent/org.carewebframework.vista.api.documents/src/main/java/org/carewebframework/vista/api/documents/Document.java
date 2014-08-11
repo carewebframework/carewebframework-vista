@@ -11,14 +11,12 @@ package org.carewebframework.vista.api.documents;
 
 import java.util.Date;
 
-import org.carewebframework.api.domain.DomainObject;
+import org.carewebframework.vista.api.domain.DomainObject;
 
 /**
  * Model object wrapping a clinical document.
  */
 public class Document extends DomainObject implements Comparable<Document> {
-    
-    private static final long serialVersionUID = 1L;
     
     private String authorName;
     

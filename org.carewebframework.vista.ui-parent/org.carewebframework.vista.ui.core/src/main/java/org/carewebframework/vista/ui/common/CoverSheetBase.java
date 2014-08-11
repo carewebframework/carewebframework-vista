@@ -16,8 +16,8 @@ import static org.carewebframework.common.StrUtil.toList;
 
 import java.util.List;
 
-import org.carewebframework.api.domain.IDomainObject;
 import org.carewebframework.cal.api.context.PatientContext;
+import org.carewebframework.fhir.model.core.IReferenceable;
 import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.ui.sharedforms.ListViewForm;
 import org.carewebframework.ui.zk.ReportBox;
@@ -169,7 +169,7 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
     }
     
     protected String getLogicalId(T data) {
-        return data instanceof String ? piece((String) data, U) : data instanceof IDomainObject ? ((IDomainObject) data)
+        return data instanceof String ? piece((String) data, U) : data instanceof IReferenceable ? ((IReferenceable) data)
                 .getLogicalId() : "";
         
     }

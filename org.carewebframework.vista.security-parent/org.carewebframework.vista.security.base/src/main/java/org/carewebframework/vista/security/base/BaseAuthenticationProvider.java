@@ -14,6 +14,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
+import org.carewebframework.cal.api.domain.UserProxy;
 import org.carewebframework.fhir.model.resource.User;
 import org.carewebframework.security.spring.AbstractAuthenticationProvider;
 import org.carewebframework.security.spring.AuthenticationCancelledException;
@@ -61,7 +62,7 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider<U
         BrokerSession brokerSession = VistAUtil.getBrokerSession();
         AuthResult authResult = Security.authenticate(brokerSession, username, password, domain);
         User user = getAuthenticatedUser(brokerSession);
-        details.setDetail("user", user);
+        details.setDetail("user", new UserProxy(user));
         checkAuthResult(authResult, user);
         return user;
     }

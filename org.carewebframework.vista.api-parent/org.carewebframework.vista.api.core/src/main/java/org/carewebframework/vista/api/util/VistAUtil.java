@@ -30,6 +30,10 @@ public class VistAUtil {
         return NumberUtils.toLong(ien);
     }
     
+    public static long parseIEN(Resource resource) {
+        return resource == null ? 0 : parseIEN(resource.getLogicalId());
+    }
+    
     public static long parseIEN(DomainObject object) {
         return object == null ? 0 : parseIEN(object.getLogicalId());
     }

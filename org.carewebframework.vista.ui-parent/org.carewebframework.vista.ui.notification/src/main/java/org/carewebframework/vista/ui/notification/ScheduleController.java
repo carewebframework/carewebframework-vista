@@ -103,7 +103,7 @@ public class ScheduleController extends FrameworkController {
             notification = new ScheduledNotification();
             notification.setPriority(Priority.LOW);
             notification.setDeliveryDate(new FMDate());
-            recipients.add(new Recipient(UserContext.getActiveUser()));
+            recipients.add(new Recipient(UserContext.getActiveUser().getNativeUser()));
         } else {
             service.getScheduledNotificationRecipients(notification, recipients);
         }

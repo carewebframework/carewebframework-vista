@@ -9,19 +9,17 @@
  */
 package org.carewebframework.vista.api.documents;
 
-import org.carewebframework.api.domain.DomainObject;
+import org.carewebframework.vista.api.domain.DomainObject;
 
 /**
  * Model object wrapping a clinical document.
  */
 public class DocumentCategory extends DomainObject implements Comparable<DocumentCategory> {
     
-    private static final long serialVersionUID = 1L;
-    
     private String name;
     
-    public DocumentCategory(String logicalId, String universalId) {
-        super(logicalId, universalId);
+    public DocumentCategory(String logicalId) {
+        super(logicalId);
     }
     
     @Override
@@ -35,16 +33,6 @@ public class DocumentCategory extends DomainObject implements Comparable<Documen
     
     public void setName(String name) {
         this.name = name;
-    }
-    
-    @Override
-    public void setLogicalId(String id) {
-        super.setLogicalId(id);
-    }
-    
-    @Override
-    public void setUniversalId(String id) {
-        super.setUniversalId(id);
     }
     
     @Override

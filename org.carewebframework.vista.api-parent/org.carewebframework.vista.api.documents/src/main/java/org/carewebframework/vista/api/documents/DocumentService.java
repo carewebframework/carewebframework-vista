@@ -45,7 +45,7 @@ public class DocumentService {
         
         for (String result : broker.callRPCList("CIAURPC FILGET", null, 8925.1, null, null, "I $P(^(0),U,4)=\"CL\"")) {
             String[] pcs = StrUtil.split(result, StrUtil.U);
-            DocumentCategory cat = new DocumentCategory(pcs[0], pcs[0]);
+            DocumentCategory cat = new DocumentCategory(pcs[0]);
             cat.setName(pcs[1]);
             categories.add(cat);
         }
