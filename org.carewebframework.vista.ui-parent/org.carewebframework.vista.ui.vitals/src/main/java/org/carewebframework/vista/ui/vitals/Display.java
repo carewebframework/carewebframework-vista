@@ -317,7 +317,7 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
             String pctileRPC = percentiles.get(testid);
             
             if (pctileRPC != null && chkPercentiles.isChecked()) {
-                List<String> pctiles = broker.callRPCList(pctileRPC, null, testid, patient.getDomainId(),
+                List<String> pctiles = broker.callRPCList(pctileRPC, null, testid, patient.getLogicalId(),
                     DateUtils.addDays(dateLow, -3000), DateUtils.addDays(dateHigh, 3000), getDefaultUnits());
                 
                 for (String pctile : pctiles) {
@@ -482,7 +482,7 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
     
     private List<String> doRPC(String rpcName, Date date1, Date date2, List<String> tests) {
         // TODO: need to use encounter location
-        return broker.callRPCList(rpcName, null, patient.getDomainId(), date1, date2, 0, tests, 0, getDefaultUnits());
+        return broker.callRPCList(rpcName, null, patient.getLogicalId(), date1, date2, 0, tests, 0, getDefaultUnits());
     }
     
     private void updatePaging() {

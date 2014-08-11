@@ -13,10 +13,11 @@ import java.util.Date;
 
 import org.apache.commons.lang.math.NumberUtils;
 
-import org.carewebframework.api.domain.IDomainObject;
 import org.carewebframework.api.spring.SpringUtil;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.model.resource.Resource;
+import org.carewebframework.vista.api.domain.DomainObject;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
 
@@ -29,15 +30,19 @@ public class VistAUtil {
         return NumberUtils.toLong(ien);
     }
     
-    public static long parseIEN(IDomainObject object) {
-        return object == null ? 0 : parseIEN(object.getDomainId());
+    public static long parseIEN(DomainObject object) {
+        return object == null ? 0 : parseIEN(object.getLogicalId());
     }
     
     public static boolean validateIEN(String ien) {
         return parseIEN(ien) > 0;
     }
     
-    public static boolean validateIEN(IDomainObject object) {
+    public static boolean validateIEN(Resource resource) {
+        return validateIEN(resource.getLogicalId());
+    }
+    
+    public static boolean validateIEN(DomainObject object) {
         return parseIEN(object) > 0;
     }
     

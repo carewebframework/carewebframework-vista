@@ -46,11 +46,11 @@ public class MainController extends CoverSheetBase<String> {
         
         switch (type) {
             case 'A':
-                getBroker().callRPCList("RGCWCACV DETAIL", result, patient.getDomainId());
+                getBroker().callRPCList("RGCWCACV DETAIL", result, patient.getLogicalId());
                 break;
             
             case 'F':
-                getBroker().callRPCList("RGCWCACV PRF", result, patient.getDomainId(), pcs[0]);
+                getBroker().callRPCList("RGCWCACV PRF", result, patient.getLogicalId(), pcs[0]);
                 break;
             
             default:

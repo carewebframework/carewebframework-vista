@@ -75,7 +75,7 @@ public class NotificationService {
         if (patient == null) {
             lst = broker.callRPCList("RGCWXQ ALRLIST", null);
         } else if (patient != null) {
-            lst = broker.callRPCList("RGCWXQ ALRLIST", null, patient.getDomainId());
+            lst = broker.callRPCList("RGCWXQ ALRLIST", null, patient.getLogicalId());
         }
         
         if (lst != null) {

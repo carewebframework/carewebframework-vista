@@ -42,7 +42,7 @@ public final class AuthenticationProvider extends BaseAuthenticationProvider {
     @Override
     protected User login(CWFAuthenticationDetails details, String username, String password, String domain) {
         User user = new User();
-        user.setDomainId("1");
+        user.setLogicalId("1");
         user.setName(new HumanName("USER,MOCK"));
         user.setLoginSimple(username);
         details.setDetail("user", user);

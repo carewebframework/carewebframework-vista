@@ -135,7 +135,7 @@ public class ScheduleController extends FrameworkController {
                 String name = FhirUtil.formatName(patient.getName());
                 Identifier mrn = patient.getIdentifier().find("MRN");
                 lblPatient.setValue(name + " (" + (mrn == null ? "" : mrn.getValueSimple()) + ")");
-                chkAssociate.setValue(patient.getDomainId());
+                chkAssociate.setValue(patient.getLogicalId());
             }
         }
         

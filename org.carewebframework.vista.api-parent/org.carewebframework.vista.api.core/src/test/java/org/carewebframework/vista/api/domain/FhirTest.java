@@ -16,7 +16,7 @@ import static org.junit.Assert.fail;
 import java.net.URISyntaxException;
 
 import org.carewebframework.api.test.CommonTest;
-import org.carewebframework.fhir.common.FhirClient;
+import org.carewebframework.cal.api.common.FhirClient;
 import org.carewebframework.fhir.model.core.Extension;
 import org.carewebframework.fhir.model.core.ResourceOrFeed;
 import org.carewebframework.fhir.model.resource.Binary;

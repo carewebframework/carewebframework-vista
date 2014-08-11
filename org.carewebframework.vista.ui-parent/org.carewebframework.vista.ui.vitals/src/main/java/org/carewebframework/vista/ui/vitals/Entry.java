@@ -158,7 +158,7 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
         if (enabled && !fetched && patient != null && encounter != null) {
             template.clear();
             fetched = true;
-            VistAUtil.getBrokerSession().callRPCList("RGCWVM TEMPLATE", template, patient.getDomainId(),
+            VistAUtil.getBrokerSession().callRPCList("RGCWVM TEMPLATE", template, patient.getLogicalId(),
                 EncounterUtil.encode(encounter), defaultUnits.ordinal() - 1);
         }
         
@@ -181,9 +181,9 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
         btnOK.setDisabled(false);
         lastDateTime = lastDateTime != null ? lastDateTime : useEncounterDate ? encounter.getPeriod().getStart().getValue()
                 .toDate() : new FMDate();
-                loadGrid();
-                val = getValue(colIndex, rowIndex);
-                moveTo(rangeCol - 1, 1);
+        loadGrid();
+        val = getValue(colIndex, rowIndex);
+        moveTo(rangeCol - 1, 1);
     }
     
     private int getRowCount() {

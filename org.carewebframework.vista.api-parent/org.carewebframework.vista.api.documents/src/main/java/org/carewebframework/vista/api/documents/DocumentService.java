@@ -45,8 +45,7 @@ public class DocumentService {
         
         for (String result : broker.callRPCList("CIAURPC FILGET", null, 8925.1, null, null, "I $P(^(0),U,4)=\"CL\"")) {
             String[] pcs = StrUtil.split(result, StrUtil.U);
-            DocumentCategory cat = new DocumentCategory();
-            cat.setDomainId(pcs[0]);
+            DocumentCategory cat = new DocumentCategory(pcs[0], pcs[0]);
             cat.setName(pcs[1]);
             categories.add(cat);
         }
@@ -87,7 +86,7 @@ public class DocumentService {
     public void retrieveContents(List<Document> documents) {
         for (Document doc : documents) {
             if (doc.getBody() == null) {
-                List<String> body = broker.callRPCList("TIU GET RECORD TEXT", null, doc.getDomainId());
+                List<String> body = broker.callRPCList("TIU GET RECORD TEXT", null, doc.getLogicalId());
                 doc.setBody(StrUtil.fromList(body));
             }
         }
@@ -143,11 +142,11 @@ public class DocumentService {
         List<Document> results = new ArrayList<Document>();
         
         for (DocumentCategory cat : categories) {
-            for (String result : broker.callRPCList("TIU DOCUMENTS BY CONTEXT", null, cat.getDomainId(), 1,
-                patient.getDomainId(), startDate, endDate, user.getDomainId())) {
+            for (String result : broker.callRPCList("TIU DOCUMENTS BY CONTEXT", null, cat.getLogicalId(), 1,
+                patient.getLogicalId(), startDate, endDate, user.getLogicalId())) {
                 String[] pcs = StrUtil.split(result, StrUtil.U, 14);
                 Document doc = new Document();
-                doc.setDomainId(pcs[0]);
+                doc.setLogicalId(pcs[0]);
                 doc.setTitle(pcs[1]);
                 doc.setDateTime(new FMDate(pcs[2]));
                 doc.setAuthorName(StrUtil.piece(pcs[4], ";", 3));

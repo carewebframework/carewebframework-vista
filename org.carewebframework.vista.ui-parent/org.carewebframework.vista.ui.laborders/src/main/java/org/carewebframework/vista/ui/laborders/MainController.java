@@ -52,7 +52,7 @@ public class MainController extends CoverSheetBase<String> {
     @Override
     protected String getDetail(String data) {
         data = piece(data, U);
-        return data.isEmpty() ? null : fromList(getBroker().callRPCList(detailRPC, null, patient.getDomainId(), data, data));
+        return data.isEmpty() ? null : fromList(getBroker().callRPCList(detailRPC, null, patient.getLogicalId(), data, data));
     }
     
     @Override

@@ -67,7 +67,7 @@ public abstract class BaseSecurityService extends AbstractSecurityService {
             
             if (!pcs[2].isEmpty()) {
                 Organization organization = new Organization();
-                organization.setDomainId(pcs[0]);
+                organization.setLogicalId(pcs[0]);
                 organization.setNameSimple(pcs[1]);
                 //organization.setAbbreviation(StringUtils.isEmpty(pcs[3]) ? pcs[1] : pcs[3]);
                 organizations.add(organization);

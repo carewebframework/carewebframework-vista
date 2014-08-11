@@ -69,15 +69,15 @@ public class EncounterUtil {
             return false;
         }
         
-        String s = VistAUtil.getBrokerSession().callRPC("RGCWENCX FETCH", patient.getDomainId(), encode(encounter),
-            getCurrentProvider(encounter).getDomainId(), true);
+        String s = VistAUtil.getBrokerSession().callRPC("RGCWENCX FETCH", patient.getLogicalId(), encode(encounter),
+            getCurrentProvider(encounter).getLogicalId(), true);
         String id = StrUtil.piece(s, StrUtil.U, 6);
         
         if (!VistAUtil.validateIEN(id)) {
             return false;
         }
         
-        encounter.setDomainId(id);
+        encounter.setLogicalId(id);
         return true;
     }
     
@@ -87,7 +87,7 @@ public class EncounterUtil {
         period.setStartSimple(new DateAndTime(date));
         encounter.setPeriod(period);
         Resource_ loc = new Resource_();
-        loc.setReferenceSimple(location.getDomainId());
+        loc.setReferenceSimple(location.getUniversalId());
         encounter.addLocation(new Encounter_Location(loc, period));
         encounter.addType(sc);
         return encounter;

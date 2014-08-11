@@ -308,7 +308,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         service.getNotificationMessage(notification);
         
         if (radAll.isChecked()
-                || (notification.hasPatient() && patient != null && notification.getDfn().equals(patient.getDomainId()))) {
+                || (notification.hasPatient() && patient != null && notification.getDfn().equals(patient.getLogicalId()))) {
             model.add(notification);
         }
         

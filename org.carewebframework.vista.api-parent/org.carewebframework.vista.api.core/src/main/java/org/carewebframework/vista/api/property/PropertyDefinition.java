@@ -14,12 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.carewebframework.api.domain.DomainObject;
 import org.carewebframework.common.JSONUtil;
+import org.carewebframework.vista.api.domain.DomainObject;
 
 public class PropertyDefinition extends DomainObject {
-    
-    private static final long serialVersionUID = 1L;
     
     static {
         JSONUtil.registerAlias("PropDefinition", PropertyDefinition.class);

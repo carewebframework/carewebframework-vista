@@ -26,8 +26,6 @@ import org.carewebframework.fhir.model.type.Resource_;
  */
 public class EncounterProvider extends EncounterRelated {
     
-    private static final long serialVersionUID = 1L;
-    
     private static final CodeableConcept primaryType = new CodeableConcept();
     
     static {
@@ -95,7 +93,7 @@ public class EncounterProvider extends EncounterRelated {
         if (result) {
             Encounter_Participant participant = new Encounter_Participant();
             Resource_ resource = new Resource_();
-            resource.setReferenceSimple(provider.getDomainId());
+            resource.setReferenceSimple(provider.getUniversalId());
             participant.setIndividual(resource);
         }
         
@@ -120,7 +118,7 @@ public class EncounterProvider extends EncounterRelated {
     
     public Encounter_Participant find(Practitioner provider, boolean create) {
         for (Encounter_Participant participant : participants) {
-            if (participant.getIndividual().getReference().equals(provider.getDomainId())) {
+            if (participant.getIndividual().getReference().equals(provider.getUniversalId())) {
                 return participant;
             }
         }
@@ -128,7 +126,7 @@ public class EncounterProvider extends EncounterRelated {
         if (create) {
             Encounter_Participant participant = new Encounter_Participant();
             Resource_ resource = new Resource_();
-            resource.setReferenceSimple(provider.getDomainId());
+            resource.setReferenceSimple(provider.getUniversalId());
             resource.setDisplaySimple(provider.getName().toString());
             participant.setIndividual(resource);
             return participant;

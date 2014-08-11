@@ -49,7 +49,7 @@ public class ProviderUtil {
             
             if (pcs[1].toUpperCase().startsWith(text)) {
                 Practitioner provider = new Practitioner();
-                provider.setDomainId(pcs[0]);
+                provider.setLogicalId(pcs[0]);
                 provider.setName(new HumanName(pcs[1]));
                 hits.add(provider);
             } else {

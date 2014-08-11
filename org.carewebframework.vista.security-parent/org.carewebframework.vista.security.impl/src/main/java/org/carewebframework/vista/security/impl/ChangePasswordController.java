@@ -167,7 +167,7 @@ public class ChangePasswordController extends GenericForwardComposer<Component> 
                 if (result != null && !result.isEmpty()) {
                     showMessage(result);
                 } else if (forced) {
-                    String inst = user.getOrganization().getDomainId();
+                    String inst = user.getOrganization().getReference().getLogicalId();
                     j_username.setValue(inst + "\\" + user.getLogin());
                     Events.sendEvent("onSubmit", panel.getRoot(), null);
                 } else {
@@ -178,7 +178,7 @@ public class ChangePasswordController extends GenericForwardComposer<Component> 
             } catch (Exception e) {
                 Throwable e1 = e.getCause() == null ? e : e.getCause();
                 showMessage(Labels
-                    .getLabel("change.password.dialog.password.change.error", new String[] { e1.getMessage() }));
+                        .getLabel("change.password.dialog.password.change.error", new String[] { e1.getMessage() }));
             }
         }
         j_password.setValue("");

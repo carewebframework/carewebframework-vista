@@ -214,7 +214,7 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
         
         if (hasFlag(flags, EncounterFlag.PROVIDER)
                 && !VistAUtil.getBrokerSession().callRPCBool("RGCWFUSR HASKEYS", "PROVIDER",
-                    EncounterUtil.getEncounterProvider(encounter).getDomainId())) {
+                    EncounterUtil.getEncounterProvider(encounter).getLogicalId())) {
             return Constants.TX_NO_KEY;
         }
         
@@ -419,14 +419,14 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
     }
     
     private boolean initOutpatient() {
-        List<String> data = broker.callRPCList("RGCWENCX VISITLST", null, patient.getDomainId(),
+        List<String> data = broker.callRPCList("RGCWENCX VISITLST", null, patient.getLogicalId(),
             rngDateRange.getStartDate(), rngDateRange.getEndDate());
         populateListbox(lstOutpatient, data);
         return data.size() > 0;
     }
     
     private boolean initInpatient() {
-        List<String> data = broker.callRPCList("RGCWENCX ADMITLST", null, patient.getDomainId());
+        List<String> data = broker.callRPCList("RGCWENCX ADMITLST", null, patient.getLogicalId());
         populateListbox(lstInpatient, data);
         return data.size() > 0;
     }

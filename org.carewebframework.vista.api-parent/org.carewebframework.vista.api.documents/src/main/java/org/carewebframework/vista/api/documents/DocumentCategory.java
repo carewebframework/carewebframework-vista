@@ -17,9 +17,13 @@ import org.carewebframework.api.domain.DomainObject;
 public class DocumentCategory extends DomainObject implements Comparable<DocumentCategory> {
     
     private static final long serialVersionUID = 1L;
-
+    
     private String name;
-
+    
+    public DocumentCategory(String logicalId, String universalId) {
+        super(logicalId, universalId);
+    }
+    
     @Override
     public int compareTo(DocumentCategory cat) {
         return name.compareToIgnoreCase(cat.name);
@@ -32,7 +36,17 @@ public class DocumentCategory extends DomainObject implements Comparable<Documen
     public void setName(String name) {
         this.name = name;
     }
-
+    
+    @Override
+    public void setLogicalId(String id) {
+        super.setLogicalId(id);
+    }
+    
+    @Override
+    public void setUniversalId(String id) {
+        super.setUniversalId(id);
+    }
+    
     @Override
     public String toString() {
         return name;

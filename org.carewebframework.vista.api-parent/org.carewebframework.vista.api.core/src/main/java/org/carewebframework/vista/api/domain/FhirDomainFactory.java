@@ -10,7 +10,7 @@
 package org.carewebframework.vista.api.domain;
 
 import org.carewebframework.api.domain.IDomainFactory;
-import org.carewebframework.fhir.common.FhirClient;
+import org.carewebframework.cal.api.common.FhirClient;
 import org.carewebframework.fhir.model.resource.Resource;
 import org.carewebframework.vista.api.mbroker.BrokerRequestFactory;
 import org.carewebframework.vista.api.util.VistAUtil;

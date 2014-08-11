@@ -110,7 +110,7 @@ public class LoginPaneController extends GenericForwardComposer<Component> {
         }
         final List<Organization> organizations = securityService.getDomains();
         institutionButton.setVisible(organizations.size() > 1);
-        String defaultInst = organizations.size() == 1 ? organizations.get(0).getDomainId() : null;
+        String defaultInst = organizations.size() == 1 ? organizations.get(0).getLogicalId() : null;
         
         if (StringUtils.isEmpty(defaultInst)) {
             defaultInst = (String) session.getAttribute(Constants.DEFAULT_INSTITUTION);
@@ -146,7 +146,7 @@ public class LoginPaneController extends GenericForwardComposer<Component> {
             Identifier abbr = organization.getIdentifier().find("ABBREVIATION");
             li.appendChild(new Listcell(abbr == null ? organization.getNameSimple() : abbr.getValueSimple()));
             
-            if (organization.getDomainId().equals(defaultInst)) {
+            if (organization.getLogicalId().equals(defaultInst)) {
                 li.setSelected(true);
             }
         }
@@ -223,7 +223,7 @@ public class LoginPaneController extends GenericForwardComposer<Component> {
     private void doSubmit() {
         showMessage("");
         final Organization organization = getSelectedOrganization();
-        String instId = organization == null ? null : organization.getDomainId();
+        String instId = organization == null ? null : organization.getLogicalId();
         String username = j_username.getValue().trim();
         final String password = j_password.getValue();
         

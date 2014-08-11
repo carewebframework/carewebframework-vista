@@ -68,7 +68,7 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider<U
     
     @Override
     protected List<String> getAuthorities(User user) {
-        return user == null ? null : VistAUtil.getBrokerSession().callRPCList("RGCWFUSR GETPRIV", null, user.getDomainId());
+        return user == null ? null : VistAUtil.getBrokerSession().callRPCList("RGCWFUSR GETPRIV", null, user.getLogicalId());
     }
     
     private User getAuthenticatedUser(BrokerSession brokerSession) {

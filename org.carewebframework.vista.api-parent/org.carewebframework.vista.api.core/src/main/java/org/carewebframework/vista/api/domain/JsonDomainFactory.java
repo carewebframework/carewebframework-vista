@@ -13,20 +13,19 @@ import java.util.Collections;
 import java.util.List;
 
 import org.carewebframework.api.domain.IDomainFactory;
-import org.carewebframework.api.domain.IDomainObject;
 import org.carewebframework.common.JSONUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
  * Factory for instantiating serialized domain objects from server.
  */
-public class JsonDomainFactory implements IDomainFactory<IDomainObject> {
+public class JsonDomainFactory implements IDomainFactory<Object> {
     
-    private static final IDomainFactory<IDomainObject> instance = new JsonDomainFactory();
+    private static final IDomainFactory<Object> instance = new JsonDomainFactory();
     
     private static final String JSON_PREFIX = "JSON/";
     
-    public static IDomainFactory<IDomainObject> getInstance() {
+    public static IDomainFactory<Object> getInstance() {
         return instance;
     }
     
@@ -35,7 +34,7 @@ public class JsonDomainFactory implements IDomainFactory<IDomainObject> {
     }
     
     @Override
-    public IDomainObject newObject(Class<IDomainObject> clazz) {
+    public Object newObject(Class<Object> clazz) {
         try {
             return clazz.newInstance();
         } catch (Exception e) {
@@ -47,22 +46,22 @@ public class JsonDomainFactory implements IDomainFactory<IDomainObject> {
      * Fetch an instance of the domain class from the data store.
      */
     @Override
-    public IDomainObject fetchObject(Class<IDomainObject> clazz, String id) {
+    public Object fetchObject(Class<Object> clazz, String id) {
         if (!VistAUtil.validateIEN(id)) {
             return null;
         }
         
         String json = VistAUtil.getBrokerSession().callRPC("RGCWSER GETBYIEN", JSON_PREFIX + getAlias(clazz), id);
-        return (IDomainObject) JSONUtil.deserialize(json);
+        return JSONUtil.deserialize(json);
     }
     
     /**
      * Fetch a keyed instance of the domain class from the data store.
      */
     @Override
-    public IDomainObject fetchObject(Class<IDomainObject> clazz, String key, String table) {
+    public Object fetchObject(Class<Object> clazz, String key, String table) {
         String json = VistAUtil.getBrokerSession().callRPC("RGCWSER GETBYKEY", JSON_PREFIX + getAlias(clazz), key, table);
-        return (IDomainObject) JSONUtil.deserialize(json);
+        return JSONUtil.deserialize(json);
     }
     
     /**
@@ -70,13 +69,13 @@ public class JsonDomainFactory implements IDomainFactory<IDomainObject> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<IDomainObject> fetchObjects(Class<IDomainObject> clazz, String[] ids) {
+    public List<Object> fetchObjects(Class<Object> clazz, String[] ids) {
         if (ids == null || ids.length == 0) {
             return Collections.emptyList();
         }
         
         String json = VistAUtil.getBrokerSession().callRPC("RGCWSER GETBYIEN", JSON_PREFIX + getAlias(clazz), ids);
-        return (List<IDomainObject>) JSONUtil.deserialize(json);
+        return (List<Object>) JSONUtil.deserialize(json);
     }
     
     /**

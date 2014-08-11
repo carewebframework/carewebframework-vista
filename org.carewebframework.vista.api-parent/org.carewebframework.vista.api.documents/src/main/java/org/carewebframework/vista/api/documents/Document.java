@@ -19,7 +19,7 @@ import org.carewebframework.api.domain.DomainObject;
 public class Document extends DomainObject implements Comparable<Document> {
     
     private static final long serialVersionUID = 1L;
-
+    
     private String authorName;
     
     private Date dateTime;
@@ -38,59 +38,64 @@ public class Document extends DomainObject implements Comparable<Document> {
     public int compareTo(Document document) {
         return 0;
     }
-
+    
     public String getAuthorName() {
         return authorName;
     }
-
+    
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
     }
-
+    
     public Date getDateTime() {
         return dateTime;
     }
-
+    
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
-
+    
     public String getBody() {
         return body;
     }
-
+    
     public void setBody(String body) {
         this.body = body;
     }
-
+    
     public String getLocationName() {
         return locationName;
     }
-
+    
     public void setLocationName(String locationName) {
         this.locationName = locationName;
     }
-
+    
+    @Override
+    public void setLogicalId(String id) {
+        super.setLogicalId(id);
+    }
+    
     public String getSubject() {
         return subject;
     }
-
+    
     public void setSubject(String subject) {
         this.subject = subject;
     }
-
+    
     public String getTitle() {
         return title;
     }
-
+    
     public void setTitle(String title) {
         this.title = title;
     }
-
+    
     public DocumentCategory getCategory() {
         return category;
     }
-
+    
     public void setCategory(DocumentCategory category) {
         this.category = category;
     }
@@ -98,5 +103,5 @@ public class Document extends DomainObject implements Comparable<Document> {
     public boolean hasCategory(DocumentCategory cat) {
         return category != null && category.equals(cat);
     }
-
+    
 }

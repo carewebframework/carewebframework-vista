@@ -78,14 +78,14 @@ public class LoginWindowController extends GenericForwardComposer<Component> {
         CredentialsExpiredException expired = getException(authError, CredentialsExpiredException.class);
         User user = expired != null && SecurityUtil.getSecurityService().canChangePassword() ? (User) expired
                 .getExtraInformation() : null;
-                String form = user != null ? ChangePasswordController.DIALOG_CHANGE_PASSWORD : LoginPaneController.DIALOG_LOGIN_PANE;
-                Map<Object, Object> args = new HashMap<Object, Object>();
-                args.put("savedRequest", savedRequest);
-                args.put("authError", authError);
-                args.put("user", user);
-                ZKUtil.loadZulPage(form, loginForm, args, this);
-                getPage().setTitle(user != null ? "Change Password" : "Please Login");
-                resetTimer();
+        String form = user != null ? ChangePasswordController.DIALOG_CHANGE_PASSWORD : LoginPaneController.DIALOG_LOGIN_PANE;
+        Map<Object, Object> args = new HashMap<Object, Object>();
+        args.put("savedRequest", savedRequest);
+        args.put("authError", authError);
+        args.put("user", user);
+        ZKUtil.loadZulPage(form, loginForm, args, this);
+        getPage().setTitle(user != null ? "Change Password" : "Please Login");
+        resetTimer();
     }
     
     /**

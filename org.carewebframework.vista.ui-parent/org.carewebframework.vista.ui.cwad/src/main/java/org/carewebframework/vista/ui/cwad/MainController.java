@@ -60,12 +60,12 @@ public class MainController extends PluginController implements IPatientContextE
         }
         
         Patient patient = PatientContext.getActivePatient();
-        String cwad = patient == null ? "" : broker.callRPC("RGCWCACV CWAD", patient.getDomainId());
+        String cwad = patient == null ? "" : broker.callRPC("RGCWCACV CWAD", patient.getLogicalId());
         lblCWAD.setValue(cwad);
         lblPostings.setValue(cwad.isEmpty() ? "No Postings" : "Postings");
         
         if (!noPopup && popupFlags && cwad.contains("F")) {
-            List<String> lst = broker.callRPCList("RGCWCACV PRF", null, patient.getDomainId());
+            List<String> lst = broker.callRPCList("RGCWCACV PRF", null, patient.getLogicalId());
             
             if (!lst.isEmpty()) {
                 dlgFlags = ReportBox.amodal(lst, "Record Flags", allowPrint);
@@ -78,7 +78,7 @@ public class MainController extends PluginController implements IPatientContextE
         }
         
         if (patient != null) {
-            eventId = "GMRA." + patient.getDomainId();
+            eventId = "GMRA." + patient.getLogicalId();
             getEventManager().subscribe(eventId, gmraListener);
         }
     }

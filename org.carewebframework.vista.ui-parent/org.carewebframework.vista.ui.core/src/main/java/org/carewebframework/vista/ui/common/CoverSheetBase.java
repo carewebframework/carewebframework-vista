@@ -149,7 +149,7 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
     
     @Override
     protected void requestData() {
-        asyncHandle = getBroker().callRPCAsync(listRPC, this, patient.getDomainId());
+        asyncHandle = getBroker().callRPCAsync(listRPC, this, patient.getLogicalId());
     }
     
     /**
@@ -168,9 +168,9 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
         }
     }
     
-    protected String getDomainId(T data) {
+    protected String getLogicalId(T data) {
         return data instanceof String ? piece((String) data, U) : data instanceof IDomainObject ? ((IDomainObject) data)
-                .getDomainId() : "";
+                .getLogicalId() : "";
         
     }
     
@@ -181,9 +181,9 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
      * @return
      */
     protected String getDetail(T data) {
-        String ien = getDomainId(data);
+        String ien = getLogicalId(data);
         return detailRPC == null || ien == null || ien.isEmpty() ? null : fromList(getBroker().callRPCList(detailRPC, null,
-            patient.getDomainId(), ien));
+            patient.getLogicalId(), ien));
     }
     
     protected String getError(List<String> list) {
