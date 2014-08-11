@@ -93,7 +93,7 @@ public class EncounterProvider extends EncounterRelated {
         if (result) {
             Encounter_Participant participant = new Encounter_Participant();
             Resource_ resource = new Resource_();
-            resource.setReferenceSimple(provider.getUniversalId());
+            resource.setReferenceSimple(provider.getAbsoluteId());
             participant.setIndividual(resource);
         }
         
@@ -118,7 +118,7 @@ public class EncounterProvider extends EncounterRelated {
     
     public Encounter_Participant find(Practitioner provider, boolean create) {
         for (Encounter_Participant participant : participants) {
-            if (participant.getIndividual().getReference().equals(provider.getUniversalId())) {
+            if (participant.getIndividual().getReference().equals(provider.getAbsoluteId())) {
                 return participant;
             }
         }
@@ -126,7 +126,7 @@ public class EncounterProvider extends EncounterRelated {
         if (create) {
             Encounter_Participant participant = new Encounter_Participant();
             Resource_ resource = new Resource_();
-            resource.setReferenceSimple(provider.getUniversalId());
+            resource.setReferenceSimple(provider.getAbsoluteId());
             resource.setDisplaySimple(provider.getName().toString());
             participant.setIndividual(resource);
             return participant;

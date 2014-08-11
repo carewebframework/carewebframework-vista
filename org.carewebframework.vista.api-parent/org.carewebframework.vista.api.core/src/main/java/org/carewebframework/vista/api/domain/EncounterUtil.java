@@ -87,7 +87,7 @@ public class EncounterUtil {
         period.setStartSimple(new DateAndTime(date));
         encounter.setPeriod(period);
         Resource_ loc = new Resource_();
-        loc.setReferenceSimple(location.getUniversalId());
+        loc.setReferenceSimple(location.getAbsoluteId());
         encounter.addLocation(new Encounter_Location(loc, period));
         encounter.addType(sc);
         return encounter;
