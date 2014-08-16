@@ -81,7 +81,7 @@ public class PropertyService implements IPropertyService, IPropertyDAO {
             Object value = property.isEmpty() ? "@" : "W".equals(property.getDataType()) ? property.getValues() : property
                     .getValue();
             String result = broker.callRPC("RGCWFPAR SETPAR", property.getName(), value, entity == null ? "USR" : entity,
-                    getInstanceId(property));
+                getInstanceId(property));
             
             if (result.contains(StrUtil.U)) {
                 throw new RuntimeException(result);
@@ -111,7 +111,7 @@ public class PropertyService implements IPropertyService, IPropertyDAO {
     @Override
     public PropertyDefinition getDefinition(String propertyName) {
         try {
-            return DomainFactoryRegistry.fetchObject(PropertyDefinition.class, toAlias(propertyName), "8989.51");
+            return DomainFactoryRegistry.fetchObject(PropertyDefinition.class, "@" + toAlias(propertyName));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -56,15 +56,6 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
     }
     
     /**
-     * Fetch a keyed instance of the domain class from the data store.
-     */
-    @Override
-    public Object fetchObject(Class<Object> clazz, String key, String table) {
-        String json = VistAUtil.getBrokerSession().callRPC("RGCWSER GETBYKEY", JSON_PREFIX + getAlias(clazz), key, table);
-        return JSONUtil.deserialize(json);
-    }
-    
-    /**
      * Fetch multiple instances of the domain class from the data store.
      */
     @SuppressWarnings("unchecked")
