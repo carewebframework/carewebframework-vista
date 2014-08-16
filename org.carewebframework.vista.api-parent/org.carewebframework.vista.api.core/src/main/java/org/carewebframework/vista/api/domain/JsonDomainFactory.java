@@ -16,6 +16,8 @@ import org.carewebframework.api.domain.IDomainFactory;
 import org.carewebframework.common.JSONUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Factory for instantiating serialized domain objects from server.
  */
@@ -47,7 +49,7 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
      */
     @Override
     public Object fetchObject(Class<Object> clazz, String id) {
-        if (!VistAUtil.validateIEN(id)) {
+        if (StringUtils.isEmpty(id)) {
             return null;
         }
         
