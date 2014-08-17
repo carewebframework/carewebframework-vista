@@ -179,7 +179,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.vista.smart.api</artifactId>
+			<artifactId>org.carewebframework.vista.api.smart</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- Security -->

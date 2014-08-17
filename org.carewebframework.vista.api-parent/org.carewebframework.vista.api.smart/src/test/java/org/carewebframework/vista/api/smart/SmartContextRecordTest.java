@@ -7,7 +7,7 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.smart;
+package org.carewebframework.vista.api.smart;
 
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.fhir.common.FhirUtil;

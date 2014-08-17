@@ -10,7 +10,7 @@
 	<beans profile="desktop-test">
 
 		<bean id="smart.context.record" parent="smart.context.base"
-			class="org.carewebframework.vista.smart.SmartContextRecordTest" depends-on="patientContext"
+			class="org.carewebframework.vista.api.smart.SmartContextRecordTest" depends-on="patientContext"
 			cwf:override="always" />
 
 	</beans>
