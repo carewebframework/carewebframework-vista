@@ -6,7 +6,7 @@
 	<window width="550px" height="500px" mode="modal">
 		<panel title="Select an Encounter" height="100%" width="100%"
 			border="normal"
-			use="gov.va.cwf.ui.context.encounter.EncounterSelection">
+			use="org.carewebframework.vista.ui.context.encounter.EncounterSelection">
 			<panelchildren>
 				<tabbox id="tabbox" vflex="1">
 					<tabs>

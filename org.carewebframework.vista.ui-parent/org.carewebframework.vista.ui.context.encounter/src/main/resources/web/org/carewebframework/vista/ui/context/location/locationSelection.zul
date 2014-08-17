@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 	<panel title="Select Your Location" width="400px" border="normal"
-		use="gov.va.cwf.ui.context.location.LocationSelection">
+		use="org.carewebframework.vista.ui.context.location.LocationSelection">
 		<panelchildren>
 			<div width="100%" height="100%">
 				Enter Location

@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 	<borderlayout
-		use="gov.va.cwf.ui.context.encounter.ProviderSelection"
+		use="org.carewebframework.vista.ui.context.encounter.ProviderSelection"
 		height="300px">
 		<north title="Encounter Providers" style="text-align:center">
 		</north>

@@ -6,7 +6,7 @@
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 <window title="Acknowledge Warnings" width="700px"
-	use="gov.va.cwf.ui.esig.IssueViewer">
+	use="org.carewebframework.vista.ui.esig.IssueViewer">
 	<panel width="100%" height="100%">
 		<panelchildren style="overflow:auto">
 			<grid id="grid" sclass="esig-grid-issues" fixedLayout="true" width="99%"
