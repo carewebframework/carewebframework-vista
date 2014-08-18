@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.carewebframework</groupId>
-		<artifactId>org.carewebframework.vista-parent</artifactId>
+		<artifactId>org.carewebframework.vista.web-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>org.carewebframework.vista.testharness</artifactId>
+	<artifactId>org.carewebframework.vista.web.testharness</artifactId>
 	<packaging>war</packaging>
 	<name>TestHarness</name>
 	<properties>

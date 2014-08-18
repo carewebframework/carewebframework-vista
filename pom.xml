@@ -43,8 +43,7 @@
 		<module>org.carewebframework.vista.api-parent</module>
 		<module>org.carewebframework.vista.security-parent</module>
 		<module>org.carewebframework.vista.ui-parent</module>
-		<module>org.carewebframework.vista.testharness</module>
-		<module>org.carewebframework.vista.web.wvehr</module>
+		<module>org.carewebframework.vista.web-parent</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
