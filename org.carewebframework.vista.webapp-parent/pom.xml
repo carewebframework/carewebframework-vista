@@ -8,12 +8,12 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>org.carewebframework.vista.web-parent</artifactId>
+	<artifactId>org.carewebframework.vista.webapp-parent</artifactId>
 	<packaging>pom</packaging>
 	<description>Web Application POM Aggregator</description>
 	
 	<modules>
-		<module>org.carewebframework.vista.web.testharness</module>
-		<module>org.carewebframework.vista.web.wvehr</module>
+		<module>org.carewebframework.vista.webapp.testharness</module>
+		<module>org.carewebframework.vista.webapp.wvehr</module>
 	</modules>
 </project>
