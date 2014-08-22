@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
 
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.model.resource.Organization;
-import org.carewebframework.fhir.model.type.Identifier;
+import org.carewebframework.fhir.model.type.IdentifierType;
 import org.carewebframework.ui.FrameworkWebSupport;
 import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
@@ -143,7 +143,7 @@ public class LoginPaneController extends GenericForwardComposer<Component> {
             final Listitem li = new Listitem();
             li.setValue(organization);
             j_domain.appendChild(li);
-            Identifier abbr = organization.getIdentifier().find("ABBREVIATION");
+            IdentifierType abbr = organization.getIdentifier().find("ABBREVIATION");
             li.appendChild(new Listcell(abbr == null ? organization.getNameSimple() : abbr.getValueSimple()));
             
             if (organization.getLogicalId().equals(defaultInst)) {

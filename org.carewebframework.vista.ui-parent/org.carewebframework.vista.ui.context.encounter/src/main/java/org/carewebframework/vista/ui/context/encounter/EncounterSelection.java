@@ -28,7 +28,7 @@ import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.model.resource.Encounter;
 import org.carewebframework.fhir.model.resource.Location;
 import org.carewebframework.fhir.model.resource.Patient;
-import org.carewebframework.fhir.model.type.CodeableConcept;
+import org.carewebframework.fhir.model.type.CodeableConceptType;
 import org.carewebframework.ui.zk.DateRangePicker;
 import org.carewebframework.ui.zk.DateTimebox;
 import org.carewebframework.ui.zk.PopupDialog;
@@ -348,7 +348,7 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
             Location location = locid != null ? DomainFactoryRegistry.fetchObject(Location.class, locid) : null;
             Comboitem cboitem = cboServiceCategory.getSelectedItem();
             Date date = datEncounter.getDate();
-            CodeableConcept sc = EncounterUtil.createServiceCategory((String) cboitem.getValue(), cboitem.getLabel(),
+            CodeableConceptType sc = EncounterUtil.createServiceCategory((String) cboitem.getValue(), cboitem.getLabel(),
                 cboitem.getTooltiptext());
             encounter = EncounterUtil.create(date, location, sc);
             

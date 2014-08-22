@@ -21,10 +21,10 @@ import org.carewebframework.fhir.model.resource.Encounter_Location;
 import org.carewebframework.fhir.model.resource.Location;
 import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.fhir.model.resource.Practitioner;
-import org.carewebframework.fhir.model.type.CodeableConcept;
-import org.carewebframework.fhir.model.type.Coding;
-import org.carewebframework.fhir.model.type.Period;
-import org.carewebframework.fhir.model.type.Resource_;
+import org.carewebframework.fhir.model.type.CodeableConceptType;
+import org.carewebframework.fhir.model.type.CodingType;
+import org.carewebframework.fhir.model.type.PeriodType;
+import org.carewebframework.fhir.model.type.ResourceType;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
@@ -81,22 +81,22 @@ public class EncounterUtil {
         return true;
     }
     
-    public static Encounter create(Date date, Location location, CodeableConcept sc) {
+    public static Encounter create(Date date, Location location, CodeableConceptType sc) {
         Encounter encounter = new Encounter();
-        Period period = new Period();
+        PeriodType period = new PeriodType();
         period.setStartSimple(new DateAndTime(date));
         encounter.setPeriod(period);
-        Resource_ loc = new Resource_();
+        ResourceType loc = new ResourceType();
         loc.setReferenceSimple(location.getAbsoluteId());
         encounter.addLocation(new Encounter_Location(loc, period));
         encounter.addType(sc);
         return encounter;
     }
     
-    public static CodeableConcept createServiceCategory(String sc, String shortDx, String longDx) {
-        CodeableConcept cpt = new CodeableConcept();
+    public static CodeableConceptType createServiceCategory(String sc, String shortDx, String longDx) {
+        CodeableConceptType cpt = new CodeableConceptType();
         cpt.setTextSimple(longDx);
-        Coding coding = new Coding();
+        CodingType coding = new CodingType();
         coding.setCodeSimple(sc);
         coding.setDisplaySimple(shortDx);
         cpt.addCoding(coding);
@@ -104,8 +104,8 @@ public class EncounterUtil {
     }
     
     public static String getServiceCategory(Encounter encounter) {
-        CodeableConcept cpt = encounter == null ? null : FhirUtil.getFirst(encounter.getType());
-        Coding coding = cpt == null ? null : FhirUtil.getFirst(cpt.getCoding());
+        CodeableConceptType cpt = encounter == null ? null : FhirUtil.getFirst(encounter.getType());
+        CodingType coding = cpt == null ? null : FhirUtil.getFirst(cpt.getCoding());
         return coding == null ? null : coding.getCodeSimple();
     }
     

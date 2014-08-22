@@ -21,8 +21,8 @@ import org.carewebframework.fhir.model.core.Extension;
 import org.carewebframework.fhir.model.core.ResourceOrFeed;
 import org.carewebframework.fhir.model.resource.Binary;
 import org.carewebframework.fhir.model.resource.DocumentReference;
-import org.carewebframework.fhir.model.type.Base64Binary;
-import org.carewebframework.fhir.model.type.Uri;
+import org.carewebframework.fhir.model.type.Base64BinaryType;
+import org.carewebframework.fhir.model.type.UriType;
 import org.carewebframework.vista.api.mbroker.BrokerRequestFactory;
 
 import org.springframework.http.HttpStatus;
@@ -47,10 +47,10 @@ public class FhirTest extends CommonTest {
         assertNotNull(result.getFeed());
         result = rest.get(ROOT + "DocumentReference/1");
         assertNotNull(result.getResource());
-        Uri uri = ((DocumentReference) result.getResource()).getLocation();
+        UriType uri = ((DocumentReference) result.getResource()).getLocation();
         result = rest.get(uri.getValue());
         assertNotNull(result.getResource());
-        Base64Binary text = ((Binary) result.getResource()).getContent();
+        Base64BinaryType text = ((Binary) result.getResource()).getContent();
         System.out.println(new String(text.getValue()));
         result = rest.get(ROOT + "Condition/1");
         assertNotNull(result.getResource());

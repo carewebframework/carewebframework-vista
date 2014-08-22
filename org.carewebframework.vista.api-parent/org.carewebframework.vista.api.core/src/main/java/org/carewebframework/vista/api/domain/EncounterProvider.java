@@ -17,20 +17,20 @@ import org.carewebframework.fhir.model.core.Element;
 import org.carewebframework.fhir.model.resource.Encounter;
 import org.carewebframework.fhir.model.resource.Encounter_Participant;
 import org.carewebframework.fhir.model.resource.Practitioner;
-import org.carewebframework.fhir.model.type.CodeableConcept;
-import org.carewebframework.fhir.model.type.Coding;
-import org.carewebframework.fhir.model.type.Resource_;
+import org.carewebframework.fhir.model.type.CodeableConceptType;
+import org.carewebframework.fhir.model.type.CodingType;
+import org.carewebframework.fhir.model.type.ResourceType;
 
 /**
  * Abstract base class for encounter-associated domain objects.
  */
 public class EncounterProvider extends EncounterRelated {
     
-    private static final CodeableConcept primaryType = new CodeableConcept();
+    private static final CodeableConceptType primaryType = new CodeableConceptType();
     
     static {
         primaryType.setTextSimple("Primary");
-        Coding coding = new Coding();
+        CodingType coding = new CodingType();
         coding.setCodeSimple("P");
         primaryType.addCoding(coding);
     }
@@ -92,7 +92,7 @@ public class EncounterProvider extends EncounterRelated {
         
         if (result) {
             Encounter_Participant participant = new Encounter_Participant();
-            Resource_ resource = new Resource_();
+            ResourceType resource = new ResourceType();
             resource.setReferenceSimple(provider.getAbsoluteId());
             participant.setIndividual(resource);
         }
@@ -125,7 +125,7 @@ public class EncounterProvider extends EncounterRelated {
         
         if (create) {
             Encounter_Participant participant = new Encounter_Participant();
-            Resource_ resource = new Resource_();
+            ResourceType resource = new ResourceType();
             resource.setReferenceSimple(provider.getAbsoluteId());
             resource.setDisplaySimple(provider.getName().toString());
             participant.setIndividual(resource);
@@ -150,7 +150,7 @@ public class EncounterProvider extends EncounterRelated {
             return null;
         }
         
-        Resource_ resource = participant.getIndividual();
+        ResourceType resource = participant.getIndividual();
         Element ele = resource.getReferenceTarget();
         return ele instanceof Practitioner ? (Practitioner) ele : null;
     }

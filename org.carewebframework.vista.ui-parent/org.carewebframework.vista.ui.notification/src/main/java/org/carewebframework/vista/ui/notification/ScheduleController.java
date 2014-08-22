@@ -21,7 +21,7 @@ import org.carewebframework.cal.api.context.UserContext;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.fhir.model.resource.Patient;
-import org.carewebframework.fhir.model.type.Identifier;
+import org.carewebframework.fhir.model.type.IdentifierType;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.DateTimebox;
 import org.carewebframework.ui.zk.ListUtil;
@@ -133,7 +133,7 @@ public class ScheduleController extends FrameworkController {
                 pnlAssociate.setVisible(false);
             } else {
                 String name = FhirUtil.formatName(patient.getName());
-                Identifier mrn = patient.getIdentifier().find("MRN");
+                IdentifierType mrn = patient.getIdentifier().find("MRN");
                 lblPatient.setValue(name + " (" + (mrn == null ? "" : mrn.getValueSimple()) + ")");
                 chkAssociate.setValue(patient.getLogicalId());
             }

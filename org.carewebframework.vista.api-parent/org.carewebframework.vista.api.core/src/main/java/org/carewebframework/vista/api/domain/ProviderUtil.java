@@ -15,7 +15,7 @@ import java.util.List;
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.model.resource.Practitioner;
-import org.carewebframework.fhir.model.type.HumanName;
+import org.carewebframework.fhir.model.type.HumanNameType;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
@@ -50,7 +50,7 @@ public class ProviderUtil {
             if (pcs[1].toUpperCase().startsWith(text)) {
                 Practitioner provider = new Practitioner();
                 provider.setLogicalId(pcs[0]);
-                provider.setName(new HumanName(pcs[1]));
+                provider.setName(new HumanNameType(pcs[1]));
                 hits.add(provider);
             } else {
                 break;

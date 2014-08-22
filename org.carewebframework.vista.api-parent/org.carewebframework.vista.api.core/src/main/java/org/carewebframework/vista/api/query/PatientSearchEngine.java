@@ -18,8 +18,8 @@ import org.carewebframework.cal.api.query.patient.PatientSearchException;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.model.core.DateAndTime;
 import org.carewebframework.fhir.model.resource.Patient;
-import org.carewebframework.fhir.model.type.HumanName;
-import org.carewebframework.fhir.model.type.String_;
+import org.carewebframework.fhir.model.type.HumanNameType;
+import org.carewebframework.fhir.model.type.StringType;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
@@ -41,7 +41,7 @@ public class PatientSearchEngine implements IPatientSearch {
     public List<Patient> search(PatientSearchCriteria criteria) {
         BrokerSession broker = VistAUtil.getBrokerSession();
         
-        HumanName name = criteria.getName();
+        HumanNameType name = criteria.getName();
         String familyName = name == null ? null : concatNames(name.getFamily());
         String givenName = name == null ? null : concatNames(name.getGiven());
         String mrn = criteria.getMRN();
@@ -81,10 +81,10 @@ public class PatientSearchEngine implements IPatientSearch {
      * @param names
      * @return
      */
-    private String concatNames(List<String_> names) {
+    private String concatNames(List<StringType> names) {
         StringBuilder sb = null;
         
-        for (String_ name : names) {
+        for (StringType name : names) {
             if (sb == null) {
                 sb = new StringBuilder();
             } else {
