@@ -40,7 +40,7 @@ public class FhirTest extends CommonTest {
         rest.registerClientHttpRequestFactory("broker://*", new BrokerRequestFactory());
         ResourceOrFeed result = rest.get(ROOT + "Patient/1");
         assertNotNull(result.getResource());
-        for (Extension extension : result.getResource().getExtensions().iterable("http://hl7.org/fhir/Profile/us-core#race")) {
+        for (Extension extension : result.getResource().getExtension().iterable("http://hl7.org/fhir/Profile/us-core#race")) {
             System.out.println(extension.getValue());
         }
         result = rest.get(ROOT + "Patient?_id=1,2");

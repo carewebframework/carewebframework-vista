@@ -16,7 +16,7 @@ import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.fhir.model.core.DateAndTime;
 import org.carewebframework.fhir.model.resource.Encounter;
-import org.carewebframework.fhir.model.resource.Encounter.EncounterStatus;
+import org.carewebframework.fhir.model.resource.Encounter.EncounterStatusType;
 import org.carewebframework.fhir.model.resource.Encounter_Location;
 import org.carewebframework.fhir.model.resource.Location;
 import org.carewebframework.fhir.model.resource.Patient;
@@ -120,7 +120,7 @@ public class EncounterUtil {
     }
     
     public static boolean isLocked(Encounter encounter) {
-        return encounter.getStatusSimple() == EncounterStatus.finished;
+        return encounter.getStatusSimple() == EncounterStatusType.Value.finished;
     }
     
     public static boolean isPrepared(Encounter encounter) {

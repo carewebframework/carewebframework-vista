@@ -26,7 +26,7 @@ import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.model.resource.Encounter;
-import org.carewebframework.fhir.model.resource.Encounter.EncounterStatus;
+import org.carewebframework.fhir.model.resource.Encounter.EncounterStatusType;
 import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.shell.plugins.IPluginEvent;
 import org.carewebframework.shell.plugins.PluginContainer;
@@ -175,7 +175,7 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
             return;
         }
         
-        imgLocked.setVisible(encounter != null && encounter.getStatusSimple() == EncounterStatus.finished);
+        imgLocked.setVisible(encounter != null && encounter.getStatusSimple() == EncounterStatusType.Value.finished);
         btnNew.setDisabled(!imgLocked.isVisible());
         btnCancel.setDisabled(btnNew.isDisabled());
         btnOK.setDisabled(false);
