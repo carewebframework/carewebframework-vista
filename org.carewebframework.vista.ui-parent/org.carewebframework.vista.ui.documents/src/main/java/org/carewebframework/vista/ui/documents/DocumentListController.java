@@ -201,20 +201,26 @@ public class DocumentListController extends AbstractListController<Document> {
      * Double-clicking enters document view mode.
      *
      * @param event
-     * @throws Exception
      */
-    public void onDoubleClick$listBox(Event event) throws Exception {
+    public void onDoubleClick$listBox(Event event) {
         Component cmpt = ZKUtil.getEventOrigin(event).getTarget();
         
         if (cmpt instanceof Listitem) {
-            Listitem item = (Listitem) cmpt;
-            
-            if (item != null) {
-                item.setSelected(true);
-            }
-            
-            Events.echoEvent(Events.ON_CLICK, btnView, null);
+            Events.postEvent("onDeferredOpen", listBox, cmpt);
         }
+    }
+    
+    /**
+     * Opening the display view after a double-click is deferred to avoid anomalies with selection
+     * of the associated list item.
+     * 
+     * @param event
+     */
+    public void onDeferredOpen$listBox(Event event) {
+        Listitem item = (Listitem) ZKUtil.getEventOrigin(event).getData();
+        item.setSelected(true);
+        onSelect$listBox();
+        onClick$btnView();
     }
     
     /**
