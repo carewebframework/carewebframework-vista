@@ -13,6 +13,8 @@ import static org.carewebframework.common.StrUtil.U;
 
 import java.util.Arrays;
 
+import org.apache.commons.lang.math.NumberUtils;
+
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.mbroker.FMDate;
 
@@ -111,7 +113,7 @@ public class Notification extends AbstractNotification {
      */
     @Override
     protected void setDfn(String dfn) {
-        this.dfn = dfn;
+        this.dfn = NumberUtils.toLong(dfn) > 0 ? dfn : null;
     }
     
     /**
