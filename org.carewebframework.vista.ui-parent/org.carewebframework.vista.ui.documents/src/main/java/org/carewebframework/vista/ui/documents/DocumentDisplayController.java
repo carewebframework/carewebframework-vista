@@ -125,25 +125,25 @@ public class DocumentDisplayController extends AbstractListController<Document> 
     }
     
     /**
-     * Sets the documents to be displayed.
+     * Sets the documents to be displayed and updates the displayed count.
      *
      * @param documents
      */
     protected void setDocuments(List<Document> documents) {
         this.documents = documents;
+        int docCount = documents == null ? 0 : documents.size();
+        lblInfo.setValue(docCount + " document(s)");
         refresh();
     }
     
     /**
-     * Updates the document count when the model changes.
+     * Updates the header selector when the model changes.
      */
     @Override
     protected void setListModel(ListModel<Document> model) {
         super.setListModel(model);
         cboHeader.setModel(model);
         cboHeader.setText(null);
-        int docCount = model == null ? 0 : model.getSize();
-        lblInfo.setValue(docCount + " document(s)");
     }
     
 }
