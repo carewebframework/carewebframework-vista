@@ -24,7 +24,7 @@
 				<cwp:property name="Fixed Category" id="fixedFilter" type="enum" 
 					description="To restrict documents to a specific category, set this to the category name." >
 					<cwp:config>
-						<cwp:entry key="bean">documentsCategoryEnumerator</cwp:entry>
+						<cwp:entry key="bean">vistaDocumentsCategoryEnumerator</cwp:entry>
 					</cwp:config>
 				</cwp:property>
 			</cwp:serialization>
@@ -55,14 +55,14 @@
 		<bean id="vistaDocumentsListController"
 			class="org.carewebframework.vista.ui.documents.DocumentListController"
 			scope="prototype">
-			<constructor-arg ref="documentService" />
+			<constructor-arg ref="vistaDocumentService" />
 			<property name="itemRenderer" ref="vistaDocumentsDocumentListRenderer" />
 		</bean>
 
 		<bean id="vistaDocumentsDisplayController"
 			class="org.carewebframework.vista.ui.documents.DocumentDisplayController"
 			scope="prototype">
-			<constructor-arg ref="documentService" />
+			<constructor-arg ref="vistaDocumentService" />
 			<property name="itemRenderer" ref="vistaDocumentsDocumentDisplayRenderer" />
 		</bean>
 

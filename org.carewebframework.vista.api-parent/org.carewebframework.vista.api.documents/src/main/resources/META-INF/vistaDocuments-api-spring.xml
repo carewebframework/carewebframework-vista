@@ -6,12 +6,12 @@
 
 	<beans profile="root">
 
-		<bean id="documentService"
+		<bean id="vistaDocumentService"
 			class="org.carewebframework.vista.api.documents.DocumentService">
 			<constructor-arg ref="brokerSession" />
 		</bean>
 
-		<bean id="documentsCategoryEnumerator"
+		<bean id="vistaDocumentsCategoryEnumerator"
 			class="org.carewebframework.vista.api.documents.DocumentCategoryEnumerator" />
 
 

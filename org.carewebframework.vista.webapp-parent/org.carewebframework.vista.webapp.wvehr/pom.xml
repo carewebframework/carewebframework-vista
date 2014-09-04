@@ -115,6 +115,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
+			<artifactId>org.carewebframework.cal.ui.documents</artifactId>
+			<version>${org.carewebframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.smart.ui</artifactId>
 			<version>${org.carewebframework.version}</version>
 		</dependency>
@@ -151,11 +156,13 @@
 			<artifactId>org.carewebframework.vista.ui.cwad</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!--  
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.vista.ui.documents</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.vista.ui.laborders</artifactId>

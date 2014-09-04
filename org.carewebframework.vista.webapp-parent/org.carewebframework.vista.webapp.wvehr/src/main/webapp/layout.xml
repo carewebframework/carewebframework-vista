@@ -41,8 +41,8 @@
 								captionStyle="HIDDEN" deferUpdate="true" horizontal="true"
 								layout="50:0:true;0:100%" showDetailPane="false" />
 						</treepane>
-						<treepane label="Documents">
-							<vistaDocuments />
+						<treepane label="Documents (FHIR)">
+							<calDocuments />
 						</treepane>
 						<treepane label="Lab Orders">
 							<vistaLabOrders allowPrint="false" caption="Lab Orders"
