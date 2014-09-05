@@ -98,7 +98,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
                 case ADD:
                     addNotification(eventData);
                     break;
-                    
+                
                 case INFO:
                     notification = findNotification(eventData);
                     
@@ -108,11 +108,11 @@ public class MainController extends CaptionedForm implements IPatientContextEven
                     }
                     
                     break;
-                    
+                
                 case REFRESH:
                     refresh();
                     break;
-                    
+                
                 case DELETE:
                     notification = findNotification(eventData);
                     
@@ -224,13 +224,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     @Override
     public void refresh() {
         lstNotification.setModel((ListModel<?>) null);
-        
-        if (radAll.isChecked() || patient != null) {
-            service.getNotifications(radAll.isChecked() ? null : patient, model);
-        } else {
-            model.clear();
-        }
-        
+        service.getNotifications(radAll.isChecked() ? null : patient, model);
         lstNotification.setModel(model);
         Clients.resize(lstNotification);
         updateControls(false);
@@ -314,8 +308,8 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         
         if (alertThreshold != null && notification.getPriority().ordinal() <= alertThreshold.ordinal()) {
             MessageInfo mi = new MessageInfo(notification.getDisplayText(), "New Notification", notification.getPriority()
-                .getColor(), alertDuration * 1000, null, "cwf.fireLocalEvent('ALERT.INFO', '"
-                        + notification.getAlertId() + "');");
+                    .getColor(), alertDuration * 1000, null, "cwf.fireLocalEvent('ALERT.INFO', '"
+                    + notification.getAlertId() + "');");
             getEventManager().fireLocalEvent(MessageWindow.EVENT_SHOW, mi);
         }
     }
@@ -397,7 +391,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
                         case ALL:
                             silent = true;
                             break;
-                            
+                        
                         case CANCEL:
                             break LOOP;
                     }
