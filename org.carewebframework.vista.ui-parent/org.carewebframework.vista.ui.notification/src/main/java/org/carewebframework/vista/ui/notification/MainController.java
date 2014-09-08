@@ -452,7 +452,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
     /**
      * Process a double-clicked notification.
      *
-     * @param event
+     * @param event The process item event.
      */
     public void onProcessItem$lstNotification(Event event) {
         event = ZKUtil.getEventOrigin(event);

@@ -13,8 +13,6 @@ import java.util.List;
 
 /**
  * Filter used to subselect items returned from an esig list.
- * 
- * 
  */
 public class ESigFilter {
     
@@ -44,7 +42,7 @@ public class ESigFilter {
     /**
      * Returns true if the item matches the selection filter.
      * 
-     * @param item
+     * @param item The esignature item.
      * @return True if the item matches the selection filter.
      */
     public boolean matches(ESigItem item) {

@@ -16,22 +16,22 @@ import java.io.IOException;
  * A response received from the host server.
  */
 public class Response {
-
+    
     public static enum ResponseType {
         ACK, ERROR, ASYNC, EVENT
     };
-
+    
     private ResponseType responseType;
-
+    
     private final String data;
-
+    
     private byte sequenceId = 0;
-
+    
     /**
      * Creates a response from an input stream.
      * 
      * @param stream The input stream.
-     * @throws IOException
+     * @throws IOException An IO exception.
      */
     public Response(DataInputStream stream) throws IOException {
         int bufsize = 100;
@@ -40,21 +40,21 @@ public class Response {
         int bytesRead;
         boolean eod = false;
         int start = 2;
-
+        
         while (!eod && (bytesRead = stream.read(temp)) > 0) {
             eod = temp[bytesRead - 1] == Constants.EOD;
             buffer.put(temp, start, eod ? bytesRead - 1 : bytesRead);
-
+            
             if (start != 0) {
                 start = 0;
                 sequenceId = temp[0];
                 responseType = ResponseType.values()[temp[1]];
             }
         }
-
+        
         data = new String(buffer.toArray(), Constants.UTF8);
     }
-
+    
     /**
      * Creates an error response.
      *
@@ -64,7 +64,7 @@ public class Response {
         responseType = ResponseType.ERROR;
         data = e.toString();
     }
-
+    
     /**
      * Returns the response type.
      *
@@ -73,7 +73,7 @@ public class Response {
     public ResponseType getResponseType() {
         return responseType;
     }
-
+    
     /**
      * Returns the response data.
      *
@@ -82,9 +82,9 @@ public class Response {
     public String getData() {
         return data;
     }
-
+    
     public byte getSequenceId() {
         return sequenceId;
     }
-
+    
 }

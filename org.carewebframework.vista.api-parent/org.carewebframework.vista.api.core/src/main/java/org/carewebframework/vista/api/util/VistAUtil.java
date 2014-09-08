@@ -92,7 +92,7 @@ public class VistAUtil {
     /**
      * Converts a parameter list into a ^-delimited string
      *
-     * @param params
+     * @param params The parameter list.
      * @return Concatenated list.
      */
     public static String concatParams(Object... params) {

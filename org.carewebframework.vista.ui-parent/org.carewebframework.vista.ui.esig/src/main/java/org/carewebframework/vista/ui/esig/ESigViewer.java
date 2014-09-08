@@ -69,7 +69,7 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
      * @param esigService Reference to the esignature service.
      * @param filter Optional filter to control which items are displayed.
      * @return True unless the dialog was canceled.
-     * @throws Exception
+     * @throws Exception Unspecified exception.
      */
     public static boolean execute(IESigService esigService, ESigFilter filter) throws Exception {
         Iterable<ESigItem> items = esigService.getItems(filter);
@@ -87,8 +87,8 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
     /**
      * Initialize the dialog, adding the signature items to the list.
      * 
-     * @param esigService
-     * @param items
+     * @param esigService The electronic signature service.
+     * @param items List of items to add.
      */
     private void init(IESigService esigService, Iterable<ESigItem> items) {
         this.esigService = esigService;
@@ -110,7 +110,7 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
     /**
      * Add an esignature item to the list.
      * 
-     * @param item
+     * @param item The item to add.
      */
     private void addItem(ESigItem item) {
         esigTypes.add(item.getESigType());
@@ -130,8 +130,8 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
     /**
      * Locates or creates the group for the specified esig item.
      * 
-     * @param item
-     * @return
+     * @param item The signature item.
+     * @return The associated group.
      */
     private Group findGroup(ESigItem item) {
         String label = item.getESigType().getESigTypeGroupHeader();
@@ -169,7 +169,7 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
      * 
      * @param group The returned group is the first one following this group. If this value is null,
      *            returns the first group encountered.
-     * @return
+     * @return The next group.
      */
     private Group nextGroup(Group group) {
         Component cmpt = group == null ? grid.getRows().getFirstChild() : group.getNextSibling();
@@ -211,8 +211,8 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
     /**
      * Returns a list of all selected items of the specified esignature type.
      * 
-     * @param esigType
-     * @return
+     * @param esigType The esignature type.
+     * @return List of items.
      */
     private List<ESigItem> getSelectedItems(IESigType esigType) {
         List<ESigItem> list = new ArrayList<ESigItem>();
@@ -312,7 +312,7 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
     /**
      * Display the error message.
      * 
-     * @param message
+     * @param message The error message.
      */
     private void setError(String message) {
         lblError.setValue(message == null ? " " : message);
@@ -356,7 +356,7 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
     /**
      * Close the dialog with the specified cancel status.
      * 
-     * @param canceled
+     * @param canceled The cancel status.
      */
     private void close(boolean canceled) {
         this.canceled = canceled;

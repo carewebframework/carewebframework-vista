@@ -24,7 +24,7 @@ public class LocationUtil {
      * 
      * @param lookup Partial name for lookup.
      * @return List of service locations matching the lookup.
-     * @throws Exception
+     * @throws Exception Unspecified exception.
      */
     public static List<Location> findLocations(String lookup) throws Exception {
         return null;

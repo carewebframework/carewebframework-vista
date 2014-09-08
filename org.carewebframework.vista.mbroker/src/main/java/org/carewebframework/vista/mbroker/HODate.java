@@ -21,21 +21,21 @@ import org.carewebframework.common.DateUtil;
  * Represents a $HOROLOG-style date.
  */
 public class HODate extends Date {
-
+    
     private static final long serialVersionUID = 1L;
-
+    
     private boolean hasTime;
-
+    
     /**
      * Converts a string value to a $H date.
      *
-     * @param value
+     * @param value The string value to convert.
      * @return A $H date.
      */
     public static HODate fromString(String value) {
         return StringUtils.isEmpty(value) ? null : new HODate(value);
     }
-
+    
     /**
      * Creates a date based on the $H-formatted value.
      * 
@@ -45,7 +45,7 @@ public class HODate extends Date {
         super();
         setHODate(value);
     }
-
+    
     /**
      * Creates a $H date with the current date and time.
      */
@@ -53,7 +53,7 @@ public class HODate extends Date {
         super();
         this.hasTime = DateUtil.hasTime(this);
     }
-
+    
     /**
      * Creates a $H date from a date value.
      *
@@ -64,7 +64,7 @@ public class HODate extends Date {
         this.setTime(date.getTime());
         this.hasTime = date instanceof HODate ? ((HODate) date).hasTime : DateUtil.hasTime(this);
     }
-
+    
     /**
      * Sets the date to the value corresponding to the $H value.
      *
@@ -77,7 +77,7 @@ public class HODate extends Date {
         long ms = (Long.parseLong(pcs[0]) - 47116) * 24 * 60 * 60 * 1000;
         cal.setTimeInMillis(ms);
         hasTime = pcs.length == 2;
-
+        
         if (hasTime) {
             int frac = Integer.parseInt(pcs[1]);
             cal.set(Calendar.SECOND, frac % 60);
@@ -86,10 +86,10 @@ public class HODate extends Date {
             frac /= 60;
             cal.set(Calendar.HOUR, frac);
         }
-
+        
         setTime(cal.getTimeInMillis());
     }
-
+    
     /**
      * Returns the display friendly value of the date.
      *
@@ -99,7 +99,7 @@ public class HODate extends Date {
     public String toString() {
         return DateUtil.formatDate(this, false, !hasTime);
     }
-
+    
     /**
      * Returns the display friendly value of the date, including time zone.
      *
@@ -108,7 +108,7 @@ public class HODate extends Date {
     public String toStringFull() {
         return !hasTime ? toString() : DateUtil.formatDate(this, true);
     }
-
+    
     /**
      * Returns the display friendly value of the date, ignoring any time component.
      *

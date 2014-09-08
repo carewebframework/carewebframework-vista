@@ -18,48 +18,48 @@ import java.util.List;
  * are not thread safe.
  */
 public class DynamicByteBuffer {
-
+    
     private int chunk; // Index of the current buffer chunk
-
+    
     private final List<byte[]> pool = new ArrayList<byte[]>(); // Buffer chunk pool
-
+    
     private final int incrementalSize; // Increment in bytes by which buffer will grow beyond initial size
-
+    
     private final int initialSize; // Initial size for buffer
-
+    
     private int position; // Byte offset within current chunk
-
+    
     private int size; // Total number of bytes currently stored in buffer
-
+    
     /**
      * Create a buffer with an initial and incremental size of 100 bytes.
      */
     DynamicByteBuffer() {
         this(100);
     }
-
+    
     /**
      * Create a buffer with the specified initial size. The incremental size will be the same as the
      * initial size.
      *
-     * @param initialSize
+     * @param initialSize THe initial size.
      */
     DynamicByteBuffer(int initialSize) {
         this(initialSize, initialSize);
     }
-
+    
     /**
      * Create a buffer with the specified initial and incremental size.
      *
-     * @param initialSize
-     * @param incrementalSize
+     * @param initialSize The initial size.
+     * @param incrementalSize The expansion increment.
      */
     DynamicByteBuffer(int initialSize, int incrementalSize) {
         this.initialSize = initialSize;
         this.incrementalSize = incrementalSize;
         clear();
     }
-
+    
     /**
      * Activates the next chunk from the pool, allocating it if necessary.
      *
@@ -68,64 +68,64 @@ public class DynamicByteBuffer {
     private byte[] alloc() {
         position = 0;
         chunk++;
-
+        
         if (chunk >= pool.size()) {
             byte[] bytes = new byte[chunk == 0 ? initialSize : incrementalSize];
             pool.add(bytes);
         }
-
+        
         return chunk();
     }
-
+    
     /**
      * Returns the currently active chunk. If no chunk is currently active, allocates the initial
      * chunk and returns it.
      *
-     * @return
+     * @return The currently active chunk.
      */
     private byte[] chunk() {
         return chunk == -1 ? alloc() : pool.get(chunk);
     }
-
+    
     /**
      * Checks that an index falls within the currently valid range. Raises a run time exception if
      * it does not.
      *
-     * @param index
+     * @param index The index to check.
      */
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
     }
-
+    
     /**
      * Returns the byte at the specified index.
      *
-     * @param index
+     * @param index The index.
      * @return Byte at index.
-     * @exception IndexOutOfBoundsException
+     * @exception IndexOutOfBoundsException If index out of bounds.
      */
     public byte get(int index) {
         checkIndex(index);
         return getByte(index);
     }
-
+    
     /**
      * Returns the byte at the specified index. No index validation is performed.
      *
-     * @param index
-     * @return
+     * @param index The index.
+     * @return The byte at the specified index.
      */
     private byte getByte(int index) {
         if (index < initialSize) {
             return pool.get(0)[index];
         }
-
+        
         index -= initialSize;
         return pool.get(index / incrementalSize + 1)[index % incrementalSize];
     }
-
+    
     /**
      * Writes one or more bytes to the buffer. Values may be specified as multiple arguments or as a
      * byte array.
@@ -135,7 +135,7 @@ public class DynamicByteBuffer {
     public void put(byte... value) {
         put(value, value.length);
     }
-
+    
     /**
      * Writes a specified number of bytes from an array, starting at the beginning of the array.
      *
@@ -145,7 +145,7 @@ public class DynamicByteBuffer {
     public void put(byte[] bytes, int count) {
         put(bytes, 0, count);
     }
-
+    
     /**
      * Writes a range of bytes from the specified array.
      *
@@ -155,17 +155,17 @@ public class DynamicByteBuffer {
      */
     public void put(byte[] bytes, int start, int end) {
         byte[] buffer = chunk();
-
+        
         for (int i = start; i < end; i++) {
             if (position == buffer.length) {
                 buffer = alloc();
             }
-
+            
             buffer[position++] = bytes[i];
             size++;
         }
     }
-
+    
     /**
      * Returns the current contents of the buffer as a byte array.
      *
@@ -174,16 +174,16 @@ public class DynamicByteBuffer {
     public byte[] toArray() {
         byte[] result = new byte[size];
         int pos = 0;
-
+        
         for (byte[] buffer : pool) {
             for (int i = 0; i < buffer.length && pos < size; i++) {
                 result[pos++] = buffer[i];
             }
         }
-
+        
         return result;
     }
-
+    
     /**
      * Returns the range of bytes beginning at the start position and exclusive of the end position.
      * If the start position is greater than or equal to the end position, an empty array is
@@ -192,20 +192,20 @@ public class DynamicByteBuffer {
      * @param start Starting position.
      * @param end Ending position.
      * @return Byte array.
-     * @exception IndexOutOfBoundsException
+     * @exception IndexOutOfBoundsException If an index is out of bounds.
      */
     public byte[] toArray(int start, int end) {
         checkIndex(start);
         checkIndex(end);
         byte[] result = new byte[start > end ? 0 : end - start];
-
+        
         for (int i = start; i < end; i++) {
             result[i] = getByte(i);
         }
-
+        
         return result;
     }
-
+    
     /**
      * Returns the total number of bytes currently stored in the buffer.
      *
@@ -214,7 +214,7 @@ public class DynamicByteBuffer {
     public int getSize() {
         return size;
     }
-
+    
     /**
      * Clears the buffer contents. Does not deallocate any buffer space.
      */
@@ -222,7 +222,7 @@ public class DynamicByteBuffer {
         size = 0;
         chunk = -1;
     }
-
+    
     /**
      * Clears the buffer contents and deallocates all buffer space.
      */

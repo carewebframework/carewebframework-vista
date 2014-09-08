@@ -78,8 +78,8 @@ public class PatientSearchEngine implements IPatientSearch {
     /**
      * Concatenate all names in list, separating with spaces.
      * 
-     * @param names
-     * @return
+     * @param names List of names.
+     * @return Concatenated list.
      */
     private String concatNames(List<StringType> names) {
         StringBuilder sb = null;

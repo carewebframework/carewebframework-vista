@@ -23,70 +23,70 @@ import org.apache.commons.logging.LogFactory;
  * the property name.
  */
 public class PropertyCollection {
-
+    
     private static final Log log = LogFactory.getLog(PropertyCollection.class);
-
+    
     private final Map<String, Property> properties = new HashMap<String, Property>();
-
+    
     /**
      * Instantiates an empty collection Reference {@link #loadProperties(String)} to populate
      * collection
      */
     public PropertyCollection() {
     }
-
+    
     /**
      * Load property objects with the given array of prefixes
      *
-     * @param propertyPrefixes
+     * @param propertyPrefixes List of property prefixes.
      */
     public PropertyCollection(String... propertyPrefixes) {
         for (String prefix : propertyPrefixes) {
             loadProperties(prefix);
         }
     }
-
+    
     /**
      * Loads all property objects beginning with the specified prefix. The property objects are
      * stored in a map indexed by the property name for easy retrieval.
      *
-     * @param prefix
+     * @param prefix The property prefix.
      */
     public void loadProperties(String prefix) {
         List<Property> props = null;
-
+        
         try {
             props = getListByPrefix(prefix);
         } catch (Exception e) {
             log.error("Error retrieving properties with prefix: " + prefix, e);
             return;
         }
-
+        
         for (Property prop : props) {
             if (prop.getName() != null) {
                 this.properties.put(prop.getName(), prop);
             }
         }
     }
-
+    
     private List<Property> getListByPrefix(String prefix) {
         List<Property> result = new ArrayList<Property>();
         List<String> props = PropertyUtil.getPropertyDAO().getMatching(prefix);
-
+        
         for (String prop : props) {
             result.add(new Property(prop));
         }
-
+        
         return result;
     }
-
+    
     /**
      * Clears current Map of properties
      */
     public void clear() {
         this.properties.clear();
     }
-
+    
     /**
      * Returns the property with the specified name, or null if not found.
      *
@@ -96,7 +96,7 @@ public class PropertyCollection {
     public Property getProperty(String name) {
         return this.properties.get(name);
     }
-
+    
     /**
      * Checks to see if current Map contains this propertyName as a key
      *
@@ -106,7 +106,7 @@ public class PropertyCollection {
     public boolean containsProperty(String propertyName) {
         return this.properties.containsKey(propertyName);
     }
-
+    
     /**
      * Returns the index of a property value as it occurs in the choice list.
      *
@@ -119,7 +119,7 @@ public class PropertyCollection {
         int index = Arrays.asList(choices).indexOf(val);
         return index == -1 ? 0 : index;
     }
-
+    
     /**
      * Returns a boolean property value.
      *
@@ -135,7 +135,7 @@ public class PropertyCollection {
             return false;
         }
     }
-
+    
     /**
      * Returns an integer property value.
      *
@@ -150,7 +150,7 @@ public class PropertyCollection {
             return dflt;
         }
     }
-
+    
     /**
      * Returns a string property value.
      *
@@ -162,7 +162,7 @@ public class PropertyCollection {
         Property prop = getProperty(name);
         return prop == null ? dflt : prop.getValue();
     }
-
+    
     /**
      * Returns the property map.
      *

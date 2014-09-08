@@ -72,7 +72,7 @@ public class Request {
      * low nybble is the low nybble of the data length value. The additional descriptor bytes (if
      * any) form the rest of the data length value from low byte to high byte.
      *
-     * @param length
+     * @param length The length to be encoded.
      * @return The length descriptor.
      */
     private byte[] getLengthDescriptor(int length) {
@@ -181,13 +181,13 @@ public class Request {
     public Action getAction() {
         return action;
     }
-
+    
     /**
      * Write request components to output stream.
      * 
      * @param stream Output stream.
      * @param sequenceId Sequence identifier for packet.
-     * @throws IOException
+     * @throws IOException An IO exception.
      */
     public void write(DataOutputStream stream, byte sequenceId) throws IOException {
         stream.write(PREAMBLE);

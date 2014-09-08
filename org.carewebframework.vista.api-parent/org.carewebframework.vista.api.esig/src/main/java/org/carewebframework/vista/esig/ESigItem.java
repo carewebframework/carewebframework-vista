@@ -18,8 +18,6 @@ import org.carewebframework.common.NumUtil;
 
 /**
  * This represents a single item to be submitted for electronic signature.
- * 
- * 
  */
 public class ESigItem implements Serializable {
     
@@ -27,8 +25,6 @@ public class ESigItem implements Serializable {
     
     /**
      * Represents a default signature state for a signature item.
-     * 
-     * 
      */
     public static enum SignState {
         YES, // Item is marked for signature
@@ -57,8 +53,6 @@ public class ESigItem implements Serializable {
     
     /**
      * Represents the severity level for an issue.
-     * 
-     * 
      */
     public static enum ESigItemIssueSeverity {
         MINOR, // Minor - User need not explicitly acknowledge or justify override.
@@ -71,8 +65,6 @@ public class ESigItem implements Serializable {
     /**
      * Represents a single issue and associated severity. Issues are used to convey to the user
      * potential consequences of signing an item.
-     * 
-     * 
      */
     public static class ESigItemIssue implements Comparable<ESigItemIssue> {
         
@@ -126,7 +118,7 @@ public class ESigItem implements Serializable {
          * Sets the override reason. Override reasons must be provided for issues of a severity
          * level of major before signature of the item is allowed.
          * 
-         * @param override
+         * @param override The override reason.
          */
         public void setOverride(String override) {
             this.override = override;
@@ -194,7 +186,7 @@ public class ESigItem implements Serializable {
     /**
      * Sets the item id.
      * 
-     * @param id
+     * @param id The item id.
      */
     public void setId(String id) {
         this.id = id;
@@ -212,7 +204,7 @@ public class ESigItem implements Serializable {
     /**
      * Sets a data object associated with the item. This object should be serializable.
      * 
-     * @param data
+     * @param data The data object.
      */
     public void setData(Object data) {
         this.data = data;
@@ -231,7 +223,7 @@ public class ESigItem implements Serializable {
      * Sets the text that describes the sig item. This should be sufficiently descriptive that the
      * potential signer understands what is being signed.
      * 
-     * @param text
+     * @param text The description text.
      */
     public void setText(String text) {
         this.text = text;
@@ -251,7 +243,7 @@ public class ESigItem implements Serializable {
      * Sets the sub group name. For presentation, items will be organized by this sub group name
      * within the item type's group name.
      * 
-     * @param subGroupName
+     * @param subGroupName THe sub group name.
      */
     public void setSubGroupName(String subGroupName) {
         this.subGroupName = subGroupName;
@@ -270,7 +262,7 @@ public class ESigItem implements Serializable {
     /**
      * Sets the session identifier. Sessions are used to group signature items together.
      * 
-     * @param session
+     * @param session The session identifier.
      */
     public void setSession(String session) {
         this.session = session;
@@ -290,7 +282,7 @@ public class ESigItem implements Serializable {
      * Returns the default signature state. This determines how the item is selected when presented
      * for signature.
      * 
-     * @param signState
+     * @param signState The signature state.
      */
     public void setSignState(SignState signState) {
         this.signState = signState;
@@ -310,7 +302,7 @@ public class ESigItem implements Serializable {
      * Sets the selection state of the item. This is used to allow certain operations to select or
      * unselect signature items for further processing.
      * 
-     * @param selected
+     * @param selected The selection state.
      */
     public void setSelected(boolean selected) {
         this.selected = selected;

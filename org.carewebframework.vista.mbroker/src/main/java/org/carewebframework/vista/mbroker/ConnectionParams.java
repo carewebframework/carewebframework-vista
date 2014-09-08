@@ -18,39 +18,39 @@ import org.carewebframework.common.StrUtil;
  * Class representing all connection parameters that influence a broker connection.
  */
 public class ConnectionParams {
-
+    
     private String server; // IP address or resolvable name of the server
-
+    
     private int port = 9200; // Port number of the listener on the server
-
+    
     private String namespace; // Login namespace (defaults to listener's namespace)
-
+    
     private String username; // Username of authenticating user (optional)
-
+    
     private String password; // Password of authenticating user (optional)
-
+    
     private String appid; // Identifier of application requesting connection
-
+    
     private int timeout; // Default connection timeout
-
+    
     private boolean debug; // Debug mode flag
-
+    
     /**
      * Create with all default values
      */
     public ConnectionParams() {
         this("");
     }
-
+    
     /**
      * Create from a connection parameter string.
      *
-     * @param value
+     * @param value Connection parameter string.
      */
     public ConnectionParams(String value) {
         this(value, null, 10000, false);
     }
-
+    
     /**
      * Create specifying all connection parameters.
      *
@@ -61,7 +61,7 @@ public class ConnectionParams {
      */
     public ConnectionParams(String value, String appid, int timeout, boolean debug) {
         String[] pcs = value.split("\\@", 2);
-
+        
         if (pcs.length == 1) {
             server = pcs[0];
             username = "";
@@ -72,7 +72,7 @@ public class ConnectionParams {
             username = pcs[0];
             password = pcs[1];
         }
-
+        
         pcs = StrUtil.split(server, ":", 3, true);
         server = pcs[0];
         port = NumberUtils.toInt(pcs[1], port);
@@ -81,11 +81,11 @@ public class ConnectionParams {
         this.debug = debug;
         this.appid = StringUtils.isEmpty(appid) ? Constants.DEFAULT_APP_ID : appid;
     }
-
+    
     /**
      * Copy constructor.
      *
-     * @param source
+     * @param source Source from which to copy.
      */
     public ConnectionParams(ConnectionParams source) {
         appid = source.appid;
@@ -97,7 +97,7 @@ public class ConnectionParams {
         timeout = source.timeout;
         username = source.username;
     }
-
+    
     /**
      * Returns the default timeout, in milliseconds.
      *
@@ -106,25 +106,25 @@ public class ConnectionParams {
     public int getTimeout() {
         return timeout;
     }
-
+    
     /**
      * Sets the default timeout, in milliseconds.
      *
-     * @param timeout
+     * @param timeout Timeout in milliseconds.
      */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
-
+    
     /**
      * Returns true if debug mode is active.
      * 
-     * @return
+     * @return Debug mode.
      */
     public boolean isDebug() {
         return debug;
     }
-
+    
     /**
      * Sets debug mode.
      * 
@@ -133,7 +133,7 @@ public class ConnectionParams {
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
-
+    
     /**
      * Displays the connection string reflecting the current connection parameters.
      *
@@ -149,7 +149,7 @@ public class ConnectionParams {
         addPiece(namespace, ":", sb);
         return sb.toString();
     }
-
+    
     /**
      * Used to build a connection string for display.
      *
@@ -162,11 +162,11 @@ public class ConnectionParams {
             if (sb.length() > 0) {
                 sb.append(prefix);
             }
-
+            
             sb.append(pc);
         }
     }
-
+    
     /**
      * Returns the server name.
      *
@@ -175,7 +175,7 @@ public class ConnectionParams {
     public String getServer() {
         return server;
     }
-
+    
     /**
      * Sets the server name.
      *
@@ -184,7 +184,7 @@ public class ConnectionParams {
     public void setServer(String server) {
         this.server = server;
     }
-
+    
     /**
      * Returns the broker port #.
      *
@@ -193,7 +193,7 @@ public class ConnectionParams {
     public int getPort() {
         return port;
     }
-
+    
     /**
      * Sets the broker port #.
      *
@@ -202,7 +202,7 @@ public class ConnectionParams {
     public void setPort(int port) {
         this.port = port;
     }
-
+    
     /**
      * Returns the target M namespace.
      *
@@ -211,7 +211,7 @@ public class ConnectionParams {
     public String getNamespace() {
         return namespace;
     }
-
+    
     /**
      * Sets the target M namespace.
      *
@@ -220,7 +220,7 @@ public class ConnectionParams {
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
-
+    
     /**
      * Returns the user name for authentication.
      *
@@ -229,7 +229,7 @@ public class ConnectionParams {
     public String getUsername() {
         return username;
     }
-
+    
     /**
      * Sets the user name for authentication.
      *
@@ -238,7 +238,7 @@ public class ConnectionParams {
     public void setUsername(String username) {
         this.username = username;
     }
-
+    
     /**
      * Returns the password for authentication.
      *
@@ -247,7 +247,7 @@ public class ConnectionParams {
     public String getPassword() {
         return password;
     }
-
+    
     /**
      * Sets the password for authentication.
      *
@@ -265,7 +265,7 @@ public class ConnectionParams {
     public String getAppid() {
         return appid;
     }
-
+    
     /**
      * Sets the application id.
      *

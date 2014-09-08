@@ -81,7 +81,7 @@ public class DocumentService {
      *         Dest[11]=PA:0
      * </pre>
      *
-     * @param documents
+     * @param documents Documents for which to retrieve contents.
      */
     public void retrieveContents(List<Document> documents) {
         for (Document doc : documents) {
@@ -130,12 +130,12 @@ public class DocumentService {
      *       # of Associated Images^Subject^Has Children^IEN of Parent Document
      * </pre>
      *
-     * @param patient
-     * @param user
-     * @param startDate
-     * @param endDate
-     * @param category
-     * @return
+     * @param patient The patient.
+     * @param user The user.
+     * @param startDate The start date for retrieval.
+     * @param endDate The end date for retrieval.
+     * @param category The document category.
+     * @return List of matching documents.
      */
     public List<Document> retrieveHeaders(Patient patient, User user, Date startDate, Date endDate, DocumentCategory category) {
         List<DocumentCategory> categories = category == null ? getCategories() : Collections.singletonList(category);

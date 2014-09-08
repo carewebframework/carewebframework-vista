@@ -155,7 +155,7 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
     /**
      * Show detail for specified list item.
      *
-     * @param li
+     * @param li The list item.
      */
     protected void showDetail(Listitem li) {
         @SuppressWarnings("unchecked")
@@ -177,8 +177,8 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
     /**
      * Logic to return detail information for specified item.
      *
-     * @param data
-     * @return
+     * @param data Source for detail information.
+     * @return The detail information.
      */
     protected String getDetail(T data) {
         String ien = getLogicalId(data);

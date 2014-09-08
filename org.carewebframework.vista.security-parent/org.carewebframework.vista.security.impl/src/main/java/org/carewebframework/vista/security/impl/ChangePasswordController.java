@@ -178,7 +178,7 @@ public class ChangePasswordController extends GenericForwardComposer<Component> 
             } catch (Exception e) {
                 Throwable e1 = e.getCause() == null ? e : e.getCause();
                 showMessage(Labels
-                    .getLabel("change.password.dialog.password.change.error", new String[] { e1.getMessage() }));
+                        .getLabel("change.password.dialog.password.change.error", new String[] { e1.getMessage() }));
             }
         }
         j_password.setValue("");
@@ -200,7 +200,7 @@ public class ChangePasswordController extends GenericForwardComposer<Component> 
     /**
      * Sets the security service.
      * 
-     * @param securityService
+     * @param securityService The security service.
      */
     public void setSecurityService(SecurityServiceImpl securityService) {
         this.securityService = securityService;

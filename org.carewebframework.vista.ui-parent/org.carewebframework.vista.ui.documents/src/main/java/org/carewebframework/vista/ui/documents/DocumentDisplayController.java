@@ -127,7 +127,7 @@ public class DocumentDisplayController extends AbstractListController<Document> 
     /**
      * Sets the documents to be displayed and updates the displayed count.
      *
-     * @param documents
+     * @param documents The documents to be displayed.
      */
     protected void setDocuments(List<Document> documents) {
         this.documents = documents;

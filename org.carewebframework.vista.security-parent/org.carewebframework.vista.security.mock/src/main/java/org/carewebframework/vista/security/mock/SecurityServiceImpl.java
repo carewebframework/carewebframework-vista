@@ -9,21 +9,18 @@
  */
 package org.carewebframework.vista.security.mock;
 
-import org.carewebframework.vista.security.base.BaseSecurityService;
-
 import org.carewebframework.ui.zk.PromptDialog;
+import org.carewebframework.vista.security.base.BaseSecurityService;
 
 /**
  * Security service implementation.
- * 
- * 
  */
 public class SecurityServiceImpl extends BaseSecurityService {
     
     /**
      * Validates the current user's password.
      * 
-     * @param password
+     * @param password The password to validate.
      * @return True if the password is valid.
      */
     @Override

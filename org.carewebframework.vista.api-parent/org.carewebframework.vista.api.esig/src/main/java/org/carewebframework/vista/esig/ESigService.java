@@ -20,8 +20,6 @@ import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
 
 /**
  * This is the esig service and type registry implementation.
- * 
- * 
  */
 public class ESigService implements IESigService, IESigTypeRegistry, IPatientContextEvent {
     
@@ -44,7 +42,7 @@ public class ESigService implements IESigService, IESigTypeRegistry, IPatientCon
     /**
      * Sets the event manager to be used by the service. Injected by the IOC container.
      * 
-     * @param eventManager
+     * @param eventManager The event manager.
      */
     public void setEventManager(EventManager eventManager) {
         eSigList.setEventManager(eventManager);
@@ -81,7 +79,7 @@ public class ESigService implements IESigService, IESigTypeRegistry, IPatientCon
     /**
      * Initialize a new esig type.
      * 
-     * @param eSigType
+     * @param eSigType The esignature type.
      */
     private void init(IESigType eSigType) {
         List<ESigItem> list = new ArrayList<ESigItem>();

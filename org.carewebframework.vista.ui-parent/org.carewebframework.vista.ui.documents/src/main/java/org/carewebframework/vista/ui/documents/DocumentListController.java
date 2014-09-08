@@ -160,7 +160,7 @@ public class DocumentListController extends AbstractListController<Document> {
     /**
      * Returns the currently active category filter.
      *
-     * @return
+     * @return The active category filter.
      */
     private DocumentCategory getCurrentFilter() {
         return this.fixedFilter != null ? this.fixedFilter
@@ -178,7 +178,7 @@ public class DocumentListController extends AbstractListController<Document> {
     /**
      * Update the display count of selected documents.
      *
-     * @param selCount
+     * @param selCount The selection count.
      */
     private void updateSelectCount(int selCount) {
         if (selCount == 0) {
@@ -200,7 +200,7 @@ public class DocumentListController extends AbstractListController<Document> {
     /**
      * Double-clicking enters document view mode.
      *
-     * @param event
+     * @param event The onDoubleClick event.
      */
     public void onDoubleClick$listBox(Event event) {
         Component cmpt = ZKUtil.getEventOrigin(event).getTarget();
@@ -214,7 +214,7 @@ public class DocumentListController extends AbstractListController<Document> {
      * Opening the display view after a double-click is deferred to avoid anomalies with selection
      * of the associated list item.
      * 
-     * @param event
+     * @param event The deferred open event.
      */
     public void onDeferredOpen$listBox(Event event) {
         Listitem item = (Listitem) ZKUtil.getEventOrigin(event).getData();
@@ -243,7 +243,7 @@ public class DocumentListController extends AbstractListController<Document> {
      * Returns a list of currently selected documents, or if no documents are selected, of all
      * documents.
      *
-     * @return
+     * @return List of currently selected documents.
      */
     protected List<Document> getSelectedDocuments() {
         return getObjects(listBox.getSelectedCount() > 0);
@@ -252,7 +252,7 @@ public class DocumentListController extends AbstractListController<Document> {
     /**
      * Returns the fixed filter, if any.
      *
-     * @return
+     * @return The fixed filter.
      */
     public String getFixedFilter() {
         return fixedFilter == null ? null : fixedFilter.getName();
@@ -261,7 +261,7 @@ public class DocumentListController extends AbstractListController<Document> {
     /**
      * Sets the fixed filter.
      *
-     * @param name
+     * @param name The fixed filter.
      */
     public void setFixedFilter(String name) {
         fixedFilter = findCategory(name);

@@ -46,13 +46,14 @@ public class MainController extends CoverSheetBase<String> {
     /**
      * Logic to return detail information for specified item.
      * 
-     * @param data
-     * @return
+     * @param data The item data.
+     * @return The detail information.
      */
     @Override
     protected String getDetail(String data) {
         data = piece(data, U);
-        return data.isEmpty() ? null : fromList(getBroker().callRPCList(detailRPC, null, patient.getLogicalId(), data, data));
+        return data.isEmpty() ? null
+                : fromList(getBroker().callRPCList(detailRPC, null, patient.getLogicalId(), data, data));
     }
     
     @Override

@@ -12,15 +12,12 @@ package org.carewebframework.vista.esig;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.carewebframework.vista.esig.ESigItem.SignState;
-
 import org.carewebframework.api.event.EventManager;
+import org.carewebframework.vista.esig.ESigItem.SignState;
 
 /**
  * Maintains a list of items queued for electronic signature and provides several methods for
  * manipulating items in the list.
- * 
- * 
  */
 public class ESigList {
     
@@ -56,7 +53,7 @@ public class ESigList {
     /**
      * Returns the count of items of the specified type.
      * 
-     * @param eSigType
+     * @param eSigType The esignature type.
      * @return Count of items of specified type.
      */
     public int getCount(IESigType eSigType) {
@@ -74,8 +71,8 @@ public class ESigList {
     /**
      * Returns the index of a sig item identified by type and id.
      * 
-     * @param eSigType
-     * @param id
+     * @param eSigType The esignature type.
+     * @param id The item id.
      * @return Index of item.
      */
     public int indexOf(IESigType eSigType, String id) {
@@ -85,8 +82,8 @@ public class ESigList {
     /**
      * Returns a sig item identified by type and id, or null if not found.
      * 
-     * @param eSigType
-     * @param id
+     * @param eSigType The esignature type.
+     * @param id The item id.
      * @return Sig item.
      */
     public ESigItem get(IESigType eSigType, String id) {
@@ -98,7 +95,7 @@ public class ESigList {
      * Returns a list of sig items that match the specified filter. If the filter is null, all sig
      * items are returned.
      * 
-     * @param filter
+     * @param filter The esignature filter.
      * @return List of matching sig items.
      */
     public List<ESigItem> findItems(ESigFilter filter) {
@@ -135,7 +132,7 @@ public class ESigList {
     /**
      * Adds a list of sig items to the master list.
      * 
-     * @param items
+     * @param items List of items to add.
      */
     public void addAll(Iterable<ESigItem> items) {
         for (ESigItem item : items) {
@@ -146,13 +143,13 @@ public class ESigList {
     /**
      * Ads a new sig item to the list, given the required elements.
      * 
-     * @param eSigType
-     * @param id
-     * @param text
-     * @param subGroupName
-     * @param signState
-     * @param data
-     * @param session
+     * @param eSigType The esignature type.
+     * @param id The item id.
+     * @param text The description text.
+     * @param subGroupName The sub group name.
+     * @param signState The signature state.
+     * @param data The data object.
+     * @param session The session id.
      * @return New sig item.
      */
     public ESigItem add(IESigType eSigType, String id, String text, String subGroupName, SignState signState, String data,
@@ -230,7 +227,7 @@ public class ESigList {
     /**
      * Removes the sig item at the specified index. Fires an ESIG.DELETE event.
      * 
-     * @param index
+     * @param index The item index.
      */
     public void remove(int index) {
         remove(items.get(index));
@@ -239,7 +236,7 @@ public class ESigList {
     /**
      * Fires an ESIG.DELETE event for the specified item.
      * 
-     * @param item
+     * @param item The removed item.
      */
     private void removed(ESigItem item) {
         fireEvent("DELETE", item);

@@ -194,7 +194,7 @@ public class RecipientsController extends FrameworkController {
     /**
      * Perform user search based in text input.
      * 
-     * @param event
+     * @param event The onChanging event.
      */
     public void onChanging$txtUsers(InputEvent event) {
         String text = event.getValue().trim().toUpperCase();
@@ -209,7 +209,7 @@ public class RecipientsController extends FrameworkController {
     /**
      * Perform mail group search based in text input.
      * 
-     * @param event
+     * @param event The onChanging event.
      */
     public void onChanging$txtGroups(InputEvent event) {
         String text = event.getValue().trim().toUpperCase();

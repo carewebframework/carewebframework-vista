@@ -115,7 +115,7 @@ public class LoginWindowController extends GenericForwardComposer<Component> {
     /**
      * Resets the timer when the user types.
      * 
-     * @param event
+     * @param event The onChanging event.
      */
     public void onChanging$j_password1(Event event) {
         resetTimer();
@@ -124,7 +124,7 @@ public class LoginWindowController extends GenericForwardComposer<Component> {
     /**
      * Resets the timer when the user types.
      * 
-     * @param event
+     * @param event The onChanging event.
      */
     public void onChanging$j_password2(Event event) {
         resetTimer();
@@ -165,7 +165,7 @@ public class LoginWindowController extends GenericForwardComposer<Component> {
     /**
      * Close the dialog and display the specified message.
      * 
-     * @param message
+     * @param message The message text.
      */
     private void close(String message) {
         SecurityUtil.getSecurityService().logout(true, savedRequest == null ? null : savedRequest.getRedirectUrl(), message);

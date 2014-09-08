@@ -23,8 +23,6 @@ import org.zkoss.zul.Textbox;
 /**
  * Controller for the mock login component. This simulates a user login. Login credentials are
  * obtained from the framework.properties file.
- * 
- * 
  */
 public class LoginController extends GenericForwardComposer<Component> {
     
@@ -78,7 +76,7 @@ public class LoginController extends GenericForwardComposer<Component> {
     /**
      * Set the userName
      * 
-     * @param username
+     * @param username The username.
      */
     public void setUsername(String username) {
         this.username = username;
@@ -96,7 +94,7 @@ public class LoginController extends GenericForwardComposer<Component> {
     /**
      * Set the password
      * 
-     * @param password
+     * @param password The password.
      */
     public void setPassword(String password) {
         this.password = password;
@@ -114,7 +112,7 @@ public class LoginController extends GenericForwardComposer<Component> {
     /**
      * Set the domain
      * 
-     * @param domain
+     * @param domain The domain.
      */
     public void setAuthority(String domain) {
         this.domain = domain;

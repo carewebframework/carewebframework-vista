@@ -72,7 +72,7 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
         /**
          * Returns a set of flags
          *
-         * @param flags
+         * @param flags The encounter flags.
          * @return Set of encounter flags.
          */
         public static Set<EncounterFlag> flags(EncounterFlag... flags) {
@@ -124,7 +124,7 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
     /**
      * Displays the encounter selection dialog.
      *
-     * @param flags
+     * @param flags The encounter flags.
      */
     public static void execute(EncounterFlag... flags) {
         String resource = Constants.RESOURCE_PREFIX + "encounterSelection.zul";
@@ -331,7 +331,7 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
     /**
      * Change the encounter context to the selected encounter and close the dialog.
      *
-     * @throws ClassNotFoundException
+     * @throws ClassNotFoundException If class not found.
      */
     public void onClick$btnOK() throws ClassNotFoundException {
         Encounter encounter = null;
@@ -388,8 +388,6 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
     /**
      * Initialize the dialog. Performs a query to return all existing encounters with the set time
      * window and populates the inpatient/outpatient lists from this.
-     *
-     * @throws Exception
      */
     private void init() {
         boolean hasInpatientEncounter = initInpatient();

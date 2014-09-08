@@ -79,7 +79,7 @@ public class Recipient {
      * Returns the recipient's internal entry number. Note that a negative value means that this is
      * a mail group, while a positive value means it is a user.
      *
-     * @return
+     * @return Recipient's IEN.
      */
     public long getIen() {
         return ien;

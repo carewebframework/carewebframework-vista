@@ -50,7 +50,7 @@ public class LocationSelection extends Panel {
     /**
      * Wire variables and events.
      * 
-     * @throws Exception
+     * @throws Exception Unspecified exception.
      */
     public void onCreate() throws Exception {
         log.trace("onCreate");
@@ -61,7 +61,7 @@ public class LocationSelection extends Panel {
     /**
      * Lookup a location and populate listbox with results.
      * 
-     * @throws Exception
+     * @throws Exception Unspecified exception.
      */
     public void onClick$btnLocation() throws Exception {
         locationLookup(txtLocation.getValue(), lstLocation, LocationContext.getActiveLocation());
@@ -73,7 +73,7 @@ public class LocationSelection extends Panel {
      * @param text Partial location name for lookup.
      * @param lstLocation Listbox to populate with results.
      * @param deflt Default location to select.
-     * @throws Exception
+     * @throws Exception Unspecified exception.
      */
     public static void locationLookup(String text, Listbox lstLocation, Location deflt) throws Exception {
         text = text == null ? "" : text.trim();
@@ -119,7 +119,7 @@ public class LocationSelection extends Panel {
     /**
      * Initializes the listbox with the current location context, if one is set.
      * 
-     * @param lstLocation
+     * @param lstLocation The list box.
      */
     public static void locationInit(Listbox lstLocation) {
         Location location = LocationContext.getActiveLocation();

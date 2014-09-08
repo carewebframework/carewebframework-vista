@@ -24,54 +24,54 @@ import org.carewebframework.common.JSONUtil;
  * Represents a FileMan-style date.
  */
 public class FMDate extends Date {
-
+    
     private static final long serialVersionUID = 1L;
-
+    
     /**
      * Overrides default JSON date serialization to use FileMan format.
      */
     public static class FMDateFormat extends SimpleDateFormat {
-
+        
         private static final long serialVersionUID = 1L;
-
+        
         @Override
         public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
             FMDate value = date instanceof FMDate ? (FMDate) date : new FMDate(date);
             return toAppendTo.append(value.getFMDate());
         }
-
+        
         @Override
         public Date parse(String source, ParsePosition pos) {
             pos.setIndex(source.length());
             return FMDate.fromString(source);
         }
-
+        
         @Override
         public FMDateFormat clone() {
             return new FMDateFormat();
         }
-
+        
     }
-
+    
     /**
      * Sets the date formatter to be used by the JSON parser.
      */
     static {
         JSONUtil.setDateFormat(new FMDateFormat());
     }
-
+    
     private boolean hasTime;
-
+    
     /**
      * Converts a string value to a FM date.
      *
-     * @param value
+     * @param value The string value to convert.
      * @return A FM date.
      */
     public static FMDate fromString(String value) {
         return StringUtils.isEmpty(value) ? null : new FMDate(value);
     }
-
+    
     /**
      * Creates a FM date corresponding to the specified FM string representation.
      *
@@ -81,7 +81,7 @@ public class FMDate extends Date {
         super();
         setFMDate(value);
     }
-
+    
     /**
      * Creates a FM date with a value corresponding to the current time.
      */
@@ -89,7 +89,7 @@ public class FMDate extends Date {
         super();
         this.hasTime = DateUtil.hasTime(this);
     }
-
+    
     /**
      * Creates a FM date with a value specified by the given date.
      *
@@ -100,7 +100,7 @@ public class FMDate extends Date {
         this.setTime(date.getTime());
         this.hasTime = date instanceof FMDate ? ((FMDate) date).hasTime : DateUtil.hasTime(this);
     }
-
+    
     /**
      * Sets a calendar component based on the input value. Meant to be called successively, with the
      * return value used as the input value for the next call, to extract lower digits from the
@@ -116,7 +116,7 @@ public class FMDate extends Date {
         cal.set(part, (int) (value % div));
         return value / div;
     }
-
+    
     /**
      * Sets the date value based on the specified FM string representation.
      *
@@ -126,11 +126,11 @@ public class FMDate extends Date {
         final long multiplier = 100000000;
         Calendar cal = Calendar.getInstance();
         double val = Double.parseDouble(value);
-
+        
         if (val < 1000000D || val > 9999999D) {
             throw new IllegalArgumentException();
         }
-
+        
         long date = (long) Math.floor(val * multiplier);
         hasTime = date % multiplier != 0;
         date = setCalendar(cal, Calendar.MILLISECOND, date, 100);
@@ -142,7 +142,7 @@ public class FMDate extends Date {
         date = setCalendar(cal, Calendar.YEAR, date + 1700, 10000);
         setTime(cal.getTimeInMillis());
     }
-
+    
     /**
      * Returns the FM string representation of the date.
      *
@@ -153,26 +153,26 @@ public class FMDate extends Date {
         cal.setTime(this);
         StringBuilder sb = new StringBuilder(15);
         int hour = cal.get(Calendar.HOUR_OF_DAY);
-
+        
         if (hour == 0 && hasTime) {
             hour = 24;
             cal.add(Calendar.DAY_OF_MONTH, -1);
         }
-
+        
         addFMPiece(sb, cal.get(Calendar.YEAR) - 1700, 0);
         addFMPiece(sb, cal.get(Calendar.MONTH) + 1, 2);
         addFMPiece(sb, cal.get(Calendar.DAY_OF_MONTH), 2);
-
+        
         if (hasTime) {
             sb.append('.');
             addFMPiece(sb, hour, 2);
             addFMPiece(sb, cal.get(Calendar.MINUTE), 2);
             addFMPiece(sb, cal.get(Calendar.SECOND), 2);
             addFMPiece(sb, cal.get(Calendar.MILLISECOND), 2);
-
+            
             for (int i = sb.length() - 1; i >= 0; i--) {
                 char c = sb.charAt(i);
-
+                
                 if (c == '0') {
                     sb.deleteCharAt(i);
                 } else if (c == '.') {
@@ -183,10 +183,10 @@ public class FMDate extends Date {
                 }
             }
         }
-
+        
         return sb.toString();
     }
-
+    
     /**
      * Used to build a FM string representation of a date.
      * 
@@ -197,14 +197,14 @@ public class FMDate extends Date {
     private void addFMPiece(StringBuilder sb, int value, int pad) {
         String val = Integer.toString(value);
         pad -= val.length();
-
+        
         while (pad-- > 0) {
             sb.append('0');
         }
-
+        
         sb.append(val);
     }
-
+    
     /**
      * Returns the display friendly value of the date.
      * 
@@ -214,7 +214,7 @@ public class FMDate extends Date {
     public String toString() {
         return DateUtil.formatDate(this, false, !hasTime);
     }
-
+    
     /**
      * Returns the display friendly value of the date, including time zone.
      * 
@@ -223,7 +223,7 @@ public class FMDate extends Date {
     public String toStringFull() {
         return !hasTime ? toString() : DateUtil.formatDate(this, true);
     }
-
+    
     /**
      * Returns the display friendly value of the date, ignoring any time component.
      * 

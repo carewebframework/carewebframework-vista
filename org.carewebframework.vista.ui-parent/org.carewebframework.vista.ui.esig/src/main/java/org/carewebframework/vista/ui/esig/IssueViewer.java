@@ -61,7 +61,7 @@ public class IssueViewer extends Window {
      * 
      * @param items Esignature items that have issues for display.
      * @return True unless the dialog was canceled.
-     * @throws Exception
+     * @throws Exception Unspecified exception.
      */
     public static boolean execute(List<ESigItem> items) throws Exception {
         IssueViewer dlg = (IssueViewer) ZKUtil.loadZulPage(Constants.RESOURCE_PREFIX + "issueViewer.zul", null);

@@ -396,7 +396,7 @@ public class BrokerSession {
      * Package parameters for RPC call. If parameters already packaged, simply return the package.
      *
      * @param params Parameters to be packaged.
-     * @return
+     * @return Packaged parameters.
      */
     private RPCParameters packageParams(Object... params) {
         if (params == null) {
