@@ -69,11 +69,6 @@ public class Document extends DomainObject implements Comparable<Document> {
         this.locationName = locationName;
     }
     
-    @Override
-    public void setLogicalId(String id) {
-        super.setLogicalId(id);
-    }
-    
     public String getSubject() {
         return subject;
     }

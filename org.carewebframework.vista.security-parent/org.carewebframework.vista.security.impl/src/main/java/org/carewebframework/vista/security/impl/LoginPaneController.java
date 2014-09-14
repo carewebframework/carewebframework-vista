@@ -11,13 +11,15 @@ package org.carewebframework.vista.security.impl;
 
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu.composite.IdentifierDt;
+import ca.uhn.fhir.model.dstu.resource.Organization;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.resource.Organization;
-import org.carewebframework.fhir.model.type.IdentifierType;
+import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.FrameworkWebSupport;
 import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
@@ -110,7 +112,7 @@ public class LoginPaneController extends GenericForwardComposer<Component> {
         }
         final List<Organization> organizations = securityService.getDomains();
         institutionButton.setVisible(organizations.size() > 1);
-        String defaultInst = organizations.size() == 1 ? organizations.get(0).getLogicalId() : null;
+        String defaultInst = organizations.size() == 1 ? organizations.get(0).getId().getElementSpecificId() : null;
         
         if (StringUtils.isEmpty(defaultInst)) {
             defaultInst = (String) session.getAttribute(Constants.DEFAULT_INSTITUTION);
@@ -143,10 +145,10 @@ public class LoginPaneController extends GenericForwardComposer<Component> {
             final Listitem li = new Listitem();
             li.setValue(organization);
             j_domain.appendChild(li);
-            IdentifierType abbr = organization.getIdentifier().find("ABBREVIATION");
-            li.appendChild(new Listcell(abbr == null ? organization.getNameSimple() : abbr.getValueSimple()));
+            IdentifierDt abbr = FhirUtil.getIdentifier(organization.getIdentifier(), "ABBREVIATION");
+            li.appendChild(new Listcell(abbr == null ? organization.getName().getValue() : abbr.getValue().getValue()));
             
-            if (organization.getLogicalId().equals(defaultInst)) {
+            if (organization.getId().getIdPart().equals(defaultInst)) {
                 li.setSelected(true);
             }
         }
@@ -223,7 +225,7 @@ public class LoginPaneController extends GenericForwardComposer<Component> {
     private void doSubmit() {
         showMessage("");
         final Organization organization = getSelectedOrganization();
-        String instId = organization == null ? null : organization.getLogicalId();
+        String instId = organization == null ? null : organization.getId().getIdPart();
         String username = j_username.getValue().trim();
         final String password = j_password.getValue();
         
@@ -269,7 +271,7 @@ public class LoginPaneController extends GenericForwardComposer<Component> {
     }
     
     private void institutionChanged() {
-        lblInstitution.setValue(getSelectedOrganization().getNameSimple());
+        lblInstitution.setValue(getSelectedOrganization().getName().getValue());
     }
     
     /**

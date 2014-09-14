@@ -11,8 +11,9 @@ package org.carewebframework.vista.security.mock;
 
 import java.util.List;
 
-import org.carewebframework.fhir.model.resource.User;
-import org.carewebframework.fhir.model.type.HumanNameType;
+import ca.uhn.fhir.model.dstu.resource.User;
+
+import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.security.spring.CWFAuthenticationDetails;
 import org.carewebframework.vista.security.base.BaseAuthenticationProvider;
 
@@ -42,9 +43,9 @@ public final class AuthenticationProvider extends BaseAuthenticationProvider {
     @Override
     protected User login(CWFAuthenticationDetails details, String username, String password, String domain) {
         User user = new User();
-        user.setLogicalId("1");
-        user.setName(new HumanNameType("USER,MOCK"));
-        user.setLoginSimple(username);
+        user.setId("1");
+        user.setName(FhirUtil.parseName("USER,MOCK"));
+        user.setLogin(username);
         details.setDetail("user", user);
         return user;
     }

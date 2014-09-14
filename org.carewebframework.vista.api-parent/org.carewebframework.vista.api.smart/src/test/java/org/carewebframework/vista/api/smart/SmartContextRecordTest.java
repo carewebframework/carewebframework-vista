@@ -9,9 +9,10 @@
  */
 package org.carewebframework.vista.api.smart;
 
+import ca.uhn.fhir.model.dstu.resource.Patient;
+
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.fhir.common.FhirUtil;
-import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.smart.SmartContextBase;
 
 public class SmartContextRecordTest extends SmartContextBase {
@@ -26,7 +27,7 @@ public class SmartContextRecordTest extends SmartContextBase {
         
         if (patient != null) {
             context.put("full_name", FhirUtil.formatName(patient.getName()));
-            context.put("id", patient.getAbsoluteId());
+            context.put("id", patient.getId().getValue());
         }
     }
     

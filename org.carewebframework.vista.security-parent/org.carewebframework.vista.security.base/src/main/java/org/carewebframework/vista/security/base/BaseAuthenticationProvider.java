@@ -11,11 +11,12 @@ package org.carewebframework.vista.security.base;
 
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu.resource.User;
+
 import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.cal.api.domain.UserProxy;
-import org.carewebframework.fhir.model.resource.User;
 import org.carewebframework.security.spring.AbstractAuthenticationProvider;
 import org.carewebframework.security.spring.AuthenticationCancelledException;
 import org.carewebframework.security.spring.CWFAuthenticationDetails;
@@ -69,7 +70,8 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider<U
     
     @Override
     protected List<String> getAuthorities(User user) {
-        return user == null ? null : VistAUtil.getBrokerSession().callRPCList("RGCWFUSR GETPRIV", null, user.getLogicalId());
+        return user == null ? null : VistAUtil.getBrokerSession().callRPCList("RGCWFUSR GETPRIV", null,
+            user.getId().getIdPart());
     }
     
     private User getAuthenticatedUser(BrokerSession brokerSession) {
@@ -89,19 +91,19 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider<U
                 
             case CANCELED:
                 throw new AuthenticationCancelledException(StringUtils.defaultIfEmpty(result.reason,
-                        "Authentication attempt was cancelled."));
+                    "Authentication attempt was cancelled."));
                 
             case EXPIRED:
                 throw new CredentialsExpiredException(
-                    StringUtils.defaultIfEmpty(result.reason, "Your password has expired."), user);
+                        StringUtils.defaultIfEmpty(result.reason, "Your password has expired."), user);
                 
             case FAILURE:
                 throw new BadCredentialsException(StringUtils.defaultIfEmpty(result.reason,
-                        "Your username or password was not recognized."));
+                    "Your username or password was not recognized."));
                 
             case LOCKED:
                 throw new LockedException(StringUtils.defaultIfEmpty(result.reason,
-                        "Your user account has been locked and cannot be accessed."));
+                    "Your user account has been locked and cannot be accessed."));
                 
             case NOLOGINS:
                 throw new DisabledException(StringUtils.defaultIfEmpty(result.reason, "Logins are currently disabled."));

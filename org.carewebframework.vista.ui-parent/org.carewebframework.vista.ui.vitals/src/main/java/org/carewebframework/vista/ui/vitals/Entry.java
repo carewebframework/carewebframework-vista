@@ -16,6 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import ca.uhn.fhir.model.dstu.resource.Encounter;
+import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu.valueset.EncounterStateEnum;
+
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -25,9 +29,6 @@ import org.carewebframework.cal.api.context.EncounterContext;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.resource.Encounter;
-import org.carewebframework.fhir.model.resource.Encounter.EncounterStatusType;
-import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.shell.plugins.IPluginEvent;
 import org.carewebframework.shell.plugins.PluginContainer;
 import org.carewebframework.ui.zk.DateTimebox;
@@ -158,7 +159,7 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
         if (enabled && !fetched && patient != null && encounter != null) {
             template.clear();
             fetched = true;
-            VistAUtil.getBrokerSession().callRPCList("RGCWVM TEMPLATE", template, patient.getLogicalId(),
+            VistAUtil.getBrokerSession().callRPCList("RGCWVM TEMPLATE", template, patient.getId().getIdPart(),
                 EncounterUtil.encode(encounter), defaultUnits.ordinal() - 1);
         }
         
@@ -175,12 +176,12 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
             return;
         }
         
-        imgLocked.setVisible(encounter != null && encounter.getStatusSimple() == EncounterStatusType.Value.finished);
+        imgLocked.setVisible(encounter != null && encounter.getStatus().getValueAsEnum() == EncounterStateEnum.FINISHED);
         btnNew.setDisabled(!imgLocked.isVisible());
         btnCancel.setDisabled(btnNew.isDisabled());
         btnOK.setDisabled(false);
         lastDateTime = lastDateTime != null ? lastDateTime : useEncounterDate ? encounter.getPeriod().getStart().getValue()
-                .toDate() : new FMDate();
+                : new FMDate();
         loadGrid();
         val = getValue(colIndex, rowIndex);
         moveTo(rangeCol - 1, 1);

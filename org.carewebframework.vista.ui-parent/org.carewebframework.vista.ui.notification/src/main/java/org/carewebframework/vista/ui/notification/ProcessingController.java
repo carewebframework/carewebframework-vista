@@ -14,12 +14,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu.resource.Patient;
+
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.api.spring.SpringUtil;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.PromptDialog;
@@ -170,16 +171,16 @@ public class ProcessingController extends FrameworkController implements IPatien
             case SKIP:
             case SKIP_ALL:
                 break;
-                
+            
             case DELETE:
             case DELETE_ALL:
                 service.deleteNotification(notification);
                 break;
-                
+            
             case CANCEL:
                 close();
                 break;
-                
+            
             case VIEW:
                 changePatient(notification);
                 return;

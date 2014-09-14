@@ -11,20 +11,20 @@ package org.carewebframework.vista.api.domain;
 
 import java.util.Date;
 
+import ca.uhn.fhir.model.dstu.composite.CodeableConceptDt;
+import ca.uhn.fhir.model.dstu.composite.CodingDt;
+import ca.uhn.fhir.model.dstu.composite.PeriodDt;
+import ca.uhn.fhir.model.dstu.composite.ResourceReferenceDt;
+import ca.uhn.fhir.model.dstu.resource.Encounter;
+import ca.uhn.fhir.model.dstu.resource.Encounter.Location;
+import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu.resource.Practitioner;
+import ca.uhn.fhir.model.dstu.valueset.EncounterStateEnum;
+import ca.uhn.fhir.model.primitive.DateTimeDt;
+
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.common.FhirUtil;
-import org.carewebframework.fhir.model.core.DateAndTime;
-import org.carewebframework.fhir.model.resource.Encounter;
-import org.carewebframework.fhir.model.resource.Encounter.EncounterStatusType;
-import org.carewebframework.fhir.model.resource.Encounter_Location;
-import org.carewebframework.fhir.model.resource.Location;
-import org.carewebframework.fhir.model.resource.Patient;
-import org.carewebframework.fhir.model.resource.Practitioner;
-import org.carewebframework.fhir.model.type.CodeableConceptType;
-import org.carewebframework.fhir.model.type.CodingType;
-import org.carewebframework.fhir.model.type.PeriodType;
-import org.carewebframework.fhir.model.type.ResourceType;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
@@ -69,44 +69,46 @@ public class EncounterUtil {
             return false;
         }
         
-        String s = VistAUtil.getBrokerSession().callRPC("RGCWENCX FETCH", patient.getLogicalId(), encode(encounter),
-            getCurrentProvider(encounter).getLogicalId(), true);
+        String s = VistAUtil.getBrokerSession().callRPC("RGCWENCX FETCH", patient.getId().getIdPart(), encode(encounter),
+            getCurrentProvider(encounter).getId().getIdPart(), true);
         String id = StrUtil.piece(s, StrUtil.U, 6);
         
         if (!VistAUtil.validateIEN(id)) {
             return false;
         }
         
-        encounter.setLogicalId(id);
+        encounter.setId(id);
         return true;
     }
     
-    public static Encounter create(Date date, Location location, CodeableConceptType sc) {
+    public static Encounter create(Date date, Location location, CodeableConceptDt sc) {
         Encounter encounter = new Encounter();
-        PeriodType period = new PeriodType();
-        period.setStartSimple(new DateAndTime(date));
+        PeriodDt period = new PeriodDt();
+        period.setStart(new DateTimeDt(date));
         encounter.setPeriod(period);
-        ResourceType loc = new ResourceType();
-        loc.setReferenceSimple(location.getAbsoluteId());
-        encounter.addLocation(new Encounter_Location(loc, period));
-        encounter.addType(sc);
+        ResourceReferenceDt loc = new ResourceReferenceDt();
+        loc.setReference(location.getId());
+        Location encloc = encounter.addLocation();
+        encloc.setPeriod(period);
+        encloc.setLocation(loc);
+        //encounter.getType().add(sc);
         return encounter;
     }
     
-    public static CodeableConceptType createServiceCategory(String sc, String shortDx, String longDx) {
-        CodeableConceptType cpt = new CodeableConceptType();
-        cpt.setTextSimple(longDx);
-        CodingType coding = new CodingType();
-        coding.setCodeSimple(sc);
-        coding.setDisplaySimple(shortDx);
-        cpt.addCoding(coding);
+    public static CodeableConceptDt createServiceCategory(String sc, String shortDx, String longDx) {
+        CodeableConceptDt cpt = new CodeableConceptDt();
+        cpt.setText(longDx);
+        CodingDt coding = new CodingDt();
+        coding.setCode(sc);
+        coding.setDisplay(shortDx);
+        cpt.getCoding().add(coding);
         return cpt;
     }
     
     public static String getServiceCategory(Encounter encounter) {
-        CodeableConceptType cpt = encounter == null ? null : FhirUtil.getFirst(encounter.getType());
-        CodingType coding = cpt == null ? null : FhirUtil.getFirst(cpt.getCoding());
-        return coding == null ? null : coding.getCodeSimple();
+        CodeableConceptDt cpt = encounter == null ? null : FhirUtil.getFirst(encounter.getType());
+        CodingDt coding = cpt == null ? null : FhirUtil.getFirst(cpt.getCoding());
+        return coding == null ? null : coding.getCode().getValue();
     }
     
     public static Encounter decode(String piece) {
@@ -120,7 +122,7 @@ public class EncounterUtil {
     }
     
     public static boolean isLocked(Encounter encounter) {
-        return encounter.getStatusSimple() == EncounterStatusType.Value.finished;
+        return encounter.getStatus().getValueAsEnum() == EncounterStateEnum.FINISHED;
     }
     
     public static boolean isPrepared(Encounter encounter) {

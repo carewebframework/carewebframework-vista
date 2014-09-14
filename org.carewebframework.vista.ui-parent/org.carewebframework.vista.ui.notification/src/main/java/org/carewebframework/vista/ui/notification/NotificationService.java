@@ -14,10 +14,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu.resource.Patient;
+
 import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.vista.mbroker.BrokerSession;
 
 /**
@@ -75,7 +76,7 @@ public class NotificationService {
         if (patient == null) {
             lst = broker.callRPCList("RGCWXQ ALRLIST", null);
         } else if (patient != null) {
-            lst = broker.callRPCList("RGCWXQ ALRLIST", null, patient.getLogicalId());
+            lst = broker.callRPCList("RGCWXQ ALRLIST", null, patient.getId().getIdPart());
         }
         
         if (lst != null) {

@@ -9,14 +9,15 @@
  */
 package org.carewebframework.vista.ui.context.encounter;
 
+import ca.uhn.fhir.model.dstu.resource.Encounter;
+import ca.uhn.fhir.model.dstu.resource.Practitioner;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.carewebframework.cal.api.context.EncounterContext;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.fhir.common.FhirUtil;
-import org.carewebframework.fhir.model.resource.Encounter;
-import org.carewebframework.fhir.model.resource.Practitioner;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.vista.api.domain.EncounterUtil;
 

@@ -11,7 +11,7 @@ package org.carewebframework.vista.api.domain;
 
 import java.util.List;
 
-import org.carewebframework.fhir.model.resource.Location;
+import ca.uhn.fhir.model.dstu.resource.Location;
 
 /**
  * Location-related utility functions.

@@ -11,11 +11,12 @@ package org.carewebframework.vista.ui.context.location;
 
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu.resource.Location;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.carewebframework.cal.api.context.LocationContext;
-import org.carewebframework.fhir.model.resource.Location;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.api.domain.LocationUtil;
@@ -107,7 +108,7 @@ public class LocationSelection extends Panel {
      * @return The added list item.
      */
     public static Listitem locationAdd(Location location, Listbox lstLocation) {
-        Listitem item = new Listitem(location.getNameSimple());
+        Listitem item = new Listitem(location.getName().getValue());
         item.setValue(location);
         //item.setTooltiptext(location.getDescription());
         item.addForward(Events.ON_DOUBLE_CLICK, "btnOK", Events.ON_CLICK);

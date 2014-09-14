@@ -9,11 +9,12 @@
  */
 package org.carewebframework.vista.ui.context.location;
 
+import ca.uhn.fhir.model.dstu.resource.Location;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.carewebframework.cal.api.context.LocationContext;
-import org.carewebframework.fhir.model.resource.Location;
 import org.carewebframework.ui.FrameworkController;
 
 import org.zkoss.zk.ui.Component;
@@ -68,7 +69,7 @@ public class LocationHeader extends FrameworkController implements LocationConte
             log.debug("location: " + location);
         }
         
-        String text = location == null ? noSelectionMessage : location.getNameSimple();
+        String text = location == null ? noSelectionMessage : location.getName().getValue();
         locationHeader.setValue(text);
         Clients.resize(root);
     }

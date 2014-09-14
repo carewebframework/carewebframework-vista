@@ -12,13 +12,14 @@ package org.carewebframework.vista.security.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu.resource.Organization;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.resource.Organization;
 import org.carewebframework.security.spring.AbstractSecurityService;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.Security;
@@ -67,8 +68,8 @@ public abstract class BaseSecurityService extends AbstractSecurityService {
             
             if (!pcs[2].isEmpty()) {
                 Organization organization = new Organization();
-                organization.setLogicalId(pcs[0]);
-                organization.setNameSimple(pcs[1]);
+                organization.setId(pcs[0]);
+                organization.setName(pcs[1]);
                 //organization.setAbbreviation(StringUtils.isEmpty(pcs[3]) ? pcs[1] : pcs[3]);
                 organizations.add(organization);
             }

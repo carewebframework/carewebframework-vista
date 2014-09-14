@@ -9,17 +9,19 @@
  */
 package org.carewebframework.vista.api.query;
 
+import java.util.Date;
 import java.util.List;
+
+import ca.uhn.fhir.model.dstu.composite.HumanNameDt;
+import ca.uhn.fhir.model.dstu.composite.IdentifierDt;
+import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.primitive.StringDt;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.cal.api.query.patient.IPatientSearch;
 import org.carewebframework.cal.api.query.patient.PatientSearchCriteria;
 import org.carewebframework.cal.api.query.patient.PatientSearchException;
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.core.DateAndTime;
-import org.carewebframework.fhir.model.resource.Patient;
-import org.carewebframework.fhir.model.type.HumanNameType;
-import org.carewebframework.fhir.model.type.StringType;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
@@ -41,14 +43,14 @@ public class PatientSearchEngine implements IPatientSearch {
     public List<Patient> search(PatientSearchCriteria criteria) {
         BrokerSession broker = VistAUtil.getBrokerSession();
         
-        HumanNameType name = criteria.getName();
+        HumanNameDt name = criteria.getName();
         String familyName = name == null ? null : concatNames(name.getFamily());
         String givenName = name == null ? null : concatNames(name.getGiven());
-        String mrn = criteria.getMRN();
-        String ssn = criteria.getSSN();
+        IdentifierDt mrn = criteria.getMRN();
+        IdentifierDt ssn = criteria.getSSN();
         String gender = criteria.getGender();
-        DateAndTime date = criteria.getBirth();
-        String dob = date == null ? "" : new FMDate(date.toDate()).getFMDate();
+        Date date = criteria.getBirth();
+        String dob = date == null ? "" : new FMDate(date).getFMDate();
         String dfn = criteria.getId();
         List<String> hits = broker.callRPCList("RGCWPTPS SEARCH", null, 200, familyName, givenName, mrn, ssn, dfn, gender,
             dob);
@@ -81,10 +83,10 @@ public class PatientSearchEngine implements IPatientSearch {
      * @param names List of names.
      * @return Concatenated list.
      */
-    private String concatNames(List<StringType> names) {
+    private String concatNames(List<StringDt> names) {
         StringBuilder sb = null;
         
-        for (StringType name : names) {
+        for (StringDt name : names) {
             if (sb == null) {
                 sb = new StringBuilder();
             } else {

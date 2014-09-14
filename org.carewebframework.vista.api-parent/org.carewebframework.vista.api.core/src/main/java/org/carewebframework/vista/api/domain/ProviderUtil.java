@@ -12,10 +12,11 @@ package org.carewebframework.vista.api.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu.resource.Practitioner;
+
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.resource.Practitioner;
-import org.carewebframework.fhir.model.type.HumanNameType;
+import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
@@ -49,8 +50,8 @@ public class ProviderUtil {
             
             if (pcs[1].toUpperCase().startsWith(text)) {
                 Practitioner provider = new Practitioner();
-                provider.setLogicalId(pcs[0]);
-                provider.setName(new HumanNameType(pcs[1]));
+                provider.setId(pcs[0]);
+                provider.setName(FhirUtil.parseName(pcs[1]));
                 hits.add(provider);
             } else {
                 break;

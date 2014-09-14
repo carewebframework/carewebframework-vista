@@ -15,13 +15,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ca.uhn.fhir.model.dstu.resource.Patient;
+
 import org.carewebframework.api.event.IGenericEvent;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
 import org.carewebframework.common.NumUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.common.FhirUtil;
-import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.ui.icons.IconUtil;
 import org.carewebframework.ui.sharedforms.CaptionedForm;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
@@ -302,7 +303,8 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         service.getNotificationMessage(notification);
         
         if (radAll.isChecked()
-                || (notification.hasPatient() && patient != null && notification.getDfn().equals(patient.getLogicalId()))) {
+                || (notification.hasPatient() && patient != null && notification.getDfn()
+                        .equals(patient.getId().getIdPart()))) {
             model.add(notification);
         }
         

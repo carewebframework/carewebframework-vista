@@ -12,8 +12,9 @@ package org.carewebframework.vista.security.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import ca.uhn.fhir.model.dstu.resource.User;
+
 import org.carewebframework.api.security.SecurityUtil;
-import org.carewebframework.fhir.model.resource.User;
 import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.security.base.Constants;
 

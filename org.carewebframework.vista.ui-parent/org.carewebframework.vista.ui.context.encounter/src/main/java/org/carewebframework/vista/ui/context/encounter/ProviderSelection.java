@@ -9,9 +9,10 @@
  */
 package org.carewebframework.vista.ui.context.encounter;
 
+import ca.uhn.fhir.model.dstu.resource.Encounter;
+import ca.uhn.fhir.model.dstu.resource.Practitioner;
+
 import org.carewebframework.api.context.UserContext;
-import org.carewebframework.fhir.model.resource.Encounter;
-import org.carewebframework.fhir.model.resource.Practitioner;
 import org.carewebframework.ui.zk.ListUtil;
 import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.api.domain.EncounterProvider;

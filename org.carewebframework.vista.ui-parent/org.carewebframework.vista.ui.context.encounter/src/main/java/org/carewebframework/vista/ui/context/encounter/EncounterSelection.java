@@ -15,6 +15,11 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import ca.uhn.fhir.model.dstu.composite.CodeableConceptDt;
+import ca.uhn.fhir.model.dstu.resource.Encounter;
+import ca.uhn.fhir.model.dstu.resource.Encounter.Location;
+import ca.uhn.fhir.model.dstu.resource.Patient;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -25,10 +30,6 @@ import org.carewebframework.cal.api.context.LocationContext;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.resource.Encounter;
-import org.carewebframework.fhir.model.resource.Location;
-import org.carewebframework.fhir.model.resource.Patient;
-import org.carewebframework.fhir.model.type.CodeableConceptType;
 import org.carewebframework.ui.zk.DateRangePicker;
 import org.carewebframework.ui.zk.DateTimebox;
 import org.carewebframework.ui.zk.PopupDialog;
@@ -208,13 +209,13 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
         }
         
         if (hasFlag(flags, EncounterFlag.FORCE) && VistAUtil.parseIEN(encounter) <= 0
-                && DateUtil.stripTime(encounter.getPeriod().getStart().getValue().toDate()).after(DateUtil.today())) {
+                && DateUtil.stripTime(encounter.getPeriod().getStart().getValue()).after(DateUtil.today())) {
             return Constants.TX_NO_FUT;
         }
         
         if (hasFlag(flags, EncounterFlag.PROVIDER)
                 && !VistAUtil.getBrokerSession().callRPCBool("RGCWFUSR HASKEYS", "PROVIDER",
-                    EncounterUtil.getEncounterProvider(encounter).getLogicalId())) {
+                    EncounterUtil.getEncounterProvider(encounter).getId().getIdPart())) {
             return Constants.TX_NO_KEY;
         }
         
@@ -348,7 +349,7 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
             Location location = locid != null ? DomainFactoryRegistry.fetchObject(Location.class, locid) : null;
             Comboitem cboitem = cboServiceCategory.getSelectedItem();
             Date date = datEncounter.getDate();
-            CodeableConceptType sc = EncounterUtil.createServiceCategory((String) cboitem.getValue(), cboitem.getLabel(),
+            CodeableConceptDt sc = EncounterUtil.createServiceCategory((String) cboitem.getValue(), cboitem.getLabel(),
                 cboitem.getTooltiptext());
             encounter = EncounterUtil.create(date, location, sc);
             
@@ -417,14 +418,14 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
     }
     
     private boolean initOutpatient() {
-        List<String> data = broker.callRPCList("RGCWENCX VISITLST", null, patient.getLogicalId(),
+        List<String> data = broker.callRPCList("RGCWENCX VISITLST", null, patient.getId().getIdPart(),
             rngDateRange.getStartDate(), rngDateRange.getEndDate());
         populateListbox(lstOutpatient, data);
         return data.size() > 0;
     }
     
     private boolean initInpatient() {
-        List<String> data = broker.callRPCList("RGCWENCX ADMITLST", null, patient.getLogicalId());
+        List<String> data = broker.callRPCList("RGCWENCX ADMITLST", null, patient.getId().getIdPart());
         populateListbox(lstInpatient, data);
         return data.size() > 0;
     }

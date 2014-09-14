@@ -14,14 +14,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ca.uhn.fhir.model.dstu.composite.IdentifierDt;
+import ca.uhn.fhir.model.dstu.resource.Patient;
+
 import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.cal.api.context.UserContext;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.common.FhirUtil;
-import org.carewebframework.fhir.model.resource.Patient;
-import org.carewebframework.fhir.model.type.IdentifierType;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.DateTimebox;
 import org.carewebframework.ui.zk.ListUtil;
@@ -133,9 +134,9 @@ public class ScheduleController extends FrameworkController {
                 pnlAssociate.setVisible(false);
             } else {
                 String name = FhirUtil.formatName(patient.getName());
-                IdentifierType mrn = patient.getIdentifier().find("MRN");
-                lblPatient.setValue(name + " (" + (mrn == null ? "" : mrn.getValueSimple()) + ")");
-                chkAssociate.setValue(patient.getLogicalId());
+                IdentifierDt mrn = FhirUtil.getIdentifier(patient.getIdentifier(), "MRN");
+                lblPatient.setValue(name + " (" + (mrn == null ? "" : mrn.getValue().getValue()) + ")");
+                chkAssociate.setValue(patient.getId().getIdPart());
             }
         }
         

@@ -11,18 +11,18 @@ package org.carewebframework.vista.api.mbroker;
 
 import org.carewebframework.api.alias.AliasType;
 import org.carewebframework.api.alias.AliasTypeRegistry;
-import org.carewebframework.fhir.client.FhirClient;
+import org.carewebframework.fhir.client.ClientUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.RPCParameters;
 
 /**
  * This subclass exists to allow transparent use of RPC aliases in broker calls and registers a
- * broker request factory to allow making RESTful calls via the broker.
+ * special http client to allow making RESTful calls via the broker.
  */
 public class BrokerSessionEx extends BrokerSession {
     
     static {
-        FhirClient.getInstance().registerClientHttpRequestFactory("broker://*", new BrokerRequestFactory());
+        ClientUtil.registerHttpClient("http://broker/*", new BrokerClient());
     }
     
     private final AliasType rpcAliasType = AliasTypeRegistry.getType("RPC");

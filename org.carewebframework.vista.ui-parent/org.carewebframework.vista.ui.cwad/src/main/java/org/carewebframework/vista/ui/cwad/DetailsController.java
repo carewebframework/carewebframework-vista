@@ -89,7 +89,7 @@ public class DetailsController extends GenericForwardComposer<Window> implements
         super.doAfterCompose(comp);
         root = comp;
         allowPrint = (Boolean) arg.get("allowPrint");
-        patientId = PatientContext.getActivePatient().getLogicalId();
+        patientId = PatientContext.getActivePatient().getId().getIdPart();
         List<String> lst = broker.callRPCList("RGCWARCV LIST", null, patientId);
         //MixedCaseList(lst)
         initListbox(lstAllergies, lst, lstAllergiesRenderer);
@@ -121,7 +121,7 @@ public class DetailsController extends GenericForwardComposer<Window> implements
             String s = item.getValue();
             char c = StrUtil.piece(s, StrUtil.U, 2).charAt(0);
             List<String> lst = null;
-            String patientId = PatientContext.getActivePatient().getLogicalId();
+            String patientId = PatientContext.getActivePatient().getId().getIdPart();
             
             switch (c) {
                 case 'A':

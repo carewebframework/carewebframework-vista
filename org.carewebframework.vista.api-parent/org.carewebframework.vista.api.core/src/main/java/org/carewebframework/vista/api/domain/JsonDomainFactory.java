@@ -36,7 +36,7 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
     }
     
     @Override
-    public Object newObject(Class<Object> clazz) {
+    public <T extends Object> T newObject(Class<T> clazz) {
         try {
             return clazz.newInstance();
         } catch (Exception e) {
@@ -47,14 +47,15 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
     /**
      * Fetch an instance of the domain class from the data store.
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public Object fetchObject(Class<Object> clazz, String id) {
+    public <T extends Object> T fetchObject(Class<T> clazz, String id) {
         if (StringUtils.isEmpty(id)) {
             return null;
         }
         
         String json = VistAUtil.getBrokerSession().callRPC("RGCWSER FETCH", JSON_PREFIX + getAlias(clazz), id);
-        return JSONUtil.deserialize(json);
+        return (T) JSONUtil.deserialize(json);
     }
     
     /**
@@ -62,13 +63,13 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<Object> fetchObjects(Class<Object> clazz, String[] ids) {
+    public <T extends Object> List<T> fetchObjects(Class<T> clazz, String[] ids) {
         if (ids == null || ids.length == 0) {
             return Collections.emptyList();
         }
         
         String json = VistAUtil.getBrokerSession().callRPC("RGCWSER FETCH", JSON_PREFIX + getAlias(clazz), ids);
-        return (List<Object>) JSONUtil.deserialize(json);
+        return (List<T>) JSONUtil.deserialize(json);
     }
     
     /**

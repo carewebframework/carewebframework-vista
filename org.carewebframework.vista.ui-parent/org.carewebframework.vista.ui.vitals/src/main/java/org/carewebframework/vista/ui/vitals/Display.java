@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import ca.uhn.fhir.model.dstu.resource.Patient;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -25,8 +27,6 @@ import org.carewebframework.api.FrameworkUtil;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.common.FhirUtil;
-import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.shell.plugins.IPluginEvent;
 import org.carewebframework.shell.plugins.PluginContainer;
 import org.carewebframework.ui.highcharts.Chart;
@@ -148,14 +148,14 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
     
     private Date ageToDate(double age) {
         if (chkAge.isVisible() && chkAge.isChecked()) {
-            return DateUtil.addDays(FhirUtil.asDate(patient.getBirthDate()), (int) (age * 365.25 / 12.0), true);
+            return DateUtil.addDays(patient.getBirthDate().getValue(), (int) (age * 365.25 / 12.0), true);
         } else {
             return new Date();
         }
     }
     
     private double dateToAge(Date date) {
-        double diff = date.getTime() - FhirUtil.asDate(patient.getBirthDate()).getTime();
+        double diff = date.getTime() - patient.getBirthDate().getValue().getTime();
         return diff / 2592000000.0;
     }
     
@@ -317,7 +317,7 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
             String pctileRPC = percentiles.get(testid);
             
             if (pctileRPC != null && chkPercentiles.isChecked()) {
-                List<String> pctiles = broker.callRPCList(pctileRPC, null, testid, patient.getLogicalId(),
+                List<String> pctiles = broker.callRPCList(pctileRPC, null, testid, patient.getId().getIdPart(),
                     DateUtils.addDays(dateLow, -3000), DateUtils.addDays(dateHigh, 3000), getDefaultUnits());
                 
                 for (String pctile : pctiles) {
@@ -482,7 +482,7 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
     
     private List<String> doRPC(String rpcName, Date date1, Date date2, List<String> tests) {
         // TODO: need to use encounter location
-        return broker.callRPCList(rpcName, null, patient.getLogicalId(), date1, date2, 0, tests, 0, getDefaultUnits());
+        return broker.callRPCList(rpcName, null, patient.getId().getIdPart(), date1, date2, 0, tests, 0, getDefaultUnits());
     }
     
     private void updatePaging() {

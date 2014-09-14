@@ -16,9 +16,10 @@ import static org.carewebframework.common.StrUtil.toList;
 
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu.resource.Patient;
+
 import org.carewebframework.cal.api.context.PatientContext;
-import org.carewebframework.fhir.model.core.IReferenceable;
-import org.carewebframework.fhir.model.resource.Patient;
+import org.carewebframework.fhir.common.IReferenceable;
 import org.carewebframework.ui.sharedforms.ListViewForm;
 import org.carewebframework.ui.zk.ReportBox;
 import org.carewebframework.vista.mbroker.BrokerSession;
@@ -149,7 +150,7 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
     
     @Override
     protected void requestData() {
-        asyncHandle = getBroker().callRPCAsync(listRPC, this, patient.getLogicalId());
+        asyncHandle = getBroker().callRPCAsync(listRPC, this, patient.getId().getIdPart());
     }
     
     /**
@@ -170,7 +171,7 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
     
     protected String getLogicalId(T data) {
         return data instanceof String ? piece((String) data, U) : data instanceof IReferenceable ? ((IReferenceable) data)
-                .getLogicalId() : "";
+                .getId().getIdPart() : "";
         
     }
     
@@ -183,7 +184,7 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
     protected String getDetail(T data) {
         String ien = getLogicalId(data);
         return detailRPC == null || ien == null || ien.isEmpty() ? null : fromList(getBroker().callRPCList(detailRPC, null,
-            patient.getLogicalId(), ien));
+            patient.getId().getIdPart(), ien));
     }
     
     protected String getError(List<String> list) {

@@ -24,7 +24,7 @@ public class JsonTest extends CommonTest {
     @Test
     public void test() throws URISyntaxException {
         PropertyDefinition def = DomainFactoryRegistry.fetchObject(PropertyDefinition.class, "1");
-        assertEquals("1", def.getLogicalId());
+        assertEquals("1", def.getId().getIdPart());
     }
     
 }

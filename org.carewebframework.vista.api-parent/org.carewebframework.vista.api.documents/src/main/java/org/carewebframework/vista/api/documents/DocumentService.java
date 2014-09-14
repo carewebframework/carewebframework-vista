@@ -14,10 +14,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu.resource.User;
+
 import org.carewebframework.api.spring.SpringUtil;
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.resource.Patient;
-import org.carewebframework.fhir.model.resource.User;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
 
@@ -86,7 +87,7 @@ public class DocumentService {
     public void retrieveContents(List<Document> documents) {
         for (Document doc : documents) {
             if (doc.getBody() == null) {
-                List<String> body = broker.callRPCList("TIU GET RECORD TEXT", null, doc.getLogicalId());
+                List<String> body = broker.callRPCList("TIU GET RECORD TEXT", null, doc.getId().getIdPart());
                 doc.setBody(StrUtil.fromList(body));
             }
         }
@@ -142,11 +143,11 @@ public class DocumentService {
         List<Document> results = new ArrayList<Document>();
         
         for (DocumentCategory cat : categories) {
-            for (String result : broker.callRPCList("TIU DOCUMENTS BY CONTEXT", null, cat.getLogicalId(), 1,
-                patient.getLogicalId(), startDate, endDate, user.getLogicalId())) {
+            for (String result : broker.callRPCList("TIU DOCUMENTS BY CONTEXT", null, cat.getId().getIdPart(), 1, patient
+                    .getId().getIdPart(), startDate, endDate, user.getId().getIdPart())) {
                 String[] pcs = StrUtil.split(result, StrUtil.U, 14);
                 Document doc = new Document();
-                doc.setLogicalId(pcs[0]);
+                doc.setId(pcs[0]);
                 doc.setTitle(pcs[1]);
                 doc.setDateTime(new FMDate(pcs[2]));
                 doc.setAuthorName(StrUtil.piece(pcs[4], ";", 3));

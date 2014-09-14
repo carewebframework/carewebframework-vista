@@ -14,58 +14,63 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
+import ca.uhn.fhir.model.api.BaseResource;
+import ca.uhn.fhir.model.api.ExtensionDt;
+import ca.uhn.fhir.model.dstu.resource.Binary;
+import ca.uhn.fhir.model.dstu.resource.Condition;
+import ca.uhn.fhir.model.dstu.resource.DocumentReference;
+import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.primitive.UriDt;
+
+import org.carewebframework.api.domain.IDomainFactory;
 import org.carewebframework.api.test.CommonTest;
-import org.carewebframework.fhir.client.FhirClient;
-import org.carewebframework.fhir.model.core.Extension;
-import org.carewebframework.fhir.model.core.ResourceOrFeed;
-import org.carewebframework.fhir.model.resource.Binary;
-import org.carewebframework.fhir.model.resource.DocumentReference;
-import org.carewebframework.fhir.model.type.Base64BinaryType;
-import org.carewebframework.fhir.model.type.UriType;
-import org.carewebframework.vista.api.mbroker.BrokerRequestFactory;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
+import org.carewebframework.fhir.client.ClientUtil;
+import org.carewebframework.fhir.client.GenericClient;
+import org.carewebframework.fhir.common.FhirDomainFactory;
+import org.carewebframework.vista.api.mbroker.BrokerClient;
 
 import org.junit.Test;
 
 public class FhirTest extends CommonTest {
     
-    private static final String ROOT = "broker://RGCWSER+REST/FHIR/";
+    private static final String ROOT = "http://broker/FHIR/";
+    
+    private static final String[] PAT_IDS = { "1", "2" };
     
     @Test
     public void test() throws URISyntaxException {
-        FhirClient rest = FhirClient.getInstance();
-        rest.registerClientHttpRequestFactory("broker://*", new BrokerRequestFactory());
-        ResourceOrFeed result = rest.get(ROOT + "Patient/1");
-        assertNotNull(result.getResource());
-        for (Extension extension : result.getResource().getExtension().iterable("http://hl7.org/fhir/Profile/us-core#race")) {
-            System.out.println(extension.getValue());
+        ClientUtil.registerHttpClient("broker://*", new BrokerClient());
+        IDomainFactory<BaseResource> factory = FhirDomainFactory.getInstance();
+        Patient pat1 = factory.fetchObject(Patient.class, "1");
+        assertNotNull(pat1);
+        for (ExtensionDt extension : pat1.getAllUndeclaredExtensions()) {
+            System.out.println(extension.getUrlAsString() + "=" + extension.getValue());
         }
-        result = rest.get(ROOT + "Patient?_id=1,2");
-        assertNotNull(result.getFeed());
-        result = rest.get(ROOT + "DocumentReference/1");
-        assertNotNull(result.getResource());
-        UriType uri = ((DocumentReference) result.getResource()).getLocation();
-        result = rest.get(uri.getValue());
-        assertNotNull(result.getResource());
-        Base64BinaryType text = ((Binary) result.getResource()).getContent();
-        System.out.println(new String(text.getValue()));
-        result = rest.get(ROOT + "Condition/1");
-        assertNotNull(result.getResource());
-        testException(ROOT + "ICD9/1", HttpStatus.FORBIDDEN);
-        testException(ROOT + "xxxxxx/1", HttpStatus.NOT_FOUND);
+        List<Patient> patients = factory.fetchObjects(Patient.class, PAT_IDS);
+        assertNotNull(patients);
+        assertEquals(2, patients.size());
+        DocumentReference dr = factory.fetchObject(DocumentReference.class, "1");
+        assertNotNull(dr);
+        UriDt uri = dr.getLocation();
+        GenericClient client = ClientUtil.getFhirClient();
+        Binary result = (Binary) client.read(uri);
+        assertNotNull(result);
+        byte[] text = result.getContent();
+        System.out.println(new String(text));
+        Condition cond = factory.fetchObject(Condition.class, "1");
+        assertNotNull(cond);
+        testException(client, ROOT + "Patient/309349993439");
     }
     
-    private void testException(String url, HttpStatus status) {
+    private void testException(GenericClient client, String url) {
         try {
-            FhirClient.getInstance().get(url);
+            UriDt _url = new UriDt(url);
+            client.read(_url);
             fail("Expected exception not thrown.");
-        } catch (HttpClientErrorException e) {
-            assertEquals(status, e.getStatusCode());
         } catch (Exception e) {
-            fail("Unexpected exception thrown: " + e.getMessage());
+            
         }
     }
     

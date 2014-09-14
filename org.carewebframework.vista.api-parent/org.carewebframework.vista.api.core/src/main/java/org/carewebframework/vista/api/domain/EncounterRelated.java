@@ -9,8 +9,9 @@
  */
 package org.carewebframework.vista.api.domain;
 
+import ca.uhn.fhir.model.dstu.resource.Encounter;
+
 import org.carewebframework.cal.api.domain.DomainObject;
-import org.carewebframework.fhir.model.resource.Encounter;
 
 /**
  * Abstract base class for encounter-associated domain objects.

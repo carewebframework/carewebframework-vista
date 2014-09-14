@@ -167,7 +167,7 @@ public class ChangePasswordController extends GenericForwardComposer<Component> 
                 if (result != null && !result.isEmpty()) {
                     showMessage(result);
                 } else if (forced) {
-                    String inst = user.getNativeUser().getOrganization().getReference().getLogicalId();
+                    String inst = user.getNativeUser().getProvider().getElementSpecificId();
                     j_username.setValue(inst + "\\" + user.getLogin());
                     Events.sendEvent("onSubmit", panel.getRoot(), null);
                 } else {

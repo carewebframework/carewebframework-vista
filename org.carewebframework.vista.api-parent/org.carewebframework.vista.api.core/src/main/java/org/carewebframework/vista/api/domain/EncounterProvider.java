@@ -12,51 +12,38 @@ package org.carewebframework.vista.api.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.carewebframework.fhir.common.FhirUtil;
-import org.carewebframework.fhir.model.core.Element;
-import org.carewebframework.fhir.model.resource.Encounter;
-import org.carewebframework.fhir.model.resource.Encounter_Participant;
-import org.carewebframework.fhir.model.resource.Practitioner;
-import org.carewebframework.fhir.model.type.CodeableConceptType;
-import org.carewebframework.fhir.model.type.CodingType;
-import org.carewebframework.fhir.model.type.ResourceType;
+import ca.uhn.fhir.model.api.IResource;
+import ca.uhn.fhir.model.dstu.composite.CodeableConceptDt;
+import ca.uhn.fhir.model.dstu.composite.CodingDt;
+import ca.uhn.fhir.model.dstu.composite.ResourceReferenceDt;
+import ca.uhn.fhir.model.dstu.resource.Encounter;
+import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
+import ca.uhn.fhir.model.dstu.resource.Practitioner;
 
 /**
  * Abstract base class for encounter-associated domain objects.
  */
 public class EncounterProvider extends EncounterRelated {
     
-    private static final CodeableConceptType primaryType = new CodeableConceptType();
+    private static final CodeableConceptDt primaryType = new CodeableConceptDt();
     
     static {
-        primaryType.setTextSimple("Primary");
-        CodingType coding = new CodingType();
-        coding.setCodeSimple("P");
-        primaryType.addCoding(coding);
+        primaryType.setText("Primary");
+        CodingDt coding = primaryType.addCoding();
+        coding.setCode("P");
     }
     
     private Practitioner currentProvider;
     
     private Practitioner primaryProvider;
     
-    private final List<Encounter_Participant> participants;
+    private final List<Participant> participants;
     
     public EncounterProvider(Encounter encounter) {
         super(encounter);
         participants = encounter.getParticipant();
         currentProvider = null;
         primaryProvider = getPractitioner(findPrimary());
-    }
-    
-    public void assign(EncounterProvider encounterProvider) {
-        if (this == encounterProvider) {
-            throw new IllegalArgumentException("Cannot assign to self.");
-        }
-        
-        clear();
-        FhirUtil.clone(encounterProvider.participants, participants);
-        currentProvider = FhirUtil.clone(encounterProvider.currentProvider);
-        primaryProvider = FhirUtil.clone(encounterProvider.primaryProvider);
     }
     
     public Practitioner getCurrentProvider() {
@@ -91,9 +78,9 @@ public class EncounterProvider extends EncounterRelated {
         boolean result = find(provider, false) == null;
         
         if (result) {
-            Encounter_Participant participant = new Encounter_Participant();
-            ResourceType resource = new ResourceType();
-            resource.setReferenceSimple(provider.getAbsoluteId());
+            Participant participant = new Participant();
+            ResourceReferenceDt resource = new ResourceReferenceDt();
+            resource.setReference(provider.getId());
             participant.setIndividual(resource);
         }
         
@@ -116,18 +103,18 @@ public class EncounterProvider extends EncounterRelated {
         return result;
     }
     
-    public Encounter_Participant find(Practitioner provider, boolean create) {
-        for (Encounter_Participant participant : participants) {
-            if (participant.getIndividual().getReference().equals(provider.getAbsoluteId())) {
+    public Participant find(Practitioner provider, boolean create) {
+        for (Participant participant : participants) {
+            if (participant.getIndividual().getReference().equals(provider.getId())) {
                 return participant;
             }
         }
         
         if (create) {
-            Encounter_Participant participant = new Encounter_Participant();
-            ResourceType resource = new ResourceType();
-            resource.setReferenceSimple(provider.getAbsoluteId());
-            resource.setDisplaySimple(provider.getName().toString());
+            Participant participant = new Participant();
+            ResourceReferenceDt resource = new ResourceReferenceDt();
+            resource.setReference(provider.getId());
+            resource.setDisplay(provider.getName().toString());
             participant.setIndividual(resource);
             return participant;
         }
@@ -135,8 +122,8 @@ public class EncounterProvider extends EncounterRelated {
         return null;
     }
     
-    public Encounter_Participant findPrimary() {
-        for (Encounter_Participant participant : participants) {
+    public Participant findPrimary() {
+        for (Participant participant : participants) {
             if (participant.getType().contains(primaryType)) {
                 return participant;
             }
@@ -145,20 +132,20 @@ public class EncounterProvider extends EncounterRelated {
         return null;
     }
     
-    public Practitioner getPractitioner(Encounter_Participant participant) {
+    public Practitioner getPractitioner(Participant participant) {
         if (participant == null) {
             return null;
         }
         
-        ResourceType resource = participant.getIndividual();
-        Element ele = resource.getReferenceTarget();
+        ResourceReferenceDt resource = participant.getIndividual();
+        IResource ele = resource.getResource();
         return ele instanceof Practitioner ? (Practitioner) ele : null;
     }
     
     public List<Practitioner> getProviders() {
         List<Practitioner> list = new ArrayList<Practitioner>();
         
-        for (Encounter_Participant participant : participants) {
+        for (Participant participant : participants) {
             Practitioner practitioner = getPractitioner(participant);
             
             if (practitioner != null) {

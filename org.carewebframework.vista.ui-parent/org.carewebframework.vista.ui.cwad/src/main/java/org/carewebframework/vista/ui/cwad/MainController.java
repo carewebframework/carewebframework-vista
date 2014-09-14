@@ -11,10 +11,11 @@ package org.carewebframework.vista.ui.cwad;
 
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu.resource.Patient;
+
 import org.carewebframework.api.event.IGenericEvent;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
-import org.carewebframework.fhir.model.resource.Patient;
 import org.carewebframework.shell.plugins.PluginContainer;
 import org.carewebframework.shell.plugins.PluginController;
 import org.carewebframework.ui.zk.ReportBox;
@@ -60,12 +61,12 @@ public class MainController extends PluginController implements IPatientContextE
         }
         
         Patient patient = PatientContext.getActivePatient();
-        String cwad = patient == null ? "" : broker.callRPC("RGCWCACV CWAD", patient.getLogicalId());
+        String cwad = patient == null ? "" : broker.callRPC("RGCWCACV CWAD", patient.getId().getIdPart());
         lblCWAD.setValue(cwad);
         lblPostings.setValue(cwad.isEmpty() ? "No Postings" : "Postings");
         
         if (!noPopup && popupFlags && cwad.contains("F")) {
-            List<String> lst = broker.callRPCList("RGCWCACV PRF", null, patient.getLogicalId());
+            List<String> lst = broker.callRPCList("RGCWCACV PRF", null, patient.getId().getIdPart());
             
             if (!lst.isEmpty()) {
                 dlgFlags = ReportBox.amodal(lst, "Record Flags", allowPrint);
@@ -78,7 +79,7 @@ public class MainController extends PluginController implements IPatientContextE
         }
         
         if (patient != null) {
-            eventId = "GMRA." + patient.getLogicalId();
+            eventId = "GMRA." + patient.getId().getIdPart();
             getEventManager().subscribe(eventId, gmraListener);
         }
     }

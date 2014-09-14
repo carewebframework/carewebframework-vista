@@ -9,10 +9,11 @@
  */
 package org.carewebframework.vista.ui.notification;
 
+import ca.uhn.fhir.model.dstu.resource.User;
+
 import org.apache.commons.lang.math.NumberUtils;
 
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.model.resource.User;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
