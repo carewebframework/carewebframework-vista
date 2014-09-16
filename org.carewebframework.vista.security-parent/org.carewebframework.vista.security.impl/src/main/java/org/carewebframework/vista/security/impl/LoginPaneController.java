@@ -112,7 +112,7 @@ public class LoginPaneController extends GenericForwardComposer<Component> {
         }
         final List<Organization> organizations = securityService.getDomains();
         institutionButton.setVisible(organizations.size() > 1);
-        String defaultInst = organizations.size() == 1 ? organizations.get(0).getId().getElementSpecificId() : null;
+        String defaultInst = organizations.size() == 1 ? organizations.get(0).getId().getIdPart() : null;
         
         if (StringUtils.isEmpty(defaultInst)) {
             defaultInst = (String) session.getAttribute(Constants.DEFAULT_INSTITUTION);
