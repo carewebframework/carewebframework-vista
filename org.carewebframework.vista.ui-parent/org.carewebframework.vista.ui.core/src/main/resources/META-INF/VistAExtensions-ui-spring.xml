@@ -26,7 +26,7 @@
 
 	<beans profile="desktop">
 
-		<bean name="coverSheetBase" abstract="true" parent="sharedFormCoverController"
+		<bean name="coverSheetBase" abstract="true" parent="sharedFormListViewController"
 			scope="prototype">
 			<property name="broker" ref="brokerSession" />
 		</bean>
