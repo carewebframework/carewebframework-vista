@@ -2,7 +2,7 @@
 	<parent>
 		<groupId>org.carewebframework</groupId>
 		<artifactId>org.carewebframework.vista.ui-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>org.carewebframework.vista.ui.vitals</artifactId>
@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.ui.highcharts</artifactId>
-			<version>3.1.0</version>
+			<version>4.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

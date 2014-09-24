@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.carewebframework</groupId>
 		<artifactId>org.carewebframework.vista.webapp-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>org.carewebframework.vista.webapp.testharness</artifactId>
@@ -67,17 +67,17 @@
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.cal.ui.patientselection.v1</artifactId>
-			<version>3.1.0</version>
+			<version>4.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.cal.ui.patientheader</artifactId>
-			<version>3.1.0</version>
+			<version>4.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.ui.userheader</artifactId>
-			<version>3.1.0</version>
+			<version>4.0.0-SNAPSHOT</version>
 		</dependency>
 		<!-- VistA Plugins -->
 		<dependency>
