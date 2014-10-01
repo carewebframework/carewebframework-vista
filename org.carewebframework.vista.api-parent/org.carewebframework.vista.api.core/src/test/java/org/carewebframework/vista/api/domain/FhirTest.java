@@ -23,11 +23,11 @@ import ca.uhn.fhir.model.dstu.resource.Condition;
 import ca.uhn.fhir.model.dstu.resource.DocumentReference;
 import ca.uhn.fhir.model.dstu.resource.Patient;
 import ca.uhn.fhir.model.primitive.UriDt;
+import ca.uhn.fhir.rest.client.GenericClient;
 
 import org.carewebframework.api.domain.IDomainFactory;
 import org.carewebframework.api.test.CommonTest;
 import org.carewebframework.fhir.client.ClientUtil;
-import org.carewebframework.fhir.client.GenericClient;
 import org.carewebframework.fhir.common.FhirDomainFactory;
 import org.carewebframework.vista.api.mbroker.BrokerClient;
 
