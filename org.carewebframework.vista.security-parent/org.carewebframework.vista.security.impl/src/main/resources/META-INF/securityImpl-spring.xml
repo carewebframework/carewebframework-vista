@@ -12,7 +12,9 @@
 			<property name="canChangePassword" value="${org.carewebframework.security.password.can.change:true}" />
 		</bean>
 
-		<bean id="securityAuthenticationProvider" class="org.carewebframework.vista.security.base.BaseAuthenticationProvider" />
+		<bean id="securityAuthenticationProvider" class="org.carewebframework.vista.security.base.BaseAuthenticationProvider">
+			<property name="brokerSession" ref="brokerSession" />
+		</bean>
 	
 		<!-- Controllers -->
 		<bean id="loginPaneController" class="org.carewebframework.vista.security.impl.LoginPaneController"

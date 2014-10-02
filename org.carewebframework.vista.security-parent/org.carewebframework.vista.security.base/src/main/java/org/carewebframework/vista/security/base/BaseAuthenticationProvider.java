@@ -37,6 +37,8 @@ import org.springframework.security.core.AuthenticationException;
  */
 public class BaseAuthenticationProvider extends AbstractAuthenticationProvider<User> {
     
+    private BrokerSession brokerSession;
+    
     public BaseAuthenticationProvider() {
         super(false);
     }
@@ -60,10 +62,9 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider<U
      */
     @Override
     protected User login(CWFAuthenticationDetails details, String username, String password, String domain) {
-        BrokerSession brokerSession = VistAUtil.getBrokerSession();
         AuthResult authResult = Security.authenticate(brokerSession, username, password, domain);
-        User user = getAuthenticatedUser(brokerSession);
-        details.setDetail("user", new UserProxy(user));
+        User user = getAuthenticatedUser();
+        details.setDetail("user", user == null ? null : new UserProxy(user));
         checkAuthResult(authResult, user);
         return user;
     }
@@ -74,7 +75,7 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider<U
             user.getId().getIdPart());
     }
     
-    private User getAuthenticatedUser(BrokerSession brokerSession) {
+    private User getAuthenticatedUser() {
         try {
             return brokerSession.isAuthenticated() ? DomainFactoryRegistry.fetchObject(User.class,
                 Integer.toString(brokerSession.getUserId())) : null;
@@ -108,6 +109,14 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider<U
             case NOLOGINS:
                 throw new DisabledException(StringUtils.defaultIfEmpty(result.reason, "Logins are currently disabled."));
         }
+    }
+    
+    public BrokerSession getBrokerSession() {
+        return brokerSession;
+    }
+    
+    public void setBrokerSession(BrokerSession brokerSession) {
+        this.brokerSession = brokerSession;
     }
     
 }
