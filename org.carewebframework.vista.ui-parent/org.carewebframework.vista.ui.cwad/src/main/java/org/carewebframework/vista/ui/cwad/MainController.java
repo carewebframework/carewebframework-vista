@@ -21,7 +21,7 @@ import org.carewebframework.shell.plugins.PluginController;
 import org.carewebframework.ui.zk.ReportBox;
 import org.carewebframework.vista.mbroker.BrokerSession;
 
-import org.zkoss.zul.Label;
+import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
 
 /**
@@ -39,9 +39,9 @@ public class MainController extends PluginController implements IPatientContextE
     
     private Window dlgFlags;
     
-    private Label lblPostings;
+    private Toolbarbutton btnPostings;
     
-    private Label lblCWAD;
+    private Toolbarbutton btnCWAD;
     
     private BrokerSession broker;
     
@@ -62,8 +62,11 @@ public class MainController extends PluginController implements IPatientContextE
         
         Patient patient = PatientContext.getActivePatient();
         String cwad = patient == null ? "" : broker.callRPC("RGCWCACV CWAD", patient.getId().getIdPart());
-        lblCWAD.setValue(cwad);
-        lblPostings.setValue(cwad.isEmpty() ? "No Postings" : "Postings");
+        boolean noPostings = cwad.isEmpty();
+        btnCWAD.setLabel(cwad);
+        btnCWAD.setDisabled(noPostings);
+        btnPostings.setLabel(noPostings ? "No Postings" : "Postings");
+        btnPostings.setDisabled(noPostings);
         
         if (!noPopup && popupFlags && cwad.contains("F")) {
             List<String> lst = broker.callRPCList("RGCWCACV PRF", null, patient.getId().getIdPart());

@@ -3,11 +3,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-	<vlayout id="root" apply="${vistaCWADMainController}"
-		style="text-align: center; border: 1px solid lightgray; padding: 5px 0 5px 0; cursor: pointer"
-		width="100px">
-		<label id="lblPostings" value="No Postings" forward="onClick=root.onClick" />
-		<label id="lblCWAD" forward="onClick=root.onClick"
-			style="font-weight: bold; color: purple" />
-	</vlayout>
+	<div id="root" apply="${vistaCWADMainController}" 
+		style="text-align: center; border: 1px solid lightgray">
+		<toolbarbutton id="btnPostings" label="No Postings" forward="onClick=root.onClick"/>
+		<toolbarbutton id="btnCWAD" forward="onClick=root.onClick"
+			style="font-weight: bold; color: purple; display: block" />
+	</div>
 </zk>
