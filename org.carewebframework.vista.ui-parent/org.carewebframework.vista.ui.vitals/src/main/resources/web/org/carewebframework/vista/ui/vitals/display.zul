@@ -4,6 +4,7 @@
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 	<style>
+	
 		.vistaVitals-grid .z-listitem td { 
 			border: 1px gray solid;
 			border-left:none;
@@ -15,7 +16,15 @@
 			margin-right:10px;
 		}
 
-		.vistaVitals-header * { white-space:normal; }
+		.vistaVitals-header * { 
+			white-space:normal; 
+		}
+		
+		.vistaVitals-toolbar .z-paging {
+			border: none;
+			background: none;
+		}
+
 	</style>
 
 	<div height="100%" width="100%"
