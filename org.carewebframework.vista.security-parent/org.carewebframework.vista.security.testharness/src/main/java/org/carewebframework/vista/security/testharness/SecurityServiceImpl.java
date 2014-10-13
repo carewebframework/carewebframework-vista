@@ -11,12 +11,8 @@ package org.carewebframework.vista.security.testharness;
 
 import org.carewebframework.vista.security.base.BaseSecurityService;
 
-import org.carewebframework.ui.zk.PromptDialog;
-
 /**
  * Security service implementation.
- * 
- * 
  */
 public class SecurityServiceImpl extends BaseSecurityService {
     
@@ -35,11 +31,6 @@ public class SecurityServiceImpl extends BaseSecurityService {
     @Override
     public boolean canChangePassword() {
         return false;
-    }
-    
-    @Override
-    public void changePassword() {
-        PromptDialog.showWarning("Change password dialog not available in test harness.");
     }
     
 }

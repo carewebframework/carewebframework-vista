@@ -7,24 +7,18 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.security.impl;
+package org.carewebframework.vista.security.prod;
 
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.Security;
 import org.carewebframework.vista.mbroker.Security.AuthResult;
 import org.carewebframework.vista.mbroker.Security.AuthStatus;
 import org.carewebframework.vista.security.base.BaseSecurityService;
-import org.carewebframework.vista.security.base.Constants;
-import org.carewebframework.ui.zk.PromptDialog;
-
-import org.zkoss.util.resource.Labels;
 
 /**
  * Security service implementation.
  */
 public class SecurityServiceImpl extends BaseSecurityService {
-    
-    private boolean canChangePassword = true;
     
     /**
      * Changes the user's password.
@@ -36,30 +30,6 @@ public class SecurityServiceImpl extends BaseSecurityService {
     @Override
     public String changePassword(final String oldPassword, final String newPassword) {
         return Security.changePassword(VistAUtil.getBrokerSession(), oldPassword, newPassword);
-    }
-    
-    /**
-     * @see org.carewebframework.api.security.ISecurityService#changePassword()
-     */
-    @Override
-    public void changePassword() {
-        if (canChangePassword()) {
-            ChangePasswordController.show();
-        } else {
-            PromptDialog.showWarning(Labels.getLabel(Constants.LBL_CHANGE_PASSWORD_UNAVAILABLE));
-        }
-    }
-    
-    /**
-     * @see org.carewebframework.api.security.ISecurityService#canChangePassword()
-     */
-    @Override
-    public boolean canChangePassword() {
-        return canChangePassword;
-    }
-    
-    public void setCanChangePassword(boolean canChangePassword) {
-        this.canChangePassword = canChangePassword;
     }
     
     /**

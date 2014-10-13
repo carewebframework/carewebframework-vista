@@ -19,6 +19,8 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.carewebframework.api.security.ISecurityDomain;
+import org.carewebframework.cal.api.domain.SecurityDomainProxy;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.security.spring.AbstractSecurityService;
 import org.carewebframework.vista.api.util.VistAUtil;
@@ -36,32 +38,19 @@ public abstract class BaseSecurityService extends AbstractSecurityService {
     /**
      * Cached list of available login domains
      */
-    private static List<Organization> domains;
+    private static List<ISecurityDomain> securityDomains;
     
     /**
-     * Get domains (organizations) that a user may log into.
-     *
-     * @return A list of organization objects.
+     * Initialize security domain list.
      */
-    public List<Organization> getDomains() {
-        if (domains == null) {
-            initDomains();
-        }
-        
-        return domains;
-    }
-    
-    /**
-     * Initialize domain list.
-     */
-    private static synchronized void initDomains() {
-        if (domains != null) {
+    private static synchronized void initSecurityDomains() {
+        if (securityDomains != null) {
             return;
         }
         
-        log.trace("Retrieving Security Authorities");
+        log.trace("Retrieving Security Domains");
         List<String> results = VistAUtil.getBrokerSession().callRPCList("CIANBRPC DIVGET", null);
-        List<Organization> organizations = new ArrayList<Organization>();
+        List<ISecurityDomain> sd = new ArrayList<ISecurityDomain>();
         
         for (String result : results) {
             String[] pcs = StrUtil.split(result, StrUtil.U, 4);
@@ -70,12 +59,16 @@ public abstract class BaseSecurityService extends AbstractSecurityService {
                 Organization organization = new Organization();
                 organization.setId(pcs[0]);
                 organization.setName(pcs[1]);
-                //organization.setAbbreviation(StringUtils.isEmpty(pcs[3]) ? pcs[1] : pcs[3]);
-                organizations.add(organization);
+                sd.add(new SecurityDomainProxy(organization));
             }
         }
         
-        domains = organizations;
+        securityDomains = sd;
+    }
+    
+    @Override
+    public boolean canChangePassword() {
+        return true;
     }
     
     /**
@@ -111,6 +104,18 @@ public abstract class BaseSecurityService extends AbstractSecurityService {
     public String generateRandomPassword() {
         int len = NumberUtils.toInt(Labels.getLabel(Constants.LBL_PASSWORD_RANDOM_CHARACTER_LENGTH), 12);
         return RandomStringUtils.random(len);
+    }
+    
+    /**
+     * Returns the list of know security domains.
+     */
+    @Override
+    public List<ISecurityDomain> getSecurityDomains() {
+        if (securityDomains == null) {
+            initSecurityDomains();
+        }
+        
+        return securityDomains;
     }
     
 }

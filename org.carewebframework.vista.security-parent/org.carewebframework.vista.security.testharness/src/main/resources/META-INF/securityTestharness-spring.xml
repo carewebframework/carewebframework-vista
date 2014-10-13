@@ -3,9 +3,12 @@
 <!-- -Spring Security Prototype -->
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:cwf="http://www.carewebframework.org/schema/spring" 
 	xsi:schemaLocation="
-		http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.carewebframework.org/schema/spring 
+		http://www.carewebframework.org/schema/spring/spring-extensions.xsd">
 
 	<beans profile="root">
 
@@ -23,11 +26,12 @@
 		</bean>
 	
 		<!-- Controllers -->
-		<bean id="loginController" class="org.carewebframework.vista.security.testharness.LoginController"
-			scope="prototype">
-			<property name="username" value="${test.username}" />
-			<property name="password" value="${test.password}" />
-			<property name="domain" value="${test.domain}" />
+		<bean id="securityLoginPaneController" class="org.carewebframework.security.spring.controller.LoginController"
+			scope="prototype" cwf:override="always">
+			<property name="securityService" ref="securityService" />
+			<property name="defaultUsername" value="${test.username:}" />
+			<property name="defaultPassword" value="${test.password:}" />
+			<property name="footerText" value="${test.greeting:}" />
 		</bean>
 
 	</beans>

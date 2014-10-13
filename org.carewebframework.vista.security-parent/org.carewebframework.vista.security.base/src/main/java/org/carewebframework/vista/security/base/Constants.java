@@ -54,7 +54,7 @@ public final class Constants {
     
     public static final String LBL_PASSWORD_RANDOM_CHARACTER_LENGTH = "password.random.character.length";
     
-    public static final String LBL_CHANGE_PASSWORD_UNAVAILABLE = "change.password.dialog.unavailable";
+    public static final String LBL_CHANGE_PASSWORD_UNAVAILABLE = "password.change.dialog.unavailable";
     
     /**
      * Enforce static class.
