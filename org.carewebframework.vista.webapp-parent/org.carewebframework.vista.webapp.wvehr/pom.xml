@@ -12,7 +12,7 @@
 	<name>CareWeb-WVEHR</name>
 	
 	<properties>
-		<org.carewebframework.vista.security.artifact>org.carewebframework.vista.security.impl</org.carewebframework.vista.security.artifact>
+		<org.carewebframework.security.profile>org.carewebframework.vista.security.prod</org.carewebframework.security.profile>
 	</properties>
 	
 	<build>
@@ -196,7 +196,7 @@
 		<!-- Security -->
 		<dependency>
 			<groupId>org.carewebframework</groupId>
-			<artifactId>${org.carewebframework.vista.security.artifact}</artifactId>
+			<artifactId>${org.carewebframework.security.profile}</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
