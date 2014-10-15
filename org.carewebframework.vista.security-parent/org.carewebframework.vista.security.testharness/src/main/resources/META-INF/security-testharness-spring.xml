@@ -36,6 +36,7 @@
 			<property name="securityService" ref="securityService" />
 			<property name="defaultUsername" value="${test.username:}" />
 			<property name="defaultPassword" value="${test.password:}" />
+			<property name="autoLogin" value="${test.autologin:true}" />
 		</bean>
 
 	</beans>
