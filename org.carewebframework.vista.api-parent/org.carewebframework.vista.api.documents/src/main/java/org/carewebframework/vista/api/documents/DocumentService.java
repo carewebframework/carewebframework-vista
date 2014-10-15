@@ -30,7 +30,7 @@ public class DocumentService {
     private final BrokerSession broker;
     
     public static DocumentService getInstance() {
-        return SpringUtil.getBean("documentService", DocumentService.class);
+        return SpringUtil.getBean("vistaDocumentService", DocumentService.class);
     }
     
     public DocumentService(BrokerSession broker) {
