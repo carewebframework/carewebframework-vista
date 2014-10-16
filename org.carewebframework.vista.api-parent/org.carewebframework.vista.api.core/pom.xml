@@ -8,6 +8,7 @@
 	</parent>
 	
 	<artifactId>org.carewebframework.vista.api.core</artifactId>
+	<name>VistA API Core Library</name>
 	
 	<dependencies>
 		<dependency>

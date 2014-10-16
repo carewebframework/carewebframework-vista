@@ -9,7 +9,7 @@
 	
 	<artifactId>org.carewebframework.vista.webapp.testharness</artifactId>
 	<packaging>war</packaging>
-	<name>TestHarness</name>
+	<name>VistA TestHarness</name>
 	
 	<properties>
 		<org.carewebframework.security.profile>org.carewebframework.vista.security.testharness</org.carewebframework.security.profile>

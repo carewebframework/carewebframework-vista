@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>org.carewebframework.vista.mbroker</artifactId>
-	<name>CIA RPC Broker Client</name>
+	<name>VistA RPC Broker Client (CIA)</name>
 	<description>
 		This is a Java implementation of the CIA RPC broker client.  It supports all
 		of the features of this client including asynchronous RPC's and global event

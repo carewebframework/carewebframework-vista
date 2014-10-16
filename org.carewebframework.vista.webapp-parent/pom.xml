@@ -9,7 +9,7 @@
 	
 	<artifactId>org.carewebframework.vista.webapp-parent</artifactId>
 	<packaging>pom</packaging>
-	<description>Web Application POM Aggregator</description>
+	<name>VistA Web Application POM Aggregator</name>
 	
 	<modules>
 		<module>org.carewebframework.vista.webapp.testharness</module>
