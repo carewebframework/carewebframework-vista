@@ -9,7 +9,7 @@
 	
 	<artifactId>org.carewebframework.vista.security-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>VistA Security Implementation</name>
+	<name>VistA Security POM Aggregator</name>
 	
 	<dependencyManagement>
 		<dependencies>

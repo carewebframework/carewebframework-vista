@@ -8,7 +8,7 @@
 	</parent>
 	
 	<artifactId>org.carewebframework.vista.ui.documents</artifactId>
-	<name>Clinical Documents Plugin</name>
+	<name>VistA Clinical Documents Plugin</name>
 	
 	<dependencies>
 		<dependency>
@@ -18,12 +18,12 @@
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.vista.api.documents</artifactId>
-			<version>${project.parent.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.cal.ui.reporting</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.cal.version}</version>
 		</dependency>
 	</dependencies>
 </project>

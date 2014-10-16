@@ -67,17 +67,17 @@
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.cal.ui.patientselection.v1</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.cal.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.cal.ui.patientheader</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.cal.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.ui.userheader</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.core.version}</version>
 		</dependency>
 		<!-- VistA Plugins -->
 		<dependency>

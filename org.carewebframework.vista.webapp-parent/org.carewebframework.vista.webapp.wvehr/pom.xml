@@ -9,7 +9,7 @@
 	
 	<artifactId>org.carewebframework.vista.webapp.wvehr</artifactId>
 	<packaging>war</packaging>
-	<name>CareWeb-WVEHR</name>
+	<name>CareWeb WorldVistA EHR</name>
 	
 	<properties>
 		<org.carewebframework.security.profile>org.carewebframework.vista.security.prod</org.carewebframework.security.profile>
@@ -70,57 +70,57 @@
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.ui.currentdatetime</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.ui.infopanel</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.ui.popupsupport</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.ui.statuspanel</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.ui.userheader</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.ui.chat</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.cal.ui.patientselection.v1</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.cal.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.cal.ui.patientheader</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.cal.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.cal.ui.patientphoto</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.cal.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.cal.ui.documents</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.cal.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.smart.ui</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>${org.carewebframework.smart.version}</version>
 		</dependency>
 		<!-- VistA Plugins -->
 		<!-- 
