@@ -29,7 +29,6 @@ import org.carewebframework.api.domain.IDomainFactory;
 import org.carewebframework.api.test.CommonTest;
 import org.carewebframework.fhir.client.ClientUtil;
 import org.carewebframework.fhir.common.FhirDomainFactory;
-import org.carewebframework.vista.api.mbroker.BrokerClient;
 
 import org.junit.Test;
 
@@ -41,7 +40,6 @@ public class FhirTest extends CommonTest {
     
     @Test
     public void test() throws URISyntaxException {
-        ClientUtil.registerHttpClient("broker://*", new BrokerClient());
         IDomainFactory<BaseResource> factory = FhirDomainFactory.getInstance();
         Patient pat1 = factory.fetchObject(Patient.class, "1");
         assertNotNull(pat1);
