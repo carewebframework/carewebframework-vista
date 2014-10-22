@@ -85,6 +85,7 @@ public class DocumentListController extends AbstractListController<Document> {
         setPaging(false);
         registerDataFilter(new DataFilter());
         allCategories = service.getCategories();
+        updateSelectCount(0);
     }
     
     @Override
@@ -188,6 +189,8 @@ public class DocumentListController extends AbstractListController<Document> {
             this.btnView.setLabel(this.viewText + " (" + selCount + ")");
             this.btnClear.setDisabled(false);
         }
+        
+        btnView.setDisabled(listBox.getItemCount() == 0);
     }
     
     /**
