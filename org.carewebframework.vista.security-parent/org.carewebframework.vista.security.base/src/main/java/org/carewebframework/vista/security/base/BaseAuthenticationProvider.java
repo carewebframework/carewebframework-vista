@@ -16,10 +16,10 @@ import ca.uhn.fhir.model.dstu.resource.User;
 import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
+import org.carewebframework.api.domain.IUser;
 import org.carewebframework.cal.api.domain.UserProxy;
 import org.carewebframework.security.spring.AbstractAuthenticationProvider;
 import org.carewebframework.security.spring.AuthenticationCancelledException;
-import org.carewebframework.security.spring.CWFAuthenticationDetails;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.Security;
@@ -35,7 +35,7 @@ import org.springframework.security.core.AuthenticationException;
  * Provides authentication support for the framework. Takes provided authentication credentials and
  * authenticates them against the database.
  */
-public class BaseAuthenticationProvider extends AbstractAuthenticationProvider<User> {
+public class BaseAuthenticationProvider extends AbstractAuthenticationProvider {
     
     private BrokerSession brokerSession;
     
@@ -52,40 +52,38 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider<U
     }
     
     /**
-     * Performs a user login.
+     * Performs user authentication.
      *
-     * @param details Authentication details
      * @param username Username for the login.
      * @param password Password for the login (ignored if the user is pre-authenticated).
      * @param domain Domain for which the login is requested.
      * @return Authorization result
      */
     @Override
-    protected User login(CWFAuthenticationDetails details, String username, String password, String domain) {
+    protected IUser authenticate(String username, String password, String domain) {
         AuthResult authResult = Security.authenticate(brokerSession, username, password, domain);
-        User user = getAuthenticatedUser();
-        details.setDetail("user", user == null ? null : new UserProxy(user));
+        IUser user = getAuthenticatedUser();
         checkAuthResult(authResult, user);
         return user;
     }
     
     @Override
-    protected List<String> getAuthorities(User user) {
-        return user == null ? null : VistAUtil.getBrokerSession().callRPCList("RGCWFUSR GETPRIV", null,
-            user.getId().getIdPart());
+    protected List<String> getAuthorities(IUser user) {
+        return user == null ? null : VistAUtil.getBrokerSession().callRPCList("RGCWFUSR GETPRIV", null, user.getLogicalId());
     }
     
-    private User getAuthenticatedUser() {
+    private IUser getAuthenticatedUser() {
         try {
-            return brokerSession.isAuthenticated() ? DomainFactoryRegistry.fetchObject(User.class,
+            User user = brokerSession.isAuthenticated() ? DomainFactoryRegistry.fetchObject(User.class,
                 Integer.toString(brokerSession.getUserId())) : null;
+            return user == null ? null : new UserProxy(user);
         } catch (Exception e) {
             return null;
         }
     }
     
     @SuppressWarnings("deprecation")
-    private void checkAuthResult(AuthResult result, User user) throws AuthenticationException {
+    private void checkAuthResult(AuthResult result, IUser user) throws AuthenticationException {
         switch (result.status) {
             case SUCCESS:
                 return;
