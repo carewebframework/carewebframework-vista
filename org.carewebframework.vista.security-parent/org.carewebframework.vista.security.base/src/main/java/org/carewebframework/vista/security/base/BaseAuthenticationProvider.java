@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.api.domain.IUser;
+import org.carewebframework.api.security.ISecurityDomain;
 import org.carewebframework.cal.api.domain.UserProxy;
 import org.carewebframework.security.spring.AbstractAuthenticationProvider;
 import org.carewebframework.security.spring.AuthenticationCancelledException;
@@ -60,8 +61,8 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider {
      * @return Authorization result
      */
     @Override
-    protected IUser authenticate(String username, String password, String domain) {
-        AuthResult authResult = Security.authenticate(brokerSession, username, password, domain);
+    protected IUser authenticate(String username, String password, ISecurityDomain domain) {
+        AuthResult authResult = Security.authenticate(brokerSession, username, password, domain.getLogicalId());
         IUser user = getAuthenticatedUser();
         checkAuthResult(authResult, user);
         return user;
