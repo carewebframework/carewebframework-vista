@@ -9,7 +9,6 @@
  */
 package org.carewebframework.vista.security.base;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.carewebframework.api.security.ISecurityDomain;
 import org.carewebframework.cal.api.domain.SecurityDomainProxy;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.security.spring.AbstractSecurityService;
@@ -42,42 +40,7 @@ public class BaseSecurityService extends AbstractSecurityService {
     
     private static final Log log = LogFactory.getLog(BaseSecurityService.class);
     
-    private static boolean initialized;
-    
-    /**
-     * Cached list of available login domains
-     */
-    private static final List<ISecurityDomain> securityDomains = new ArrayList<ISecurityDomain>();
-    
     private BrokerSession brokerSession;
-    
-    /**
-     * Initialize security domain list.
-     */
-    private static synchronized void init(BrokerSession brokerSession) {
-        if (initialized) {
-            return;
-        }
-        
-        log.trace("Retrieving Security Domains");
-        List<String> results = brokerSession.callRPCList("CIANBRPC DIVGET", null);
-        String preLoginMessage = StringUtils.collectionToDelimitedString(brokerSession.getPreLoginMessage(), "\n");
-        
-        for (String result : results) {
-            String[] pcs = StrUtil.split(result, StrUtil.U, 4);
-            
-            if (!pcs[2].isEmpty()) {
-                Organization organization = new Organization();
-                organization.setId(pcs[0]);
-                organization.setName(pcs[1]);
-                Map<String, String> attributes = new HashMap<String, String>();
-                attributes.put(Constants.PROP_LOGIN_INFO, preLoginMessage);
-                securityDomains.add(new SecurityDomainProxy(organization, attributes));
-            }
-        }
-        
-        initialized = true;
-    }
     
     /**
      * Validates the current user's password.
@@ -114,15 +77,6 @@ public class BaseSecurityService extends AbstractSecurityService {
     }
     
     /**
-     * Returns the list of know security domains.
-     */
-    @Override
-    public List<ISecurityDomain> getSecurityDomains() {
-        initialize();
-        return securityDomains;
-    }
-    
-    /**
      * Return login disabled message.
      */
     @Override
@@ -141,11 +95,26 @@ public class BaseSecurityService extends AbstractSecurityService {
     }
     
     /**
-     * Initialize cached data if not already done.
+     * Initialize security domain list.
      */
-    private void initialize() {
-        if (!initialized) {
-            init(brokerSession);
+    @Override
+    protected void initSecurityDomains() {
+        log.trace("Retrieving Security Domains");
+        List<String> results = brokerSession.callRPCList("CIANBRPC DIVGET", null);
+        String preLoginMessage = StringUtils.collectionToDelimitedString(brokerSession.getPreLoginMessage(), "\n");
+        
+        for (String result : results) {
+            String[] pcs = StrUtil.split(result, StrUtil.U, 4);
+            
+            if (!pcs[2].isEmpty()) {
+                Organization organization = new Organization();
+                organization.setId(pcs[0]);
+                organization.setName(pcs[1]);
+                Map<String, String> attributes = new HashMap<String, String>();
+                attributes.put(Constants.PROP_LOGIN_INFO, preLoginMessage);
+                registerSecurityDomain(new SecurityDomainProxy(organization, attributes));
+            }
         }
     }
+    
 }
