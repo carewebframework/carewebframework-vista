@@ -151,7 +151,7 @@ public class BrokerSession {
     
     private byte netSequence;
     
-    private Socket socket;
+    private volatile Socket socket;
     
     private final List<IHostEventHandler> hostEventHandlers = new ArrayList<IHostEventHandler>();
     
@@ -411,6 +411,10 @@ public class BrokerSession {
     }
     
     public boolean eventSubscribe(String eventName, boolean subscribe) {
+        if (!isConnected()) {
+            return false;
+        }
+        
         Request request = new Request(subscribe ? Action.SUBSCRIBE : Action.UNSUBSCRIBE);
         request.addParameter("UID", id);
         request.addParameter("EVT", eventName);
