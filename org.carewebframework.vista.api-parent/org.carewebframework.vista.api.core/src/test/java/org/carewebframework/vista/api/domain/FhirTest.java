@@ -27,8 +27,8 @@ import ca.uhn.fhir.rest.client.GenericClient;
 
 import org.carewebframework.api.domain.IDomainFactory;
 import org.carewebframework.api.test.CommonTest;
-import org.carewebframework.fhir.client.ClientUtil;
-import org.carewebframework.fhir.common.FhirDomainFactory;
+import org.carewebframework.cal.api.ClientUtil;
+import org.carewebframework.cal.api.domain.FhirDomainFactory;
 
 import org.junit.Test;
 

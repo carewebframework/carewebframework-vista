@@ -11,7 +11,7 @@ package org.carewebframework.vista.api.mbroker;
 
 import org.carewebframework.api.alias.AliasType;
 import org.carewebframework.api.alias.AliasTypeRegistry;
-import org.carewebframework.fhir.client.ClientUtil;
+import org.carewebframework.cal.api.ClientUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.RPCParameters;
 
