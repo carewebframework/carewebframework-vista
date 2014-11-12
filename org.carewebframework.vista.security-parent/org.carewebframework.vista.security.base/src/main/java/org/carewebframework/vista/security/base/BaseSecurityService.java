@@ -15,8 +15,6 @@ import java.util.Map;
 
 import ca.uhn.fhir.model.dstu.resource.Organization;
 
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,8 +28,6 @@ import org.carewebframework.vista.mbroker.Security.AuthResult;
 import org.carewebframework.vista.mbroker.Security.AuthStatus;
 
 import org.springframework.util.StringUtils;
-
-import org.zkoss.util.resource.Labels;
 
 /**
  * Security service implementation.
@@ -63,17 +59,6 @@ public class BaseSecurityService extends AbstractSecurityService {
     @Override
     public String changePassword(final String oldPassword, final String newPassword) {
         return Security.changePassword(brokerSession, oldPassword, newPassword);
-    }
-    
-    /**
-     * Generates a new random password Length of password dictated by
-     *
-     * @return String The generated password
-     */
-    @Override
-    public String generateRandomPassword() {
-        int len = NumberUtils.toInt(Labels.getLabel(Constants.LBL_PASSWORD_RANDOM_CHARACTER_LENGTH), 12);
-        return RandomStringUtils.random(len);
     }
     
     /**
