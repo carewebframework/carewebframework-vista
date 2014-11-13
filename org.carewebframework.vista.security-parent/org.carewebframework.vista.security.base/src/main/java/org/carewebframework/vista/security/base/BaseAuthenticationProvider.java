@@ -21,6 +21,7 @@ import org.carewebframework.api.security.ISecurityDomain;
 import org.carewebframework.cal.api.domain.UserProxy;
 import org.carewebframework.security.spring.AbstractAuthenticationProvider;
 import org.carewebframework.security.spring.AuthenticationCancelledException;
+import org.carewebframework.security.spring.CWFAuthenticationDetails;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.Security;
@@ -58,10 +59,11 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider {
      * @param username Username for the login.
      * @param password Password for the login (ignored if the user is pre-authenticated).
      * @param domain Domain for which the login is requested.
+     * @param details Details object associated with authentication.
      * @return Authorization result
      */
     @Override
-    protected IUser authenticate(String username, String password, ISecurityDomain domain) {
+    protected IUser authenticate(String username, String password, ISecurityDomain domain, CWFAuthenticationDetails details) {
         AuthResult authResult = Security.authenticate(brokerSession, username, password, domain.getLogicalId());
         IUser user = getAuthenticatedUser();
         checkAuthResult(authResult, user);
