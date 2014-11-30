@@ -21,7 +21,7 @@ import org.zkoss.util.resource.Labels;
  * Notification priority.
  */
 public enum Priority {
-    HIGH("bullet_red.png", "error"), MEDIUM("bullet_yellow.png", "warning"), LOW("bullet_green.png", "success");
+    HIGH("bullet_red.png", "danger"), MEDIUM("bullet_yellow.png", "warning"), LOW("bullet_green.png", "success");
     
     private String image;
     
