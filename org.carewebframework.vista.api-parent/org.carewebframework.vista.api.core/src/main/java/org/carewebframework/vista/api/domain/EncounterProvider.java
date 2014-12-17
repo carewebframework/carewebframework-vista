@@ -39,6 +39,10 @@ public class EncounterProvider extends EncounterRelated {
     
     private final List<Participant> participants;
     
+    public EncounterProvider() {
+        this(new Encounter());
+    }
+    
     public EncounterProvider(Encounter encounter) {
         super(encounter);
         participants = encounter.getParticipant();
