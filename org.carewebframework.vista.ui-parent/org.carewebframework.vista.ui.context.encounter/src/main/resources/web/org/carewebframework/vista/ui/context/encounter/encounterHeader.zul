@@ -6,19 +6,15 @@
 	<vlayout id="root" apply="${encounterHeaderController}" spacing="0"
 		height="100%" width="100%">
 		<hlayout sclass="cwf-header-row" hflex="1" vflex="1">
-			<span hflex="1">
-				<image id="imgLocked" visible="false" />
-				<label id="lblLocation" value="No Encounter Selected" />
-			</span>
-			<span style="text-align:right">
-				<label id="lblDate" />
-			</span>
+			<image id="imgLocked" visible="false" />
+			<label id="lblLocation" value="No Encounter Selected" />
+			<space hflex="1" />
+			<label id="lblDate" />
 		</hlayout>
 		<hlayout sclass="cwf-header-row" hflex="1" vflex="1">
-			<label id="lblProvider" hflex="1" />
-			<span style="text-align:right">
-				<label id="lblServiceCategory" />
-			</span>
+			<label id="lblProvider" />
+			<space hflex="1" />
+			<label id="lblServiceCategory" />
 		</hlayout>
 	</vlayout>
 </zk>

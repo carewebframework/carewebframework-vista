@@ -29,6 +29,15 @@
 
 	<beans profile="desktop">
 
+		<bean id="encounterSelectionController" class="org.carewebframework.vista.ui.context.encounter.EncounterSelection"
+			scope="prototype" />
+
+		<bean id="providerSelectionController" class="org.carewebframework.vista.ui.context.encounter.ProviderSelection"
+			scope="prototype" />
+
+		<bean id="locationSelectionController" class="org.carewebframework.vista.ui.context.location.LocationSelection"
+			scope="prototype" />
+
 		<bean id="encounterHeaderController" class="org.carewebframework.vista.ui.context.encounter.EncounterHeader"
 			scope="prototype" />
 

@@ -1,42 +1,38 @@
-<zk xmlns="http://www.zkoss.org/2005/zul"
-	xmlns:h="http://www.w3.org/1999/xhtml"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-
-	<borderlayout
-		use="org.carewebframework.vista.ui.context.encounter.ProviderSelection"
-		height="300px">
-		<north title="Encounter Providers" style="text-align:center">
-		</north>
-		<west title="All Providers" width="45%">
-			<vlayout vflex="1" spacing="0">
-				<hlayout style="padding: 5px 0 0 2px">
-					<textbox id="edtProvider" hflex="1"
-						forward="onOK=btnProvider.onClick" />
-					<button id="btnProvider" label="..." />
-				</hlayout>
-				<separator />
-				<listbox id="lstAllProviders" rows="5" hflex="1"
-					vflex="1" forward="onDoubleClick=btnProviderAdd.onClick"
-					style="border-left: none; border-right: none; border-bottom: none" />
-			</vlayout>
-		</west>
-		<center>
-			<toolbar vflex="1" hflex="1" align="center" orient="vertical"
-				style="padding-top: 60px">
-				<button id="btnPrimary" label="P" style="color:red"
-					tooltiptext="Make selected provider the primary." />
-				<separator />
-				<button id="btnProviderAdd" label="&gt;"
-					tooltiptext="Add selected provider to encounter." />
-				<button id="btnProviderRemove" label="&lt;"
-					tooltiptext="Remove selected provider from encounter." />
-			</toolbar>
-		</center>
-		<east title="This Encounter" width="45%">
-			<listbox id="lstEncounterProviders" rows="7" hflex="1"
-				vflex="1" forward="onDoubleClick=btnProviderRemove.onClick"
-				style="border-left: none; border-right: none; border-bottom: none" />
-		</east>
-	</borderlayout>
+<zk>
+	<div apply="${providerSelectionController}"
+		sclass="panel panel-info">
+		<div zclass="panel-heading text-center" style="padding:0">
+			<label value="Encounter Providers" zclass="panel-title" />
+		</div>
+		<div zclass="panel-body" style="padding:2px">
+			<hbox apply="${providerSelectionController}" spacing="0" vflex="1">
+				<vlayout vflex="1" spacing="0">
+					<hlayout width="100%" spacing="0"
+						style="padding:2px">
+						<textbox id="edtProvider" hflex="1" vflex="1"
+							forward="onOK=btnProvider.onClick" />
+						<button id="btnProvider" vflex="1" zclass="btn"
+							sclass="btn-xs" label="..." />
+					</hlayout>
+					<listbox id="lstAllProviders" hflex="1" vflex="1"
+						forward="onDoubleClick=btnProviderAdd.onClick" />
+				</vlayout>
+				<vlayout vflex="1" sclass="text-center" spacing="0">
+					<space vflex="1" />
+					<a id="btnPrimary" zclass="btn" sclass="btn-link"
+						label="P" style="color:red"
+						tooltiptext="Make selected provider the primary." />
+					<space />
+					<a id="btnProviderAdd" zclass="btn"
+						sclass="btn-link" iconSclass="glyphicon glyphicon-chevron-right"
+						tooltiptext="Add selected provider to encounter." />
+					<a id="btnProviderRemove" zclass="btn"
+						sclass="btn-link" iconSclass="glyphicon glyphicon-chevron-left"
+						tooltiptext="Remove selected provider from encounter." />
+				</vlayout>
+				<listbox id="lstEncounterProviders" hflex="1" vflex="1"
+					forward="onDoubleClick=btnProviderRemove.onClick" />
+			</hbox>
+		</div>
+	</div>
 </zk>

@@ -13,29 +13,24 @@ import java.util.List;
 
 import ca.uhn.fhir.model.dstu.resource.Location;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.carewebframework.cal.api.context.LocationContext;
+import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;
-import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.api.domain.LocationUtil;
 
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
-import org.zkoss.zul.Panel;
 import org.zkoss.zul.Textbox;
 
 /**
  * Location selection controller. Supports selecting a location from a list of known locations and
  * requesting that the location context be changed to that selection.
  */
-public class LocationSelection extends Panel {
+public class LocationSelection extends FrameworkController {
     
     private static final long serialVersionUID = 1L;
-    
-    private static final Log log = LogFactory.getLog(LocationSelection.class);
     
     private Listbox lstLocation;
     
@@ -53,9 +48,9 @@ public class LocationSelection extends Panel {
      * 
      * @throws Exception Unspecified exception.
      */
-    public void onCreate() throws Exception {
-        log.trace("onCreate");
-        ZKUtil.wireController(this, this);
+    @Override
+    public void doAfterCompose(Component comp) throws Exception {
+        super.doAfterCompose(comp);
         init();
     }
     
@@ -151,7 +146,7 @@ public class LocationSelection extends Panel {
      * Close the main dialog.
      */
     private void close() {
-        getParent().detach();
+        root.detach();
     }
     
     /**

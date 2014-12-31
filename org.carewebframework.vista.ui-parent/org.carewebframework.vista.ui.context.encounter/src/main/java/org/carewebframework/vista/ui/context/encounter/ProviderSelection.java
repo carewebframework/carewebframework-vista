@@ -13,20 +13,19 @@ import ca.uhn.fhir.model.dstu.resource.Encounter;
 import ca.uhn.fhir.model.dstu.resource.Practitioner;
 
 import org.carewebframework.api.context.UserContext;
+import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.ListUtil;
-import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.api.domain.EncounterProvider;
 import org.carewebframework.vista.api.domain.ProviderUtil;
 
-import org.zkoss.zk.ui.IdSpace;
-import org.zkoss.zul.Borderlayout;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Textbox;
 
-public class ProviderSelection extends Borderlayout implements IdSpace {
+public class ProviderSelection extends FrameworkController {
     
     private static final long serialVersionUID = 1L;
     
@@ -44,8 +43,9 @@ public class ProviderSelection extends Borderlayout implements IdSpace {
     
     private final ListModelList<Practitioner> modelProviders = new ListModelList<Practitioner>();
     
-    public void onCreate() {
-        ZKUtil.wireController(this, this);
+    @Override
+    public void doAfterCompose(Component comp) throws Exception {
+        super.doAfterCompose(comp);
         lstAllProviders.setItemRenderer(providerRenderer);
         lstAllProviders.setModel(modelProviders);
         lstEncounterProviders.setItemRenderer(providerRenderer);

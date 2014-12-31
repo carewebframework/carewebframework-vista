@@ -12,6 +12,7 @@ package org.carewebframework.vista.ui.context.encounter;
 import ca.uhn.fhir.model.dstu.resource.Practitioner;
 
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
 import org.carewebframework.vista.api.domain.EncounterProvider;
 import org.carewebframework.vista.api.domain.ProviderUtil;
@@ -28,7 +29,7 @@ public class ProviderRenderer extends AbstractListitemRenderer<Object, Object> {
         Practitioner provider = data instanceof Practitioner ? (Practitioner) data : ProviderUtil.fetchProvider(StrUtil
                 .piece((String) data, StrUtil.U));
         item.setValue(provider);
-        createCell(item, provider.getName());
+        createCell(item, FhirUtil.formatName(provider.getName()));
         Practitioner primaryProvider = encounterProvider.getPrimaryProvider();
         item.setSclass(primaryProvider == null || !provider.equals(primaryProvider) ? null : Constants.SCLASS_PRIMARY);
         item.addForward(Events.ON_DOUBLE_CLICK, item.getListbox(), null);

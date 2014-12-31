@@ -79,6 +79,10 @@ public class EncounterProvider extends EncounterRelated {
     }
     
     public boolean add(Practitioner provider) {
+        if (provider == null) {
+            return false;
+        }
+        
         boolean result = find(provider, false) == null;
         
         if (result) {
@@ -108,6 +112,10 @@ public class EncounterProvider extends EncounterRelated {
     }
     
     public Participant find(Practitioner provider, boolean create) {
+        if (provider == null) {
+            return null;
+        }
+        
         for (Participant participant : participants) {
             if (participant.getIndividual().getReference().equals(provider.getId())) {
                 return participant;

@@ -16,12 +16,10 @@ import java.util.List;
 import java.util.Set;
 
 import ca.uhn.fhir.model.dstu.composite.CodeableConceptDt;
+import ca.uhn.fhir.model.dstu.composite.CodingDt;
 import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Encounter.Location;
+import ca.uhn.fhir.model.dstu.resource.Location;
 import ca.uhn.fhir.model.dstu.resource.Patient;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.carewebframework.api.FrameworkUtil;
 import org.carewebframework.api.domain.DomainFactoryRegistry;
@@ -30,17 +28,17 @@ import org.carewebframework.cal.api.context.LocationContext;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
+import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.DateRangePicker;
 import org.carewebframework.ui.zk.DateTimebox;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.PromptDialog;
-import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.api.domain.EncounterUtil;
-import org.carewebframework.vista.api.property.Property;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.ui.context.location.LocationSelection;
 
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Checkbox;
@@ -51,7 +49,6 @@ import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
-import org.zkoss.zul.Panel;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Textbox;
@@ -61,11 +58,9 @@ import org.zkoss.zul.Window;
  * Encounter selection controller. Supports selecting an existing encounter from inpatient or
  * outpatient lists or creating an ad hoc encounter.
  */
-public class EncounterSelection extends Panel implements PatientContext.IPatientContextEvent {
+public class EncounterSelection extends FrameworkController implements PatientContext.IPatientContextEvent {
     
     private static final long serialVersionUID = 1L;
-    
-    private static final Log log = LogFactory.getLog(EncounterSelection.class);
     
     public static enum EncounterFlag {
         NOT_LOCKED, FORCE, VALIDATE_ONLY, PROVIDER;
@@ -137,10 +132,11 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
         }
         
         try {
-            EncounterSelection sel = ZKUtil.findChild(dlg, EncounterSelection.class);
+            EncounterSelection sel = (EncounterSelection) FrameworkController.getController(dlg);
             sel.setEncounterFlags(EncounterFlag.flags(flags));
             dlg.doModal();
         } catch (Exception e) {
+            FrameworkUtil.setAttribute(resource, null);
             throw new RuntimeException(e);
         }
     }
@@ -238,10 +234,9 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
     /**
      * Wire variables and events.
      */
-    public void onCreate() {
-        log.trace("onCreate");
-        FrameworkUtil.getAppFramework().registerObject(this);
-        ZKUtil.wireController(this, this);
+    @Override
+    public void doAfterCompose(Component comp) throws Exception {
+        super.doAfterCompose(comp);
         lstInpatient.setItemRenderer(encounterRenderer);
         lstOutpatient.setItemRenderer(encounterRenderer);
         rngDateRange.getItemAtIndex(0).setLabel("Default Date Range");
@@ -250,13 +245,12 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
         setProviderSelectionDialog(tabInpatient, incInpatient);
         setProviderSelectionDialog(tabOutpatient, incOutpatient);
         setProviderSelectionDialog(tabNew, incNew);
-        Property property = new Property("RGCWENCX VISIT TYPES", "*", null, "I");
         
-        for (String sc : property.getValues()) {
-            String pcs[] = StrUtil.split(sc, "~", 3);
-            Comboitem item = cboServiceCategory.appendItem(pcs[1]);
-            item.setValue(pcs[0]);
-            item.setTooltiptext(pcs[2]);
+        for (CodeableConceptDt cat : EncounterUtil.getServiceCategories()) {
+            CodingDt coding = cat.getCodingFirstRep();
+            Comboitem item = cboServiceCategory.appendItem(coding.getDisplay().getValue());
+            item.setValue(coding.getCode().getValue());
+            item.setTooltiptext(cat.getText().getValue());
         }
         
         List<String> data = broker.callRPCList("RGCWENCX CLINLOC", null, "", 1, 9999);
@@ -270,10 +264,6 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
         
         flagsChanged();
         committed();
-    }
-    
-    private void getServiceCategories() {
-        
     }
     
     protected void setEncounterFlags(Set<EncounterFlag> flags) {
@@ -304,9 +294,9 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
         if (sc.isEmpty()) {
             cboServiceCategory.setSelectedItem(null);
         } else {
-            for (Object obj : cboServiceCategory.getItems()) {
-                if (sc.equals(((Comboitem) obj).getValue())) {
-                    cboServiceCategory.setSelectedItem((Comboitem) obj);
+            for (Comboitem ci : cboServiceCategory.getItems()) {
+                if (sc.equals(ci.getValue())) {
+                    cboServiceCategory.setSelectedItem(ci);
                     break;
                 }
             }
@@ -349,9 +339,7 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
             Location location = locid != null ? DomainFactoryRegistry.fetchObject(Location.class, locid) : null;
             Comboitem cboitem = cboServiceCategory.getSelectedItem();
             Date date = datEncounter.getDate();
-            CodeableConceptDt sc = EncounterUtil.createServiceCategory((String) cboitem.getValue(), cboitem.getLabel(),
-                cboitem.getTooltiptext());
-            encounter = EncounterUtil.create(date, location, sc);
+            encounter = EncounterUtil.create(date, location, (String) cboitem.getValue());
             
             if (chkForceCreate.isChecked()) {
                 flags.add(EncounterFlag.FORCE);
@@ -383,7 +371,7 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
      * Close the main dialog.
      */
     private void close() {
-        getParent().setVisible(false);
+        root.setVisible(false);
     }
     
     /**
@@ -404,8 +392,8 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
     }
     
     private void setProviderSelectionDialog(Tab tab, Include inc) {
-        ProviderSelection dlg = ZKUtil.findChild(inc, ProviderSelection.class);
-        tab.setAttribute("psd", dlg);
+        Component dlg = inc.getFirstChild();
+        tab.setAttribute("psd", FrameworkController.getController(dlg));
     }
     
     private void loadProviders(Encounter encounter) {
@@ -434,7 +422,7 @@ public class EncounterSelection extends Panel implements PatientContext.IPatient
         datEncounter.setDate(new Date());
         lstLocation.setSelectedItem(null);
         cboServiceCategory.setSelectedItem(null);
-        loadProviders(null);
+        loadProviders(new Encounter());
     }
     
     @Override

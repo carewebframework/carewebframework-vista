@@ -10,6 +10,7 @@
 package org.carewebframework.vista.ui.context.encounter;
 
 import ca.uhn.fhir.model.dstu.resource.Encounter;
+import ca.uhn.fhir.model.dstu.resource.Location;
 
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
@@ -26,9 +27,10 @@ public class EncounterRenderer extends AbstractListitemRenderer<Object, Object> 
         item.setValue(encounter);
         item.addForward(Events.ON_DOUBLE_CLICK, item.getListbox(), null);
         item.setImage(EncounterUtil.isLocked(encounter) ? Constants.ICON_LOCKED : null);
-        createCell(item, encounter.getLocation());
-        createCell(item, encounter.getPeriod());
-        createCell(item, encounter.getType());
+        Location location = (Location) encounter.getLocationFirstRep().getLocation().getResource();
+        createCell(item, location == null ? null : location.getName());
+        createCell(item, encounter.getPeriod().getStart().getValue());
+        createCell(item, encounter.getTypeFirstRep().getCodingFirstRep().getDisplay());
     }
     
     private Encounter parse(String value) {

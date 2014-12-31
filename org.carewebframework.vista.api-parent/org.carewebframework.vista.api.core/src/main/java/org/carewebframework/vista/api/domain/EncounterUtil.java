@@ -9,28 +9,39 @@
  */
 package org.carewebframework.vista.api.domain;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import ca.uhn.fhir.model.dstu.composite.CodeableConceptDt;
 import ca.uhn.fhir.model.dstu.composite.CodingDt;
 import ca.uhn.fhir.model.dstu.composite.PeriodDt;
 import ca.uhn.fhir.model.dstu.composite.ResourceReferenceDt;
 import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Encounter.Location;
+import ca.uhn.fhir.model.dstu.resource.Location;
 import ca.uhn.fhir.model.dstu.resource.Patient;
 import ca.uhn.fhir.model.dstu.resource.Practitioner;
 import ca.uhn.fhir.model.dstu.valueset.EncounterStateEnum;
+import ca.uhn.fhir.model.primitive.BoundCodeDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
 
+import org.apache.commons.lang.math.NumberUtils;
+
+import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.cal.api.context.PatientContext;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.common.FhirUtil;
+import org.carewebframework.vista.api.property.Property;
 import org.carewebframework.vista.api.util.VistAUtil;
+import org.carewebframework.vista.mbroker.FMDate;
 
 /**
  * Encounter-related utility functions.
  */
 public class EncounterUtil {
+    
+    private static volatile Map<String, CodeableConceptDt> serviceCategories;
     
     /**
      * Returns the default encounter for the current institution for the specified patient. Search
@@ -81,17 +92,20 @@ public class EncounterUtil {
         return true;
     }
     
-    public static Encounter create(Date date, Location location, CodeableConceptDt sc) {
+    public static Encounter create(Date date, Location location, String sc) {
         Encounter encounter = new Encounter();
         PeriodDt period = new PeriodDt();
         period.setStart(new DateTimeDt(date));
         encounter.setPeriod(period);
         ResourceReferenceDt loc = new ResourceReferenceDt();
-        loc.setReference(location.getId());
-        Location encloc = encounter.addLocation();
+        loc.setResource(location);
+        Encounter.Location encloc = encounter.addLocation();
         encloc.setPeriod(period);
         encloc.setLocation(loc);
-        //encounter.getType().add(sc);
+        CodeableConceptDt type = encounter.addType();
+        CodeableConceptDt cat = getServiceCategory(sc);
+        type.setText(cat.getText());
+        type.setCoding(cat.getCoding());
         return encounter;
     }
     
@@ -105,24 +119,89 @@ public class EncounterUtil {
         return cpt;
     }
     
+    public static CodeableConceptDt getServiceCategory(String category) {
+        initServiceCategories();
+        
+        if (category == null) {
+            return null;
+        }
+        
+        CodeableConceptDt cat = serviceCategories.get(category);
+        
+        if (cat == null) {
+            cat = createServiceCategory(category, "Unknown", "Unknown service category");
+        }
+        
+        return cat;
+    }
+    
+    public static Collection<CodeableConceptDt> getServiceCategories() {
+        initServiceCategories();
+        return serviceCategories.values();
+    }
+    
+    private static void initServiceCategories() {
+        if (serviceCategories == null) {
+            loadServiceCategories();
+        }
+    }
+    
+    private static synchronized void loadServiceCategories() {
+        if (serviceCategories == null) {
+            Map<String, CodeableConceptDt> map = new LinkedHashMap<String, CodeableConceptDt>();
+            Property property = new Property("RGCWENCX VISIT TYPES", "*", null, "I");
+            
+            for (String sc : property.getValues()) {
+                String pcs[] = StrUtil.split(sc, "~", 3);
+                map.put(pcs[0], createServiceCategory(pcs[0], pcs[1], pcs[2]));
+            }
+            
+            serviceCategories = map;
+        }
+        
+        return;
+    }
+    
     public static String getServiceCategory(Encounter encounter) {
         CodeableConceptDt cpt = encounter == null ? null : FhirUtil.getFirst(encounter.getType());
-        CodingDt coding = cpt == null ? null : FhirUtil.getFirst(cpt.getCoding());
+        CodingDt coding = cpt == null ? null : cpt.getCodingFirstRep();
         return coding == null ? null : coding.getCode().getValue();
     }
     
-    public static Encounter decode(String piece) {
-        // TODO Auto-generated method stub
-        return null;
-    };
+    /**
+     * Decode encounter from visit string.
+     * 
+     * @param vstr Format is:
+     *            <p>
+     *            location ien^visit date^category^visit ien
+     * @return The decoded encounter.
+     */
+    public static Encounter decode(String vstr) {
+        String[] pcs = StrUtil.split(vstr, ";", 4);
+        long encIEN = NumberUtils.toLong(pcs[3]);
+        
+        if (encIEN > 0) {
+            return DomainFactoryRegistry.fetchObject(Encounter.class, pcs[3]);
+        }
+        
+        long locIEN = NumberUtils.toLong(pcs[0]);
+        Location location = locIEN == 0 ? null : DomainFactoryRegistry.fetchObject(Location.class, pcs[0]);
+        Date date = FMDate.fromString(pcs[1]);
+        return create(date, location, pcs[2]);
+    }
     
-    public static Encounter encode(Encounter encounter) {
-        // TODO Auto-generated method stub
-        return null;
+    public static String encode(Encounter encounter) {
+        Encounter.Location location = encounter.getLocationFirstRep();
+        String locIEN = location == null ? "" : location.getLocation().getElementSpecificId();
+        DateTimeDt date = encounter.getPeriod().getStart();
+        String sc = getServiceCategory(encounter);
+        String ien = encounter.getId().getIdPart();
+        return locIEN + StrUtil.U + new FMDate(date.getValue()).getFMDate() + StrUtil.U + sc + StrUtil.U + ien;
     }
     
     public static boolean isLocked(Encounter encounter) {
-        return encounter.getStatus().getValueAsEnum() == EncounterStateEnum.FINISHED;
+        BoundCodeDt<EncounterStateEnum> status = encounter.getStatus();
+        return status != null && status.getValueAsEnum() == EncounterStateEnum.FINISHED;
     }
     
     public static boolean isPrepared(Encounter encounter) {
