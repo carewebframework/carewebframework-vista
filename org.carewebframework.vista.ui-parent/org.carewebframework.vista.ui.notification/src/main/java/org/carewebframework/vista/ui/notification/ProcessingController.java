@@ -18,8 +18,8 @@ import ca.uhn.fhir.model.dstu.resource.Patient;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.api.spring.SpringUtil;
-import org.carewebframework.cal.api.context.PatientContext;
-import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
+import org.carewebframework.cal.api.patient.PatientContext;
+import org.carewebframework.cal.api.patient.PatientContext.IPatientContextEvent;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;

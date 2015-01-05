@@ -29,10 +29,16 @@
 
 	<beans profile="desktop">
 
-		<bean id="encounterSelectionController" class="org.carewebframework.vista.ui.context.encounter.EncounterSelection"
+		<bean id="encounterOutpatientSelector" class="org.carewebframework.vista.ui.context.encounter.OutpatientSelector"
 			scope="prototype" />
 
-		<bean id="providerSelectionController" class="org.carewebframework.vista.ui.context.encounter.ProviderSelection"
+		<bean id="encounterInpatientSelector" class="org.carewebframework.vista.ui.context.encounter.InpatientSelector"
+			scope="prototype" />
+
+		<bean id="encounterNewSelector" class="org.carewebframework.vista.ui.context.encounter.NewSelector"
+			scope="prototype" />
+
+		<bean id="encounterSelectionController" class="org.carewebframework.vista.ui.context.encounter.MainController"
 			scope="prototype" />
 
 		<bean id="locationSelectionController" class="org.carewebframework.vista.ui.context.location.LocationSelection"

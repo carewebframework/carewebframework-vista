@@ -14,7 +14,7 @@ import ca.uhn.fhir.model.dstu.resource.Location;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.carewebframework.cal.api.context.LocationContext;
+import org.carewebframework.cal.api.location.LocationContext;
 import org.carewebframework.ui.FrameworkController;
 
 import org.zkoss.zk.ui.Component;

@@ -13,10 +13,9 @@ import java.util.List;
 
 import ca.uhn.fhir.model.dstu.resource.Location;
 
-import org.carewebframework.cal.api.context.LocationContext;
+import org.carewebframework.cal.api.location.LocationContext;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;
-import org.carewebframework.vista.api.domain.LocationUtil;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
@@ -77,7 +76,7 @@ public class LocationSelection extends FrameworkController {
         if (!text.isEmpty()) {
             lstLocation.setDisabled(true);
             lstLocation.getItems().clear();
-            List<Location> locations = LocationUtil.findLocations(text);
+            List<Location> locations = null;//LocationUtil.findLocations(text);
             boolean hasMatch = locations != null && locations.size() > 0;
             
             if (hasMatch) {

@@ -14,8 +14,8 @@ import ca.uhn.fhir.model.dstu.resource.Practitioner;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
-import org.carewebframework.vista.api.domain.EncounterProvider;
-import org.carewebframework.vista.api.domain.ProviderUtil;
+import org.carewebframework.vista.api.encounter.EncounterProvider;
+import org.carewebframework.vista.api.provider.ProviderUtil;
 
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listitem;

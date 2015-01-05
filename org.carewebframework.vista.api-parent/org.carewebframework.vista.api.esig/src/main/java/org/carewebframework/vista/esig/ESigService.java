@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.carewebframework.api.event.EventManager;
 import org.carewebframework.api.spring.SpringUtil;
-import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
+import org.carewebframework.cal.api.patient.PatientContext.IPatientContextEvent;
 
 /**
  * This is the esig service and type registry implementation.

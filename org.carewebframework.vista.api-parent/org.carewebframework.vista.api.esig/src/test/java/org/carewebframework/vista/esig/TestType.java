@@ -11,7 +11,7 @@ package org.carewebframework.vista.esig;
 
 import java.util.List;
 
-import org.carewebframework.cal.api.context.PatientContext;
+import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.vista.esig.ESigItem.ESigItemIssueSeverity;
 
 public abstract class TestType extends ESigType {

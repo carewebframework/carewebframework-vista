@@ -24,7 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.carewebframework.api.FrameworkUtil;
-import org.carewebframework.cal.api.context.PatientContext;
+import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.shell.plugins.IPluginEvent;

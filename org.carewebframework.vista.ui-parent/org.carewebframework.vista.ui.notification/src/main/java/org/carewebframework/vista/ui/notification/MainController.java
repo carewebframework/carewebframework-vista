@@ -18,8 +18,8 @@ import java.util.Set;
 import ca.uhn.fhir.model.dstu.resource.Patient;
 
 import org.carewebframework.api.event.IGenericEvent;
-import org.carewebframework.cal.api.context.PatientContext;
-import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
+import org.carewebframework.cal.api.patient.PatientContext;
+import org.carewebframework.cal.api.patient.PatientContext.IPatientContextEvent;
 import org.carewebframework.common.NumUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.common.FhirUtil;

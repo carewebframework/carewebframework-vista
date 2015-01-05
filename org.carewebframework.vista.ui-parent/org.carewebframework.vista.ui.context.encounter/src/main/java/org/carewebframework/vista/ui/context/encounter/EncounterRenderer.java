@@ -14,7 +14,7 @@ import ca.uhn.fhir.model.dstu.resource.Location;
 
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
-import org.carewebframework.vista.api.domain.EncounterUtil;
+import org.carewebframework.vista.api.encounter.EncounterUtil;
 
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listitem;

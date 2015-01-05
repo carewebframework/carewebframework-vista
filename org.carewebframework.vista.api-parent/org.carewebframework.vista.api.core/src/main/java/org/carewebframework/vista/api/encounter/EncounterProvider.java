@@ -7,7 +7,7 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.api.domain;
+package org.carewebframework.vista.api.encounter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,8 @@ import ca.uhn.fhir.model.dstu.composite.ResourceReferenceDt;
 import ca.uhn.fhir.model.dstu.resource.Encounter;
 import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
 import ca.uhn.fhir.model.dstu.resource.Practitioner;
+
+import org.carewebframework.cal.api.encounter.EncounterRelated;
 
 /**
  * Abstract base class for encounter-associated domain objects.
@@ -37,7 +39,7 @@ public class EncounterProvider extends EncounterRelated {
     
     private Practitioner primaryProvider;
     
-    private final List<Participant> participants;
+    private final List<Participant> participants = new ArrayList<Participant>();
     
     public EncounterProvider() {
         this(new Encounter());
@@ -45,7 +47,7 @@ public class EncounterProvider extends EncounterRelated {
     
     public EncounterProvider(Encounter encounter) {
         super(encounter);
-        participants = encounter.getParticipant();
+        participants.addAll(encounter.getParticipant());
         currentProvider = null;
         primaryProvider = getPractitioner(findPrimary());
     }
@@ -86,10 +88,7 @@ public class EncounterProvider extends EncounterRelated {
         boolean result = find(provider, false) == null;
         
         if (result) {
-            Participant participant = new Participant();
-            ResourceReferenceDt resource = new ResourceReferenceDt();
-            resource.setReference(provider.getId());
-            participant.setIndividual(resource);
+            create(provider);
         }
         
         return result;
@@ -122,16 +121,18 @@ public class EncounterProvider extends EncounterRelated {
             }
         }
         
-        if (create) {
-            Participant participant = new Participant();
-            ResourceReferenceDt resource = new ResourceReferenceDt();
-            resource.setReference(provider.getId());
-            resource.setDisplay(provider.getName().toString());
-            participant.setIndividual(resource);
-            return participant;
-        }
-        
-        return null;
+        return create ? create(provider) : null;
+    }
+    
+    private Participant create(Practitioner provider) {
+        Participant participant = new Participant();
+        ResourceReferenceDt resource = new ResourceReferenceDt();
+        resource.setResource(provider);
+        resource.setReference(provider.getId());
+        resource.setDisplay(provider.getName().toString());
+        participant.setIndividual(resource);
+        participants.add(participant);
+        return participant;
     }
     
     public Participant findPrimary() {

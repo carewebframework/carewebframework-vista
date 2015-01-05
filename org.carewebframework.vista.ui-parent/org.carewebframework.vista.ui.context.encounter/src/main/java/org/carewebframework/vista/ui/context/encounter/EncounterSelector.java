@@ -9,14 +9,21 @@
  */
 package org.carewebframework.vista.ui.context.encounter;
 
+import java.util.List;
+
 import ca.uhn.fhir.model.dstu.resource.Encounter;
 import ca.uhn.fhir.model.dstu.resource.Practitioner;
 
 import org.carewebframework.api.context.UserContext;
+import org.carewebframework.api.spring.SpringUtil;
+import org.carewebframework.cal.api.encounter.EncounterSearch;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.ListUtil;
-import org.carewebframework.vista.api.domain.EncounterProvider;
-import org.carewebframework.vista.api.domain.ProviderUtil;
+import org.carewebframework.ui.zk.ZKUtil;
+import org.carewebframework.vista.api.encounter.EncounterProvider;
+import org.carewebframework.vista.api.provider.ProviderUtil;
+import org.carewebframework.vista.api.util.VistAUtil;
+import org.carewebframework.vista.mbroker.BrokerSession;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.ListModel;
@@ -25,9 +32,11 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Textbox;
 
-public class ProviderSelection extends FrameworkController {
+public abstract class EncounterSelector extends FrameworkController {
     
     private static final long serialVersionUID = 1L;
+    
+    private static final String PROVIDER_SELECTOR = Constants.RESOURCE_PREFIX + "providerSelector.zul";
     
     private Textbox edtProvider;
     
@@ -35,7 +44,7 @@ public class ProviderSelection extends FrameworkController {
     
     private Listbox lstEncounterProviders;
     
-    private boolean modified = false;
+    private boolean modified;
     
     private EncounterProvider encounterProvider;
     
@@ -43,12 +52,48 @@ public class ProviderSelection extends FrameworkController {
     
     private final ListModelList<Practitioner> modelProviders = new ListModelList<Practitioner>();
     
+    protected BrokerSession broker;
+    
+    protected EncounterSearch searchEngine;
+    
+    protected MainController mainController;
+    
+    protected abstract Encounter getEncounterInternal();
+    
+    protected abstract boolean isComplete();
+    
     @Override
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
+        ZKUtil.wireController(ZKUtil.loadZulPage(PROVIDER_SELECTOR, comp), this);
+        broker = VistAUtil.getBrokerSession();
+        searchEngine = SpringUtil.getBean("encounterSearchEngine", EncounterSearch.class);
         lstAllProviders.setItemRenderer(providerRenderer);
         lstAllProviders.setModel(modelProviders);
         lstEncounterProviders.setItemRenderer(providerRenderer);
+    }
+    
+    protected boolean init(MainController mainController) {
+        this.mainController = mainController;
+        return true;
+    }
+    
+    protected void activate(boolean activate) {
+        
+    }
+    
+    protected void statusChanged() {
+        mainController.btnOK.setDisabled(!isComplete());
+    }
+    
+    public Encounter getEncounter() {
+        Encounter encounter = getEncounterInternal();
+        
+        if (encounter != null) {
+            updateCurrentProvider();
+        }
+        
+        return encounter;
     }
     
     public EncounterProvider getEncounterProvider() {
@@ -57,6 +102,11 @@ public class ProviderSelection extends FrameworkController {
     
     public void updateCurrentProvider() {
         encounterProvider.setCurrentProvider(getSelectedProvider(lstEncounterProviders));
+    }
+    
+    protected Encounter getSelectedEncounter(Listbox lb) {
+        Listitem item = lb.getSelectedItem();
+        return item == null ? null : (Encounter) item.getValue();
     }
     
     private Practitioner getSelectedProvider(Listbox lb) {
@@ -72,6 +122,12 @@ public class ProviderSelection extends FrameworkController {
     
     public boolean isModified() {
         return modified;
+    }
+    
+    protected boolean populateListbox(Listbox lb, List<?> data) {
+        lb.setModel((ListModel<?>) null);
+        lb.setModel(new ListModelList<Object>(data));
+        return data.size() > 0;
     }
     
     public void loadProviders(Encounter encounter) {

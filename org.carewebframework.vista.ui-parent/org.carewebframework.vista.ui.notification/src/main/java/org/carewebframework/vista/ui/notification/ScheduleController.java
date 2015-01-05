@@ -19,8 +19,8 @@ import ca.uhn.fhir.model.dstu.resource.Patient;
 
 import org.apache.commons.lang.StringUtils;
 
-import org.carewebframework.cal.api.context.PatientContext;
-import org.carewebframework.cal.api.context.UserContext;
+import org.carewebframework.cal.api.patient.PatientContext;
+import org.carewebframework.cal.api.user.UserContext;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.FrameworkController;

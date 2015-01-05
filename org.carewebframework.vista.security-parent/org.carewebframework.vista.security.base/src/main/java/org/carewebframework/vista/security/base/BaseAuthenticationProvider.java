@@ -18,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.api.domain.IUser;
 import org.carewebframework.api.security.ISecurityDomain;
-import org.carewebframework.cal.api.domain.UserProxy;
+import org.carewebframework.cal.api.user.UserProxy;
 import org.carewebframework.security.spring.AbstractAuthenticationProvider;
 import org.carewebframework.security.spring.AuthenticationCancelledException;
 import org.carewebframework.security.spring.CWFAuthenticationDetails;

@@ -14,8 +14,8 @@ import java.util.List;
 import ca.uhn.fhir.model.dstu.resource.Patient;
 
 import org.carewebframework.api.event.IGenericEvent;
-import org.carewebframework.cal.api.context.PatientContext;
-import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
+import org.carewebframework.cal.api.patient.PatientContext;
+import org.carewebframework.cal.api.patient.PatientContext.IPatientContextEvent;
 import org.carewebframework.shell.plugins.PluginContainer;
 import org.carewebframework.shell.plugins.PluginController;
 import org.carewebframework.ui.zk.ReportBox;

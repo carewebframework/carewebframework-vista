@@ -7,7 +7,7 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.api.domain;
+package org.carewebframework.vista.api;
 
 import java.util.Collections;
 import java.util.List;

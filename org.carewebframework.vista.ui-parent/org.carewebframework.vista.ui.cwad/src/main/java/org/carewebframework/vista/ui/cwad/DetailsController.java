@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.carewebframework.cal.api.context.PatientContext;
-import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
+import org.carewebframework.cal.api.patient.PatientContext;
+import org.carewebframework.cal.api.patient.PatientContext.IPatientContextEvent;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;

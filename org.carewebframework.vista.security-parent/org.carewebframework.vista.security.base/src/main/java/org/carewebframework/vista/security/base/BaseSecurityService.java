@@ -18,7 +18,7 @@ import ca.uhn.fhir.model.dstu.resource.Organization;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.carewebframework.cal.api.domain.SecurityDomainProxy;
+import org.carewebframework.cal.api.SecurityDomainProxy;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.security.spring.AbstractSecurityService;
 import org.carewebframework.security.spring.Constants;

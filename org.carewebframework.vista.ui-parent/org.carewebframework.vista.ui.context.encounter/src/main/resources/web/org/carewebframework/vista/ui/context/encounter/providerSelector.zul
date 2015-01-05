@@ -1,11 +1,10 @@
 <zk>
-	<div apply="${providerSelectionController}"
-		sclass="panel panel-info">
+	<idspace zclass="panel panel-info">
 		<div zclass="panel-heading text-center" style="padding:0">
 			<label value="Encounter Providers" zclass="panel-title" />
 		</div>
 		<div zclass="panel-body" style="padding:2px">
-			<hbox apply="${providerSelectionController}" spacing="0" vflex="1">
+			<hbox spacing="0" vflex="1">
 				<vlayout vflex="1" spacing="0">
 					<hlayout width="100%" spacing="0"
 						style="padding:2px">
@@ -34,5 +33,5 @@
 					forward="onDoubleClick=btnProviderRemove.onClick" />
 			</hbox>
 		</div>
-	</div>
+	</idspace>
 </zk>

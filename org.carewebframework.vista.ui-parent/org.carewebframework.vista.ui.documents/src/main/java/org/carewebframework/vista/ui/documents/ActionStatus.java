@@ -9,8 +9,8 @@
  */
 package org.carewebframework.vista.ui.documents;
 
-import org.carewebframework.cal.api.context.PatientContext;
-import org.carewebframework.cal.api.context.PatientContext.IPatientContextEvent;
+import org.carewebframework.cal.api.patient.PatientContext;
+import org.carewebframework.cal.api.patient.PatientContext.IPatientContextEvent;
 import org.carewebframework.shell.plugins.PluginStatus;
 import org.carewebframework.vista.api.documents.DocumentService;
 

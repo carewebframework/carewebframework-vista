@@ -18,7 +18,7 @@ import java.util.List;
 
 import ca.uhn.fhir.model.dstu.resource.Patient;
 
-import org.carewebframework.cal.api.context.PatientContext;
+import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.fhir.common.IReferenceable;
 import org.carewebframework.ui.sharedforms.ListViewForm;
 import org.carewebframework.ui.zk.ReportBox;

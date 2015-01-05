@@ -20,7 +20,7 @@ import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.api.FrameworkUtil;
 import org.carewebframework.api.security.SecurityUtil;
-import org.carewebframework.cal.api.context.PatientContext;
+import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.ui.zk.SelectionGrid;
 import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.esig.ESigFilter;

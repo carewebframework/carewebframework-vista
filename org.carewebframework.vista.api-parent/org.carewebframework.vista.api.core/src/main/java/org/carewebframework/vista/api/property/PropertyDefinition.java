@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.carewebframework.cal.api.domain.DomainObject;
+import org.carewebframework.cal.api.DomainObject;
 import org.carewebframework.common.JSONUtil;
 
 public class PropertyDefinition extends DomainObject {

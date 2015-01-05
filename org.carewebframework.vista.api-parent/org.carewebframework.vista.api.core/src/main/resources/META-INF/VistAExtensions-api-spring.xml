@@ -37,7 +37,7 @@
 		</bean>
 		
 		<!-- Domain factories  -->
-		<bean class="org.carewebframework.vista.api.domain.JsonDomainFactory" />
+		<bean class="org.carewebframework.vista.api.JsonDomainFactory" />
 
 	</beans>
 

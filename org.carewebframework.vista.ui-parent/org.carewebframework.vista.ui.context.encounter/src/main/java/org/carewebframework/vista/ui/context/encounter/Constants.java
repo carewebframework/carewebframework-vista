@@ -14,8 +14,6 @@ import org.carewebframework.ui.zk.ZKUtil;
 
 /**
  * Encounter context-related constants.
- * 
- * 
  */
 public class Constants {
     
@@ -25,7 +23,7 @@ public class Constants {
     
     public static final String SCLASS_PRIMARY = "encounter-primary-provider";
     
-    public static final int ENCOUNTER_DAYS = 366; // Days back to search for existing encounters.	
+    public static final int ENCOUNTER_DAYS = 366; // Days back to search for existing encounters.
     
     public static final String TX_NO_DAT = "Encounter Date";
     

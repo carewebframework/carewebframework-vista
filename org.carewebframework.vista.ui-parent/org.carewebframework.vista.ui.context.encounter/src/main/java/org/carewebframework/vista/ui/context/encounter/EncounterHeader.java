@@ -10,16 +10,17 @@
 package org.carewebframework.vista.ui.context.encounter;
 
 import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Practitioner;
+import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.carewebframework.cal.api.context.EncounterContext;
-import org.carewebframework.cal.api.context.PatientContext;
+import org.carewebframework.cal.api.encounter.EncounterContext;
+import org.carewebframework.cal.api.encounter.EncounterParticipantContext;
+import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.FrameworkController;
-import org.carewebframework.vista.api.domain.EncounterUtil;
+import org.carewebframework.vista.api.encounter.EncounterUtil;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Clients;
@@ -57,7 +58,7 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
      */
     public void onClick$root() {
         if (PatientContext.getActivePatient() != null) {
-            EncounterSelection.execute();
+            MainController.execute();
         }
     }
     
@@ -102,8 +103,9 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
             
             lblLocation.setValue(text);
             lblDate.setValue(encounter.getPeriod() == null ? null : encounter.getPeriod().getStart().toString());
-            Practitioner provider = EncounterUtil.getCurrentProvider(encounter);
-            lblProvider.setValue(provider == null ? null : provider.getName().toString());
+            Participant participant = EncounterParticipantContext.getActiveParticipant();
+            String name = participant == null ? null : participant.getIndividual().getDisplay().getValue();
+            lblProvider.setValue(participant == null ? null : name);
             lblServiceCategory.setValue(encounter.getType().toString());
             imgLocked.setVisible(EncounterUtil.isLocked(encounter));
         }

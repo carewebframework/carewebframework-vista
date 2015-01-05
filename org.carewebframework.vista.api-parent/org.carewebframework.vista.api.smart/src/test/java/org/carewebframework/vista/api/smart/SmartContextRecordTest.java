@@ -11,7 +11,7 @@ package org.carewebframework.vista.api.smart;
 
 import ca.uhn.fhir.model.dstu.resource.Patient;
 
-import org.carewebframework.cal.api.context.PatientContext;
+import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.smart.SmartContextBase;
 

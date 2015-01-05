@@ -11,7 +11,7 @@ package org.carewebframework.vista.api.documents;
 
 import java.util.Date;
 
-import org.carewebframework.cal.api.domain.DomainObject;
+import org.carewebframework.cal.api.DomainObject;
 
 /**
  * Model object wrapping a clinical document.

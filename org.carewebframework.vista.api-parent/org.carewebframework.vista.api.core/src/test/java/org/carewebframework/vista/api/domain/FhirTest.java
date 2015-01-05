@@ -28,7 +28,7 @@ import ca.uhn.fhir.rest.client.GenericClient;
 import org.carewebframework.api.domain.IDomainFactory;
 import org.carewebframework.api.test.CommonTest;
 import org.carewebframework.cal.api.ClientUtil;
-import org.carewebframework.cal.api.domain.FhirDomainFactory;
+import org.carewebframework.cal.api.DomainFactory;
 
 import org.junit.Test;
 
@@ -40,7 +40,7 @@ public class FhirTest extends CommonTest {
     
     @Test
     public void test() throws URISyntaxException {
-        IDomainFactory<BaseResource> factory = FhirDomainFactory.getInstance();
+        IDomainFactory<BaseResource> factory = DomainFactory.getInstance();
         Patient pat1 = factory.fetchObject(Patient.class, "1");
         assertNotNull(pat1);
         for (ExtensionDt extension : pat1.getAllUndeclaredExtensions()) {

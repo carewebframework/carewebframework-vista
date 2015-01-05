@@ -16,7 +16,7 @@ import ca.uhn.fhir.model.api.IResource;
 import org.apache.commons.lang.math.NumberUtils;
 
 import org.carewebframework.api.spring.SpringUtil;
-import org.carewebframework.cal.api.domain.DomainObject;
+import org.carewebframework.cal.api.DomainObject;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
