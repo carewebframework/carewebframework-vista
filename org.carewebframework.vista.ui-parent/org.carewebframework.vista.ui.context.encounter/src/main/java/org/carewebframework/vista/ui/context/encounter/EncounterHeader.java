@@ -28,17 +28,13 @@ import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.FrameworkController;
-import org.carewebframework.vista.api.encounter.EncounterUtil;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Label;
 
 /**
- * Controller for encounter header component. Note that this controller has two context change
- * listeners, one implemented by the controller itself (encounter context listener) and one inner
- * (patient context listener). This is done because Java does not permit disambiguation of
- * conflicting interface method names.
+ * Controller for encounter header component.
  */
 public class EncounterHeader extends FrameworkController implements EncounterContext.IEncounterContextEvent {
     
