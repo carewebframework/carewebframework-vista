@@ -1,0 +1,37 @@
+<zk>
+	<idspace zclass="panel panel-info">
+		<div zclass="panel-heading text-center" style="padding:0">
+			<label value="Encounter Participants" zclass="panel-title" />
+		</div>
+		<div zclass="panel-body" style="padding:2px">
+			<hbox spacing="0" vflex="1">
+				<vlayout vflex="1" spacing="0">
+					<hlayout width="100%" spacing="0"
+						style="padding:2px">
+						<textbox id="edtParticipant" hflex="1" vflex="1"
+							forward="onOK=btnParticipant.onClick" />
+						<button id="btnParticipant" vflex="1" zclass="btn"
+							sclass="btn-xs" label="..." />
+					</hlayout>
+					<listbox id="lstAllParticipants" hflex="1" vflex="1"
+						forward="onDoubleClick=btnParticipantAdd.onClick" />
+				</vlayout>
+				<vlayout vflex="1" sclass="text-center" spacing="0">
+					<space vflex="1" />
+					<a id="btnPrimary" zclass="btn" sclass="btn-link"
+						label="P" style="color:red"
+						tooltiptext="Make selected participant the primary." />
+					<space />
+					<a id="btnParticipantAdd" zclass="btn"
+						sclass="btn-link" iconSclass="glyphicon glyphicon-chevron-right"
+						tooltiptext="Add selected participant to encounter." />
+					<a id="btnParticipantRemove" zclass="btn"
+						sclass="btn-link" iconSclass="glyphicon glyphicon-chevron-left"
+						tooltiptext="Remove selected participant from encounter." />
+				</vlayout>
+				<listbox id="lstEncounterParticipants" hflex="1" vflex="1"
+					forward="onDoubleClick=btnParticipantRemove.onClick" />
+			</hbox>
+		</div>
+	</idspace>
+</zk>

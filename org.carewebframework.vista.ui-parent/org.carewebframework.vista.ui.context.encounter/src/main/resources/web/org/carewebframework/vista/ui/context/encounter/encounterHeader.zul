@@ -6,13 +6,13 @@
 	<vlayout id="root" apply="${encounterHeaderController}" spacing="0"
 		height="100%" width="100%">
 		<hlayout sclass="cwf-header-row" hflex="1" vflex="1">
-			<image id="imgLocked" visible="false" />
+			<span id="imgLocked" zclass="glyphicon glyphicon-lock" visible="false" />
 			<label id="lblLocation" value="No Encounter Selected" />
 			<space hflex="1" />
 			<label id="lblDate" />
 		</hlayout>
 		<hlayout sclass="cwf-header-row" hflex="1" vflex="1">
-			<label id="lblProvider" />
+			<label id="lblParticipant" />
 			<space hflex="1" />
 			<label id="lblServiceCategory" />
 		</hlayout>

@@ -37,7 +37,7 @@ public class InpatientSelector extends EncounterSelector {
     }
     
     public void onSelect$lstInpatient() {
-        loadProviders(getSelectedEncounter(lstInpatient));
+        loadEncounterParticipants(getSelectedEncounter(lstInpatient));
         statusChanged();
     }
     
@@ -52,7 +52,7 @@ public class InpatientSelector extends EncounterSelector {
         EncounterSearchCriteria criteria = new EncounterSearchCriteria();
         criteria.setPatient(mainController.patient);
         criteria.setType("I");
-        List<Encounter> encounters = searchEngine.search(criteria);
+        List<Encounter> encounters = encounterSearch.search(criteria);
         return populateListbox(lstInpatient, encounters);
     }
     

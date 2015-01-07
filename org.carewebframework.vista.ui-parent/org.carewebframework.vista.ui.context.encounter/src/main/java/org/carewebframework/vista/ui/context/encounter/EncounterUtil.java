@@ -64,7 +64,7 @@ public class EncounterUtil extends org.carewebframework.vista.api.encounter.Enco
             appendItem(sb, Constants.TX_NO_PRV);
         }
         
-        if (EncounterUtil.getPrimaryProvider(encounter) == null && !EncounterUtil.isLocked(encounter)) {
+        if (EncounterUtil.getPrimaryParticipant(encounter) == null && !EncounterUtil.isLocked(encounter)) {
             appendItem(sb, Constants.TX_NO_PRI);
         }
         

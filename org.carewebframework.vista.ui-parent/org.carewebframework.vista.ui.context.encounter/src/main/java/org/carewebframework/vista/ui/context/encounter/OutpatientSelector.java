@@ -38,7 +38,7 @@ public class OutpatientSelector extends EncounterSelector {
     }
     
     public void onSelect$lstOutpatient() {
-        loadProviders(getSelectedEncounter(lstOutpatient));
+        loadEncounterParticipants(getSelectedEncounter(lstOutpatient));
         statusChanged();
     }
     

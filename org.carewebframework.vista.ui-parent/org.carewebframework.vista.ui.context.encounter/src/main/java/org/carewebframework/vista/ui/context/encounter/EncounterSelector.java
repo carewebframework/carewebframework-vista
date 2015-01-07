@@ -12,22 +12,28 @@ package org.carewebframework.vista.ui.context.encounter;
 import java.util.List;
 
 import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Practitioner;
+import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
+
+import org.apache.commons.lang.ObjectUtils;
 
 import org.carewebframework.api.context.UserContext;
-import org.carewebframework.api.spring.SpringUtil;
+import org.carewebframework.cal.api.encounter.EncounterContext;
+import org.carewebframework.cal.api.encounter.EncounterParticipantContext;
 import org.carewebframework.cal.api.encounter.EncounterSearch;
+import org.carewebframework.cal.api.practitioner.PractitionerSearch;
+import org.carewebframework.cal.api.practitioner.PractitionerSearchCriteria;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.ListUtil;
+import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.ZKUtil;
-import org.carewebframework.vista.api.encounter.EncounterProvider;
-import org.carewebframework.vista.api.provider.ProviderUtil;
+import org.carewebframework.vista.api.encounter.EncounterUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.ListModelSet;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Textbox;
@@ -36,25 +42,31 @@ public abstract class EncounterSelector extends FrameworkController {
     
     private static final long serialVersionUID = 1L;
     
-    private static final String PROVIDER_SELECTOR = Constants.RESOURCE_PREFIX + "providerSelector.zul";
+    private static final String PARTICIPANT_SELECTOR = Constants.RESOURCE_PREFIX + "participantSelector.zul";
     
-    private Textbox edtProvider;
+    private Textbox edtParticipant;
     
-    private Listbox lstAllProviders;
+    private Listbox lstAllParticipants;
     
-    private Listbox lstEncounterProviders;
+    private Listbox lstEncounterParticipants;
     
-    private boolean modified;
+    private boolean primaryModified;
     
-    private EncounterProvider encounterProvider;
+    private boolean participantsModified;
     
-    private final ProviderRenderer providerRenderer = new ProviderRenderer();
+    private final ParticipantRenderer encounterParticipantRenderer = new ParticipantRenderer();
     
-    private final ListModelList<Practitioner> modelProviders = new ListModelList<Practitioner>();
+    private final ListModelSet<Object> allParticipantsModel = new ListModelSet<Object>();
+    
+    private final ListModelSet<Participant> encounterParticipantsModel = new ListModelSet<Participant>();
+    
+    private Participant currentParticipant;
     
     protected BrokerSession broker;
     
-    protected EncounterSearch searchEngine;
+    protected PractitionerSearch practitionerSearch;
+    
+    protected EncounterSearch encounterSearch;
     
     protected MainController mainController;
     
@@ -65,12 +77,12 @@ public abstract class EncounterSelector extends FrameworkController {
     @Override
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
-        ZKUtil.wireController(ZKUtil.loadZulPage(PROVIDER_SELECTOR, comp), this);
+        ZKUtil.wireController(ZKUtil.loadZulPage(PARTICIPANT_SELECTOR, comp), this);
         broker = VistAUtil.getBrokerSession();
-        searchEngine = SpringUtil.getBean("encounterSearchEngine", EncounterSearch.class);
-        lstAllProviders.setItemRenderer(providerRenderer);
-        lstAllProviders.setModel(modelProviders);
-        lstEncounterProviders.setItemRenderer(providerRenderer);
+        lstAllParticipants.setItemRenderer(new ParticipantRenderer());
+        lstAllParticipants.setModel(allParticipantsModel);
+        lstEncounterParticipants.setItemRenderer(encounterParticipantRenderer);
+        lstEncounterParticipants.setModel(encounterParticipantsModel);
     }
     
     protected boolean init(MainController mainController) {
@@ -90,18 +102,34 @@ public abstract class EncounterSelector extends FrameworkController {
         Encounter encounter = getEncounterInternal();
         
         if (encounter != null) {
-            updateCurrentProvider();
+            if (participantsModified) {
+                List<Participant> participants = encounter.getParticipant();
+                participants.clear();
+                participants.addAll(encounterParticipantsModel);
+            }
+            
+            if (primaryModified) {
+                Participant participant = EncounterUtil.getPrimaryParticipant(encounter);
+                
+                if (participant != null) {
+                    EncounterUtil.removeType(participant, EncounterUtil.primaryType);
+                }
+                
+                participant = encounterParticipantRenderer.getPrimaryParticipant();
+                
+                if (participant != null) {
+                    EncounterUtil.addType(participant, EncounterUtil.primaryType);
+                }
+            }
+            
+            EncounterContext.changeEncounter(encounter);
+            
+            if (encounter == EncounterContext.getActiveEncounter()) {
+                EncounterParticipantContext.changeParticipant(getSelectedParticipant(lstEncounterParticipants));
+            }
         }
         
         return encounter;
-    }
-    
-    public EncounterProvider getEncounterProvider() {
-        return encounterProvider;
-    }
-    
-    public void updateCurrentProvider() {
-        encounterProvider.setCurrentProvider(getSelectedProvider(lstEncounterProviders));
     }
     
     protected Encounter getSelectedEncounter(Listbox lb) {
@@ -109,19 +137,21 @@ public abstract class EncounterSelector extends FrameworkController {
         return item == null ? null : (Encounter) item.getValue();
     }
     
-    private Practitioner getSelectedProvider(Listbox lb) {
+    private Participant getSelectedParticipant(Listbox lb) {
         Listitem item = lb.getSelectedItem();
-        return item == null ? null : (Practitioner) item.getValue();
+        return item == null ? null : (Participant) item.getValue();
     }
     
-    private void setPrimaryProvider(Practitioner provider) {
-        encounterProvider.setPrimaryProvider(provider);
-        refreshProviders();
-        modified = true;
+    public Participant getPrimaryParticipant() {
+        return encounterParticipantRenderer.getPrimaryParticipant();
     }
     
-    public boolean isModified() {
-        return modified;
+    private void setPrimaryParticipant(Participant participant) {
+        if (!ObjectUtils.equals(participant, getPrimaryParticipant())) {
+            encounterParticipantRenderer.setPrimaryParticipant(participant);
+            primaryModified = true;
+            lstEncounterParticipants.setModel(encounterParticipantsModel);
+        }
     }
     
     protected boolean populateListbox(Listbox lb, List<?> data) {
@@ -130,42 +160,36 @@ public abstract class EncounterSelector extends FrameworkController {
         return data.size() > 0;
     }
     
-    public void loadProviders(Encounter encounter) {
-        encounterProvider = new EncounterProvider(encounter);
-        providerRenderer.setEncounterProvider(encounterProvider);
-        modified = false;
-        refreshProviders();
-    }
-    
-    public void refreshProviders() {
-        Practitioner provider = getSelectedProvider(lstEncounterProviders);
-        ListModel<Practitioner> model = new ListModelList<Practitioner>(encounterProvider.getProviders());
-        lstEncounterProviders.setModel((ListModel<?>) null);
-        lstEncounterProviders.setModel(model);
+    public void loadEncounterParticipants(Encounter encounter) {
+        encounterParticipantsModel.clear();
+        encounterParticipantsModel.addAll(encounter.getParticipant());
+        currentParticipant = EncounterParticipantContext.getActiveParticipant();
+        encounterParticipantRenderer.setPrimaryParticipant(EncounterUtil.getPrimaryParticipant(encounter));
         
-        if (model.getSize() == 1) {
-            lstEncounterProviders.setSelectedIndex(0);
+        if (encounterParticipantsModel.getSize() == 1) {
+            lstEncounterParticipants.setSelectedIndex(0);
         } else {
-            selectFirstProvider(provider, UserContext.getActiveUser(), encounterProvider.getCurrentProvider(),
-                encounterProvider.getPrimaryProvider());
+            selectFirstParticipant(UserContext.getActiveUser(), currentParticipant, getPrimaryParticipant());
         }
         
+        participantsModified = false;
+        primaryModified = false;
     }
     
-    private void selectFirstProvider(Object... providers) {
-        for (Object provider : providers) {
-            if (findProvider(provider)) {
+    private void selectFirstParticipant(Object... participants) {
+        for (Object participant : participants) {
+            if (findParticipant(participant)) {
                 break;
             }
         }
     }
     
-    private boolean findProvider(Object provider) {
-        if (provider != null) {
-            int i = ListUtil.findListboxData(lstEncounterProviders, provider);
+    private boolean findParticipant(Object participant) {
+        if (participant != null) {
+            int i = ListUtil.findListboxData(lstEncounterParticipants, participant);
             
             if (i >= 0) {
-                lstEncounterProviders.setSelectedIndex(i);
+                lstEncounterParticipants.setSelectedIndex(i);
                 return true;
             }
         }
@@ -173,34 +197,50 @@ public abstract class EncounterSelector extends FrameworkController {
         return false;
     }
     
-    public void onClick$btnProvider() {
-        ProviderUtil.search(edtProvider.getText(), 40, modelProviders);
+    public void onClick$btnParticipant() {
+        String search = edtParticipant.getText().trim();
+        
+        if (!search.isEmpty()) {
+            try {
+                PractitionerSearchCriteria criteria = new PractitionerSearchCriteria(search);
+                allParticipantsModel.clear();
+                allParticipantsModel.addAll(practitionerSearch.search(criteria));
+            } catch (Exception e) {
+                PromptDialog.showError(e);
+            }
+        }
     }
     
     public void onClick$btnPrimary() {
-        Practitioner provider = getSelectedProvider(lstEncounterProviders);
+        Participant participant = getSelectedParticipant(lstEncounterParticipants);
         
-        if (provider != null) {
-            setPrimaryProvider(provider);
+        if (participant != null) {
+            setPrimaryParticipant(participant);
         }
     }
     
-    public void onClick$btnProviderAdd() {
-        Practitioner provider = getSelectedProvider(lstAllProviders);
+    public void onClick$btnParticipantAdd() {
+        Participant participant = getSelectedParticipant(lstAllParticipants);
         
-        if (encounterProvider.add(provider)) {
-            refreshProviders();
-            modified = true;
+        if (encounterParticipantsModel.add(participant)) {
+            participantsModified = true;
         }
     }
     
-    public void onClick$btnProviderRemove() {
-        Practitioner provider = getSelectedProvider(lstEncounterProviders);
+    public void onClick$btnParticipantRemove() {
+        Participant participant = getSelectedParticipant(lstEncounterParticipants);
         
-        if (encounterProvider.remove(provider)) {
-            refreshProviders();
-            modified = true;
+        if (encounterParticipantsModel.remove(participant)) {
+            participantsModified = true;
         }
+    }
+    
+    public void setEncounterSearch(EncounterSearch encounterSearch) {
+        this.encounterSearch = encounterSearch;
+    }
+    
+    public void setPractitionerSearch(PractitionerSearch practitionerSearch) {
+        this.practitionerSearch = practitionerSearch;
     }
     
 }

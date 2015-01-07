@@ -9,22 +9,29 @@
  */
 package org.carewebframework.vista.ui.context.encounter;
 
+import java.util.Date;
+
+import ca.uhn.fhir.model.dstu.composite.PeriodDt;
 import ca.uhn.fhir.model.dstu.resource.Encounter;
+import ca.uhn.fhir.model.dstu.resource.Encounter.Hospitalization;
+import ca.uhn.fhir.model.dstu.resource.Encounter.HospitalizationAccomodation;
 import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
+import ca.uhn.fhir.model.dstu.resource.Location;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.carewebframework.cal.api.ClientUtil;
 import org.carewebframework.cal.api.encounter.EncounterContext;
 import org.carewebframework.cal.api.encounter.EncounterParticipantContext;
 import org.carewebframework.cal.api.patient.PatientContext;
+import org.carewebframework.common.DateUtil;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.vista.api.encounter.EncounterUtil;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Clients;
-import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 
 /**
@@ -45,11 +52,11 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
     
     private Label lblServiceCategory;
     
-    private Label lblProvider;
+    private Label lblParticipant;
     
     private String noSelectionMessage;
     
-    private Image imgLocked;
+    private Component imgLocked;
     
     private Component root;
     
@@ -69,7 +76,6 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
         noSelectionMessage = lblLocation.getValue();
-        imgLocked.setSrc(Constants.ICON_LOCKED);
         committed();
     }
     
@@ -91,22 +97,35 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
         if (encounter == null) {
             lblLocation.setValue(noSelectionMessage);
             lblDate.setValue(null);
-            lblProvider.setValue(null);
+            lblParticipant.setValue(null);
             lblServiceCategory.setValue(null);
             imgLocked.setVisible(false);
         } else {
-            String text = encounter.getLocation().isEmpty() ? "" : FhirUtil.getLast(encounter.getLocation()).toString();
-            /*
-            if (!StringUtils.isEmpty(encounter.getBed())) {
-                text += " (" + encounter.getBed() + ")";
-            } */
+            Location location = encounter.getLocation().isEmpty() ? null : ClientUtil.getResource(encounter
+                    .getLocationFirstRep().getLocation(), Location.class);
+            String text = location == null ? "" : location.getName().getValue();
+            Hospitalization hospitalization = encounter.getHospitalization();
+            
+            if (!hospitalization.isEmpty()) {
+                HospitalizationAccomodation accomodation = FhirUtil.getLast(hospitalization.getAccomodation());
+                
+                if (accomodation != null && !accomodation.isEmpty()) {
+                    Location bed = ClientUtil.getResource(accomodation.getBed(), Location.class);
+                    
+                    if (bed != null) {
+                        text += " (" + bed.getName().getValue() + ")";
+                    }
+                }
+            }
             
             lblLocation.setValue(text);
-            lblDate.setValue(encounter.getPeriod() == null ? null : encounter.getPeriod().getStart().toString());
+            PeriodDt period = encounter.getPeriod();
+            Date date = period.isEmpty() ? null : period.getStart().getValue();
+            lblDate.setValue(DateUtil.formatDate(date));
             Participant participant = EncounterParticipantContext.getActiveParticipant();
-            String name = participant == null ? null : participant.getIndividual().getDisplay().getValue();
-            lblProvider.setValue(participant == null ? null : name);
-            lblServiceCategory.setValue(encounter.getType().toString());
+            String name = participant == null ? null : FhirUtil.formatName(EncounterUtil.getName(participant));
+            lblParticipant.setValue(name);
+            lblServiceCategory.setValue(encounter.getTypeFirstRep().getCodingFirstRep().getDisplay().getValue());
             imgLocked.setVisible(EncounterUtil.isLocked(encounter));
         }
         

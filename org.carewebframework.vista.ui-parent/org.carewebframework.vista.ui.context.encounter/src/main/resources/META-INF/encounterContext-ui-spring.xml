@@ -29,13 +29,24 @@
 
 	<beans profile="desktop">
 
-		<bean id="encounterOutpatientSelector" class="org.carewebframework.vista.ui.context.encounter.OutpatientSelector"
+		<bean id="encounterAbstractSelector" abstract="true">
+			<property name="encounterSearch" ref="encounterSearchEngine" />
+			<property name="practitionerSearch" ref="practitionerSearchEngine" />
+		</bean>
+		
+		<bean id="encounterOutpatientSelector" 
+			parent="encounterAbstractSelector"
+			class="org.carewebframework.vista.ui.context.encounter.OutpatientSelector"
 			scope="prototype" />
 
-		<bean id="encounterInpatientSelector" class="org.carewebframework.vista.ui.context.encounter.InpatientSelector"
+		<bean id="encounterInpatientSelector" 
+			parent="encounterAbstractSelector"
+			class="org.carewebframework.vista.ui.context.encounter.InpatientSelector"
 			scope="prototype" />
 
-		<bean id="encounterNewSelector" class="org.carewebframework.vista.ui.context.encounter.NewSelector"
+		<bean id="encounterNewSelector" 
+			parent="encounterAbstractSelector"
+			class="org.carewebframework.vista.ui.context.encounter.NewSelector"
 			scope="prototype" />
 
 		<bean id="encounterSelectionController" class="org.carewebframework.vista.ui.context.encounter.MainController"

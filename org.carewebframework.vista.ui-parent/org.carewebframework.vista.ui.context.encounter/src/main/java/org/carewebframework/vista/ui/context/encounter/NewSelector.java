@@ -92,6 +92,14 @@ public class NewSelector extends EncounterSelector {
         statusChanged();
     }
     
+    public void onSelect$cboServiceCategory() {
+        statusChanged();
+    }
+    
+    public void onChange$datEncounter() {
+        statusChanged();
+    }
+    
     public void onClick$btnLocation() throws Exception {
         LocationSelection.locationLookup(txtLocation.getValue(), lstLocation, LocationContext.getActiveLocation());
     }
@@ -121,7 +129,7 @@ public class NewSelector extends EncounterSelector {
         datEncounter.setDate(new Date());
         lstLocation.setSelectedItem(null);
         cboServiceCategory.setSelectedItem(null);
-        loadProviders(new Encounter());
+        loadEncounterParticipants(new Encounter());
         boolean forceVisit = EncounterFlag.hasFlag(mainController.flags, EncounterFlag.FORCE);
         chkForceCreate.setChecked(forceVisit);
         chkForceCreate.setDisabled(forceVisit);
@@ -130,7 +138,8 @@ public class NewSelector extends EncounterSelector {
     
     @Override
     protected boolean isComplete() {
-        return true; //TODO
+        return lstLocation.getSelectedItem() != null && cboServiceCategory.getSelectedItem() != null
+                && datEncounter.getDate() != null;
     }
     
 }
