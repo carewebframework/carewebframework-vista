@@ -20,8 +20,8 @@
 	</style>
 	
 	<panel width="100%" height="100%"
-		use="org.carewebframework.vista.ui.vitals.Entry">
-		<panelchildren>
+		apply="${vistaVitalsEntryController}">
+		<panelchildren id="panelchildren">
 			<grid id="grdVitals" fixedLayout="true">
 				<columns>
 					<column id="colTest" sclass="vistaVitals-enter-unmarked" align="right" width="12em">

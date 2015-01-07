@@ -11,10 +11,13 @@
 				<splitterpane relative="false" size="40">
 					<patientPhoto />
 				</splitterpane>
-				<splitterpane relative="true" size="50">
+				<splitterpane relative="true" size="33">
 					<patientHeader color="lightyellow" />
 				</splitterpane>
-				<splitterpane relative="true" size="50">
+				<splitterpane relative="true" size="33">
+					<encounterHeader color="lightgreen" />
+				</splitterpane>
+				<splitterpane relative="true" size="33">
 					<userHeader color="lightblue" />
 				</splitterpane>
 			</splitterview>

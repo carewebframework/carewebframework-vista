@@ -23,12 +23,12 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.carewebframework.api.FrameworkUtil;
 import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.shell.plugins.IPluginEvent;
 import org.carewebframework.shell.plugins.PluginContainer;
+import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.highcharts.Chart;
 import org.carewebframework.ui.highcharts.DashStyle;
 import org.carewebframework.ui.highcharts.DataPoint;
@@ -36,15 +36,14 @@ import org.carewebframework.ui.highcharts.DateTimeFormatOptions;
 import org.carewebframework.ui.highcharts.Series;
 import org.carewebframework.ui.highcharts.ZoomType;
 import org.carewebframework.ui.zk.DateRangePicker;
-import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
 
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
-import org.zkoss.zul.Div;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
@@ -57,9 +56,9 @@ import org.zkoss.zul.Toolbar;
 /**
  * Controller for vital measurement display.
  */
-public class Display extends Div implements PatientContext.IPatientContextEvent, IPluginEvent {
+public class DisplayController extends FrameworkController implements PatientContext.IPatientContextEvent, IPluginEvent {
     
-    private static final Log log = LogFactory.getLog(Display.class);
+    private static final Log log = LogFactory.getLog(DisplayController.class);
     
     private static final long serialVersionUID = 1L;
     
@@ -115,17 +114,9 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
     
     private final int maxCols = 5;
     
-    public void selectData(String test, String gridRPC, String detailRPC, List<String> tests) {
-        this.gridRPC = gridRPC;
-        this.detailRPC = detailRPC;
-        this.tests = tests;
-        committed();
-        setSelectedRow(test);
-    }
-    
-    public void onCreate() {
-        ZKUtil.wireController(this);
-        FrameworkUtil.getAppFramework().registerObject(this);
+    @Override
+    public void doAfterCompose(Component comp) throws Exception {
+        super.doAfterCompose(comp);
         // chart.getRenderer().setBaseItemLabelsVisible(true);
         //chart.setPeriod(Chart.MINUTE);
         //chart.setDateFormat("dd-MMM-yy");
@@ -137,8 +128,16 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
         broker = VistAUtil.getBrokerSession();
         cboUnits.setSelectedIndex(0);
         datRange.setSelectedIndex(0);
-        btnEnterVitals.setVisible(Entry.isEnabled());
+        btnEnterVitals.setVisible(EntryController.isEnabled());
         selectData("", "RGCWVM GRID", "RGCWVM DETAIL", null);
+    }
+    
+    public void selectData(String test, String gridRPC, String detailRPC, List<String> tests) {
+        this.gridRPC = gridRPC;
+        this.detailRPC = detailRPC;
+        this.tests = tests;
+        committed();
+        setSelectedRow(test);
     }
     
     private void setDateFormats(DateTimeFormatOptions dtlf) {
@@ -436,6 +435,7 @@ public class Display extends Div implements PatientContext.IPatientContextEvent,
                 hdrVitals.appendChild(lh);
             }
         } else {
+            hdrVitals.appendChild(new Listheader());
             tbarPaging.setVisible(false);
         }
     }

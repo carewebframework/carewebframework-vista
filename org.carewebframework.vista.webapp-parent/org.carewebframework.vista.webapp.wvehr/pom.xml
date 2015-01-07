@@ -129,13 +129,11 @@
 			<classifier>theme</classifier>
 		</dependency>
 		<!-- VistA Plugins -->
-		<!-- 
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.vista.ui.context.encounter</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		-->
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.vista.ui.alerts</artifactId>

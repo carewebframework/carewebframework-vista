@@ -20,5 +20,15 @@
 		-->
 
 	</beans>
+
+	<beans profile="desktop">
+
+		<bean id="vistaVitalsDisplayController" class="org.carewebframework.vista.ui.vitals.DisplayController"
+			scope="prototype" />
+
+		<bean id="vistaVitalsEntryController" class="org.carewebframework.vista.ui.vitals.EntryController"
+			scope="prototype" />
+
+	</beans>
 	
 </beans>

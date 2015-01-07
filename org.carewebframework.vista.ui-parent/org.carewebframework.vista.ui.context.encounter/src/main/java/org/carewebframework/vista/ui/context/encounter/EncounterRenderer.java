@@ -12,12 +12,14 @@ package org.carewebframework.vista.ui.context.encounter;
 import ca.uhn.fhir.model.dstu.resource.Encounter;
 import ca.uhn.fhir.model.dstu.resource.Location;
 
+import org.carewebframework.cal.api.ClientUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
 import org.carewebframework.vista.api.encounter.EncounterUtil;
 
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Span;
 
 public class EncounterRenderer extends AbstractListitemRenderer<Object, Object> {
     
@@ -26,8 +28,10 @@ public class EncounterRenderer extends AbstractListitemRenderer<Object, Object> 
         Encounter encounter = data instanceof Encounter ? (Encounter) data : parse((String) data);
         item.setValue(encounter);
         item.addForward(Events.ON_DOUBLE_CLICK, item.getListbox(), null);
-        item.setImage(EncounterUtil.isLocked(encounter) ? Constants.ICON_LOCKED : null);
-        Location location = (Location) encounter.getLocationFirstRep().getLocation().getResource();
+        Span span = new Span();
+        span.setSclass(EncounterUtil.isLocked(encounter) ? Constants.SCLASS_LOCKED : null);
+        createCell(item, span);
+        Location location = ClientUtil.getResource(encounter.getLocationFirstRep().getLocation(), Location.class);
         createCell(item, location == null ? null : location.getName());
         createCell(item, encounter.getPeriod().getStart().getValue());
         createCell(item, encounter.getTypeFirstRep().getCodingFirstRep().getDisplay());

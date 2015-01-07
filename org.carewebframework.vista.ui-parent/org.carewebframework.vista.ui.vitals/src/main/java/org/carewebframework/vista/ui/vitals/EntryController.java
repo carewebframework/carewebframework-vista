@@ -31,6 +31,7 @@ import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.shell.plugins.IPluginEvent;
 import org.carewebframework.shell.plugins.PluginContainer;
+import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.DateTimebox;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.ZKUtil;
@@ -48,15 +49,15 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
-import org.zkoss.zul.Panel;
 import org.zkoss.zul.Row;
 import org.zkoss.zul.Span;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Toolbar;
 
 /**
  * Controller for vital measurement entry.
  */
-public class Entry extends Panel implements PatientContext.IPatientContextEvent, EncounterContext.IEncounterContextEvent, IPluginEvent {
+public class EntryController extends FrameworkController implements PatientContext.IPatientContextEvent, EncounterContext.IEncounterContextEvent, IPluginEvent {
     
     private static final long serialVersionUID = 1L;
     
@@ -88,6 +89,10 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
     private Button btnNew;
     
     private DateTimebox dtmDate;
+    
+    private Toolbar tbar;
+    
+    private Component panelchildren;
     
     private boolean useEncounterDate;
     
@@ -123,15 +128,16 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
     
     private BrokerSession broker;
     
-    public static boolean isEnabled() {
-        return SecurityUtil.isGranted("PARM_RGCWVM DATA ENTRY");
-    }
-    
-    public void onCreate() {
-        ZKUtil.wireController(this, this);
+    @Override
+    public void doAfterCompose(Component comp) throws Exception {
+        super.doAfterCompose(comp);
         broker = VistAUtil.getBrokerSession();
         enabled = isEnabled();
         init();
+    }
+    
+    public static boolean isEnabled() {
+        return SecurityUtil.isGranted("PARM_RGCWVM DATA ENTRY");
     }
     
     private void init() {
@@ -169,8 +175,8 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
     private void refreshForm() {
         modified = false;
         noValidate = true;
-        getTopToolbar().setVisible(encounter != null);
-        getPanelchildren().setVisible(encounter != null);
+        tbar.setVisible(encounter != null);
+        panelchildren.setVisible(encounter != null);
         
         if (encounter == null) {
             return;
@@ -214,7 +220,7 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
         col.setWidth("12em");
         col.setAlign("center");
         DateTimebox dtb = new DateTimebox();
-        dtb.addForward(Events.ON_CHANGE, this, "onDateChange");
+        dtb.addForward(Events.ON_CHANGE, root, "onDateChange");
         col.appendChild(dtb);
         return col;
     }
@@ -235,7 +241,7 @@ public class Entry extends Panel implements PatientContext.IPatientContextEvent,
             } else {
                 Textbox tb = new Textbox();
                 child = tb;
-                tb.addForward(Events.ON_CHANGE, this, "onDataChange");
+                tb.addForward(Events.ON_CHANGE, root, "onDataChange");
             }
             
             span.appendChild(child);

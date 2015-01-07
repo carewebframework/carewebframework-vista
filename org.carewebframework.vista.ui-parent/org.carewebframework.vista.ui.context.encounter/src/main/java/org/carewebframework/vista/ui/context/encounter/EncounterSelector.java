@@ -9,7 +9,10 @@
  */
 package org.carewebframework.vista.ui.context.encounter;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 import ca.uhn.fhir.model.dstu.resource.Encounter;
 import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
@@ -22,6 +25,7 @@ import org.carewebframework.cal.api.encounter.EncounterParticipantContext;
 import org.carewebframework.cal.api.encounter.EncounterSearch;
 import org.carewebframework.cal.api.practitioner.PractitionerSearch;
 import org.carewebframework.cal.api.practitioner.PractitionerSearchCriteria;
+import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.ListUtil;
 import org.carewebframework.ui.zk.PromptDialog;
@@ -39,6 +43,25 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Textbox;
 
 public abstract class EncounterSelector extends FrameworkController {
+    
+    /**
+     * Used to prevent duplicates in participant model set and to sort alphabetically.
+     */
+    private static final Comparator<Participant> participantComparator = new Comparator<Participant>() {
+        
+        @Override
+        public int compare(Participant p1, Participant p2) {
+            if (p1.getIndividual().getReference().equals(p2.getIndividual().getReference())) {
+                return 0;
+            }
+            
+            String n1 = FhirUtil.formatName(EncounterUtil.getName(p1));
+            String n2 = FhirUtil.formatName(EncounterUtil.getName(p2));
+            int i = n1.compareToIgnoreCase(n2);
+            return i == 0 ? 1 : i;
+        }
+        
+    };
     
     private static final long serialVersionUID = 1L;
     
@@ -58,7 +81,8 @@ public abstract class EncounterSelector extends FrameworkController {
     
     private final ListModelSet<Object> allParticipantsModel = new ListModelSet<Object>();
     
-    private final ListModelSet<Participant> encounterParticipantsModel = new ListModelSet<Participant>();
+    private final ListModelSet<Participant> encounterParticipantsModel = new ListModelSet<Participant>(
+            new TreeSet<Participant>(participantComparator), true);
     
     private Participant currentParticipant;
     
@@ -225,6 +249,8 @@ public abstract class EncounterSelector extends FrameworkController {
         if (encounterParticipantsModel.add(participant)) {
             participantsModified = true;
         }
+        
+        encounterParticipantsModel.setSelection(Collections.singleton(participant));
     }
     
     public void onClick$btnParticipantRemove() {
@@ -232,6 +258,10 @@ public abstract class EncounterSelector extends FrameworkController {
         
         if (encounterParticipantsModel.remove(participant)) {
             participantsModified = true;
+            
+            if (participant == getPrimaryParticipant()) {
+                encounterParticipantRenderer.setPrimaryParticipant(null);
+            }
         }
     }
     

@@ -31,12 +31,31 @@ import org.carewebframework.ui.FrameworkController;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.A;
 import org.zkoss.zul.Label;
 
 /**
  * Controller for encounter header component.
  */
 public class EncounterHeader extends FrameworkController implements EncounterContext.IEncounterContextEvent {
+    
+    private final PatientContext.IPatientContextEvent patientContextListener = new PatientContext.IPatientContextEvent() {
+        
+        @Override
+        public String pending(boolean silent) {
+            return null;
+        }
+        
+        @Override
+        public void committed() {
+            select.setDisabled(PatientContext.getActivePatient() == null);
+        }
+        
+        @Override
+        public void canceled() {
+        }
+        
+    };
     
     private static final long serialVersionUID = 1L;
     
@@ -54,16 +73,7 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
     
     private Component imgLocked;
     
-    private Component root;
-    
-    /**
-     * Invoke encounter selection dialog when select button is clicked.
-     */
-    public void onClick$root() {
-        if (PatientContext.getActivePatient() != null) {
-            MainController.execute();
-        }
-    }
+    private A select;
     
     /**
      * Initialize controller.
@@ -71,8 +81,19 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
     @Override
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
+        getAppFramework().registerObject(patientContextListener);
         noSelectionMessage = lblLocation.getValue();
+        patientContextListener.committed();
         committed();
+    }
+    
+    /**
+     * Invoke encounter selection dialog when select button is clicked.
+     */
+    public void onClick$select() {
+        if (PatientContext.getActivePatient() != null) {
+            MainController.execute();
+        }
     }
     
     @Override

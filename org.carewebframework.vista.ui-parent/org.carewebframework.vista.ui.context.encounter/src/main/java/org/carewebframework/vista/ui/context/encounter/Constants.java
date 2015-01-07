@@ -9,7 +9,6 @@
  */
 package org.carewebframework.vista.ui.context.encounter;
 
-import org.carewebframework.ui.icons.IconUtil;
 import org.carewebframework.ui.zk.ZKUtil;
 
 /**
@@ -19,7 +18,7 @@ public class Constants {
     
     public static final String RESOURCE_PREFIX = ZKUtil.getResourcePath(Constants.class);
     
-    public static final String ICON_LOCKED = IconUtil.getIconPath("lock.png");
+    public static final String SCLASS_LOCKED = "glyphicon glyphicon-lock text-danger";
     
     public static final String SCLASS_PRIMARY = "encounter-primary-provider";
     
