@@ -1,29 +1,14 @@
-<zk xmlns="http://www.zkoss.org/2005/zul"
-	xmlns:h="http://www.w3.org/1999/xhtml"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-
-	<window sclass="vistaNotification-processing" apply="${vistaNotificationProcessingController}" 
-		mode="overlapped" position="right,bottom" visible="false">
-		<caption id="caption" style="padding: 0 5px 0 5px;font-weight:bold" />
-		<toolbar sclass="vistaNotification-processing-toolbar" align="center" mold="panel">
-			<button id="btnNext" label="${labels.vistanotification.processing.button.next.label}" />
-			<button id="btnStop" label="${labels.vistanotification.processing.button.stop.label}" />
-		</toolbar>
-		<style>
-			.vistaNotification-processing div {
-				background: yellow;
-				padding: 0;
-			}
-			
-			.vistaNotification-processing .z-caption-l {
-				padding-bottom: 3px;
-				white-space: nowrap;
-			}
-			
-			.vistaNotification-processing-toolbar div {
-				background: lightyellow;
-			}
-		</style>
+<zk>
+	<window sclass="panel-info vistaNotification-processing" 
+		apply="${vistaNotificationProcessingController}" mode="overlapped"
+		position="right,bottom" mold="bootstrap" visible="false">
+		<caption id="caption" />
+		<div align="center">
+			<button id="btnNext" zclass="btn"
+				sclass="btn-success btn-xs"
+				label="${labels.vistanotification.processing.button.next.label}" />
+			<button id="btnStop" zclass="btn" sclass="btn-danger btn-xs"
+				label="${labels.vistanotification.processing.button.stop.label}" />
+		</div>
 	</window>
 </zk>

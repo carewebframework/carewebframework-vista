@@ -5,22 +5,5 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 	
-	<div self="@insert(sharedFormsRoot)" height="100%" width="100%">
-	
-		<style>
-			.vistaNotification-legend .z-tree-ico { 
-				display: none; 
-			}
-	
-			.vistaNotification-legend .z-treerow-disd * {
-				color: black!important;
-			}
-			
-			.vistaNotification-legend .z-tree-spacer { 
-				width: 2px; height:
-				20px; 
-			}
-		</style>
-	
-	</div>
+	<div self="@insert(sharedFormsRoot)" height="100%" width="100%" />
 </zk>

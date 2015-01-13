@@ -45,6 +45,7 @@
 			</cwp:serialization>
 			<cwp:resource>
 				<cwp:help-resource module="vistaNotificationHelp" />
+				<cwp:css-resource url="~./org/carewebframework/vista/ui/notification/notifications.css" />
 			</cwp:resource>
 		</cwp:plugin>
 

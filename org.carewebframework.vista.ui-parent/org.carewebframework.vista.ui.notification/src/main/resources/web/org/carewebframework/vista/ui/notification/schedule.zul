@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 	<window title="Schedule a Notification" mode="modal" height="500px" width="500px"
-		apply="${vistaNotificationScheduleController}">
+		apply="${vistaNotificationScheduleController}" mold="bootstrap">
 		<vlayout hflex="1" vflex="1" style="padding: 10px">
 			<hlayout id="pnlAssociate">
 				<checkbox id="chkAssociate" />
@@ -33,13 +33,15 @@
 			<label value="${labels.vistanotification.schedule.input.recipients.label}" />
 			<hlayout>
 				<textbox id="txtRecipients" readonly="true" hflex="1" />
-				<button id="btnRecipients" label="..." />
+				<button id="btnRecipients" zclass="btn" sclass="btn-default btn-xs" label="..." />
 			</hlayout>
 			<label value="${labels.vistanotification.schedule.input.message.label}" />
 			<textbox id="txtMessage" multiline="true" hflex="1" vflex="1" />
 			<toolbar align="end">
-				<button id="btnOK" label="${labels.vistanotification.schedule.button.ok.label}" />
-				<button id="btnCancel" label="${labels.vistanotification.schedule.button.cancel.label}" forward="onClick=onClose" />
+				<button id="btnOK" zclass="btn" sclass="btn-sm btn-success" 
+					label="${labels.vistanotification.schedule.button.ok.label}" />
+				<button id="btnCancel" zclass="btn" sclass="btn-sm btn-danger"
+					label="${labels.vistanotification.schedule.button.cancel.label}" forward="onClick=onClose" />
 			</toolbar>
 		</vlayout>
 	</window>

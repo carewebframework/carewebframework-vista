@@ -6,7 +6,7 @@
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 	<window title="Notification Recipients" mode="modal" height="500px" width="500px"
-		apply="${vistaNotificationRecipientsController}">
+		apply="${vistaNotificationRecipientsController}" mold="bootstrap">
 		<borderlayout height="100%" width="100%">
 			<west width="45%" border="none">
 				<vlayout vflex="1">
@@ -42,8 +42,10 @@
 				<toolbar mold="panel" >
 					<textbox id="txtComment" width="300px" visible="false" />
 					<span style="float:right">
-						<button id="btnOK" label="Ok" />
-						<button label="Cancel" forward="onClick=onClose" />
+						<button id="btnOK" zclass="btn" sclass="btn-sm btn-success"
+							label="Ok" />
+						<button zclass="btn" sclass="btn-sm btn-danger"
+							label="Cancel" forward="onClick=onClose" />
 					</span>
 				</toolbar>
 			</south>

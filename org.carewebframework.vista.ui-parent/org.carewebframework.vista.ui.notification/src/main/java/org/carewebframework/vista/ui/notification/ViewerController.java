@@ -116,6 +116,7 @@ public class ViewerController extends FrameworkController {
             btnSkipAll.setDisabled(notification.isActionable());
             btnView.setDisabled(!notification.hasPatient());
             caption.setLabel(notification.hasPatient() ? notification.getPatientName() : defaultTitle);
+            txtMessage.invalidate();
             root.setVisible(true);
         } else {
             onAction(null);

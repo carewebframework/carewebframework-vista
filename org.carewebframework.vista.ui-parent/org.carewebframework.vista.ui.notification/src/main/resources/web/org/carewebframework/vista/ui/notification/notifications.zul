@@ -4,8 +4,9 @@
 	xmlns:h="http://www.w3.org/1999/xhtml"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-	
+
 	<div self="@define(sharedFormsCaptioned)" width="100%" height="100%"
+		sclass="vistaNotification"
 		apply="${vistaNotificationMainController}">
 		<borderlayout width="100%" height="100%">
 			<center>
@@ -13,80 +14,89 @@
 					style="border:none" checkmark="true">
 					<listhead>
 						<listheader width="32px" align="right" />
-						<listheader id="getPriority" align="center" width="30px"
-							image="${iconPriority}" />
-						<listheader id="isActionable" align="center" width="30px"
-							image="${iconType}" />
+						<listheader id="getPriority" align="center"
+							width="30px" image="${iconPriority}" />
+						<listheader id="isActionable" align="center"
+							width="30px" image="${iconType}" />
 						<listheader id="getPatientName" hflex="2">
-							<radiogroup id="rgFilter" orient="horizontal">
-								<radio id="radAll" label="${labels.vistanotification.main.button.all.label}"
+							<radiogroup id="rgFilter"
+								orient="horizontal">
+								<radio id="radAll"
+									label="${labels.vistanotification.main.button.all.label}"
 									renderdefer="1" />
 								<separator orient="vertical" />
 								<radio id="radPatient" selected="true"
 									renderdefer="1" />
 							</radiogroup>
 						</listheader>
-						<listheader id="getSubject" hflex="3" label="${labels.vistanotification.main.header.subject}" />
-						<listheader id="getDeliveryDate" width="150px" label="${labels.vistanotification.main.header.delivered}" />
+						<listheader id="getSubject" hflex="3"
+							label="${labels.vistanotification.main.header.subject}" />
+						<listheader id="getDeliveryDate" width="150px"
+							label="${labels.vistanotification.main.header.delivered}" />
 					</listhead>
 				</listbox>
 			</center>
 			<east width="120px">
 				<div vflex="1">
-					<groupbox closable="false" title="${labels.vistanotification.main.group.legend.caption}">
-						<tree sclass="vistaNotification-legend"
-							style="border:none">
-							<treechildren>
-								<treeitem disabled="true"
-									image="${iconPriority}"
-									label="${labels.vistanotification.main.legend.priority}">
-									<treechildren>
-										<treeitem disabled="true"
-											image="${iconPriorityHigh}" label="${labels.vistanotification.priority.label.HIGH}" />
-										<treeitem disabled="true"
-											image="${iconPriorityMedium}" label="${labels.vistanotification.priority.label.MEDIUM}" />
-										<treeitem disabled="true"
-											image="${iconPriorityLow}" label="${labels.vistanotification.priority.label.LOW}" />
-									</treechildren>
-								</treeitem>
-								<treeitem disabled="true"
-									image="${iconType}" label="${labels.vistanotification.main.legend.type}">
-									<treechildren>
-										<treeitem disabled="true"
-											image="${iconInfoOnly}" label="${labels.vistanotification.main.legend.infoonly}" />
-										<treeitem disabled="true"
-											image="${iconActionable}" label="${labels.vistanotification.main.legend.actionable}" />
-									</treechildren>
-								</treeitem>
-							</treechildren>
-						</tree>
+					<groupbox closable="false"
+						sclass="vistaNotification-legend"
+						title="${labels.vistanotification.main.group.legend.caption}">
+						<a image="${iconPriority}" disabled="true"
+							label="${labels.vistanotification.main.legend.priority}" />
+						<vlayout>
+							<a image="${iconPriorityHigh}" disabled="true"
+								label="${labels.vistanotification.priority.label.HIGH}" />
+							<a image="${iconPriorityMedium}" disabled="true"
+								label="${labels.vistanotification.priority.label.MEDIUM}" />
+							<a image="${iconPriorityLow}" disabled="true"
+								label="${labels.vistanotification.priority.label.LOW}" />
+							<space />
+						</vlayout>
+						<a image="${iconType}" disabled="true"
+							label="${labels.vistanotification.main.legend.type}" />
+						<vlayout>
+							<a image="${iconInfoOnly}" disabled="true"
+								label="${labels.vistanotification.main.legend.infoonly}" />
+							<a image="${iconActionable}" disabled="true"
+								label="${labels.vistanotification.main.legend.actionable}" />
+						</vlayout>
 					</groupbox>
-					<div vflex="1" />
-					<groupbox closable="false" title="${labels.vistanotification.main.group.options.caption}">
-						<toolbar orient="vertical" align="center">
-							<button id="btnSchedule" label="${labels.vistanotification.main.button.schedule.label}"
+					<space vflex="1" />
+					<groupbox closable="false"
+						title="${labels.vistanotification.main.group.options.caption}">
+						<div align="center" sclass="btn-group-vertical btn-sm">
+							<button id="btnSchedule" zclass="btn" sclass="btn-default"
+								label="${labels.vistanotification.main.button.schedule.label}"
 								width="100%" />
-							<button id="btnRefresh" label="${labels.vistanotification.main.button.refresh.label}"
+							<button id="btnRefresh" zclass="btn" sclass="btn-default"
+								label="${labels.vistanotification.main.button.refresh.label}"
 								width="100%" />
-						</toolbar>
+						</div>
 					</groupbox>
-					<groupbox closable="false" title="${labels.vistanotification.main.group.process.caption}">
-						<toolbar orient="vertical" align="center">
-							<button id="btnAll" label="${labels.vistanotification.main.button.all.label}"
+					<groupbox closable="false"
+						title="${labels.vistanotification.main.group.process.caption}">
+						<div align="center" sclass="btn-group-vertical btn-sm">
+							<button id="btnAll" zclass="btn" sclass="btn-default"
+								label="${labels.vistanotification.main.button.all.label}"
 								width="100%" />
-							<button id="btnSelected" label="${labels.vistanotification.main.button.selected.label}"
+							<button id="btnSelected" zclass="btn" sclass="btn-default"
+								label="${labels.vistanotification.main.button.selected.label}"
 								width="100%" />
-							<button id="btnInfoAll" label="${labels.vistanotification.main.button.infoonly.label}"
+							<button id="btnInfoAll" zclass="btn" sclass="btn-default"
+								label="${labels.vistanotification.main.button.infoonly.label}"
 								width="100%" />
-							<button id="btnForward" label="${labels.vistanotification.main.button.forward.label}"
+							<button id="btnForward" zclass="btn" sclass="btn-default"
+								label="${labels.vistanotification.main.button.forward.label}"
 								width="100%" />
-							<button id="btnDelete" label="${labels.vistanotification.main.button.delete.label}"
+							<button id="btnDelete" zclass="btn" sclass="btn-default"
+								label="${labels.vistanotification.main.button.delete.label}"
 								width="100%" />
-						</toolbar>
+						</div>
 					</groupbox>
 				</div>
 			</east>
 		</borderlayout>
-		<image id="imgIndicator" src="${iconIndicator}" style="position:absolute;left:0" visible="false" />
+		<image id="imgIndicator" src="${iconIndicator}"
+			style="position:absolute;left:0" visible="false" />
 	</div>
 </zk>
