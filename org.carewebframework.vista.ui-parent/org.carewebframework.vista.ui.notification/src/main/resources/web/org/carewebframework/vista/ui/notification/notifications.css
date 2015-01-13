@@ -6,15 +6,6 @@
 	border-bottom: none;
 }
 
-.vistaNotification-viewer,
-.vistaNotification-viewer .panel-heading {
-	padding: 2px;
-}
-
-.vistaNotification-viewer .panel-title {
-	font-size: 90%;
-}
-
 .vistaNotification-legend .z-vlayout {
 	margin-left: 20px;
 	border-top: 1px solid lightgray;
@@ -27,13 +18,4 @@
 
 .vistaNotification-legend .z-a[disabled] {
 	color: black;
-}
-
-.vistaNotification-processing .panel-content,
-.vistaNotification-processing .panel-caption {
-	padding: 2px;
-}
-
-.vistaNotification-processing .panel-title {
-	font-size: 90%;
 }

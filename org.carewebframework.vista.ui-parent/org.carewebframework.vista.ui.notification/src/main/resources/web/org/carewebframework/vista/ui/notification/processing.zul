@@ -1,5 +1,5 @@
 <zk>
-	<window sclass="panel-info vistaNotification-processing" 
+	<window sclass="panel-info panel-mini" 
 		apply="${vistaNotificationProcessingController}" mode="overlapped"
 		position="right,bottom" mold="bootstrap" visible="false">
 		<caption id="caption" />
