@@ -21,7 +21,7 @@ import org.carewebframework.ui.zk.ZKUtil;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.InputEvent;
-import org.zkoss.zul.Button;
+import org.zkoss.zul.A;
 import org.zkoss.zul.ListModelSet;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
@@ -63,11 +63,11 @@ public class RecipientsController extends FrameworkController {
     
     private Textbox txtComment;
     
-    private Button btnAdd;
+    private A btnAdd;
     
-    private Button btnRemove;
+    private A btnRemove;
     
-    private Button btnRemoveAll;
+    private A btnRemoveAll;
     
     private NotificationService service;
     
@@ -123,7 +123,7 @@ public class RecipientsController extends FrameworkController {
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
         recipients = (Collection<Recipient>) arg.get("recipients");
-        txtComment.setVisible((Boolean) arg.get("showComment"));
+        ZKUtil.updateStyle(txtComment, "visibility", (Boolean) arg.get("showComment") ? null : "hidden");
         lstRecipients.setItemRenderer(new ItemRenderer(btnRemove));
         lstRecipients.setModel(modelRecipients);
         lstGroups.setItemRenderer(new ItemRenderer(btnAdd));

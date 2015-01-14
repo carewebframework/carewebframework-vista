@@ -1,54 +1,48 @@
-<?taglib uri="http://www.carewebframework.org/tld/core" prefix="rc"?>
-
-<zk xmlns="http://www.zkoss.org/2005/zul"
-	xmlns:h="http://www.w3.org/1999/xhtml"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-
-	<window title="Notification Recipients" mode="modal" height="500px" width="500px"
-		apply="${vistaNotificationRecipientsController}" mold="bootstrap">
-		<borderlayout height="100%" width="100%">
-			<west width="45%" border="none">
-				<vlayout vflex="1">
-					<groupbox vflex="1">
-						<caption label="${labels.vistanotification.recipients.group.users.caption}" />
-						<textbox id="txtUsers" width="95%" />
-						<listbox id="lstUsers" vflex="1" />
-					</groupbox>
-					<groupbox vflex="1">
-						<caption label="${labels.vistanotification.recipients.group.groups.caption }" />
-						<textbox id="txtGroups" width="95%" />
-						<listbox id="lstGroups" vflex="1" />
-					</groupbox>
-					<label value="${labels.vistanotification.recipients.textbox.comment.label}" />
-				</vlayout>
-			</west>
-			<center border="none">
-				<toolbar orient="vertical" align="center" vflex="1" mold="panel">
-					<separator height="100px" />
-					<button id="btnAdd" label="&gt;" width="95%" />
-					<separator height="50px" />
-					<button id="btnRemove" label="&lt;"  width="95%" />
-					<button id="btnRemoveAll" label="&lt;&lt;" width="95%" />
-				</toolbar>
-			</center>
-			<east width="45%" border="none">
+<zk>
+	<window title="${labels.vistanotification.recipients.title}"
+		mode="modal" height="500px" width="500px" mold="bootstrap"
+		apply="${vistaNotificationRecipientsController}" >
+		<hbox spacing="0" vflex="1" align="center">
+			<vlayout vflex="1" spacing="1">
 				<groupbox vflex="1">
-					<caption label="${labels.vistanotification.recipients.group.recipients.caption}" />
-					<listbox id="lstRecipients" vflex="1" style="border:none"/>
+					<caption
+						label="${labels.vistanotification.recipients.group.users.caption}" />
+					<textbox id="txtUsers" width="100%" />
+					<listbox id="lstUsers" vflex="1" />
 				</groupbox>
-			</east>
-			<south height="40px" border="none">
-				<toolbar mold="panel" >
-					<textbox id="txtComment" width="300px" visible="false" />
-					<span style="float:right">
-						<button id="btnOK" zclass="btn" sclass="btn-sm btn-success"
-							label="Ok" />
-						<button zclass="btn" sclass="btn-sm btn-danger"
-							label="Cancel" forward="onClick=onClose" />
-					</span>
-				</toolbar>
-			</south>
-		</borderlayout>
+				<groupbox vflex="1">
+					<caption
+						label="${labels.vistanotification.recipients.group.groups.caption }" />
+					<textbox id="txtGroups" width="100%" />
+					<listbox id="lstGroups" vflex="1" />
+				</groupbox>
+			</vlayout>
+			<vlayout vflex="1" sclass="text-center" spacing="1">
+				<space vflex="1" />
+				<a id="btnAdd" zclass="btn" sclass="btn-link"
+					iconSclass="glyphicon glyphicon-chevron-right" />
+				<a id="btnRemove" zclass="btn" sclass="btn-link"
+					iconSclass="glyphicon glyphicon-chevron-left" />
+				<a id="btnRemoveAll" zclass="btn" sclass="btn-link"
+					iconSclass="glyphicon glyphicon-chevron-left-double" />
+				<space vflex="1" />
+			</vlayout>
+			<groupbox vflex="1">
+				<caption
+					label="${labels.vistanotification.recipients.group.recipients.caption}" />
+				<listbox id="lstRecipients" vflex="1"
+					style="border:none" />
+			</groupbox>
+		</hbox>
+		<hlayout sclass="text-right panel-footer" style="padding:5px">
+			<textbox id="txtComment" hflex="1"
+				placeholder="${labels.vistanotification.recipients.textbox.comment.placeholder}" />
+			<space />
+			<button id="btnOK" zclass="btn" sclass="btn-sm btn-success"
+				label="${labels.vistanotification.recipients.button.ok.label}" />
+			<button zclass="btn" sclass="btn-sm btn-danger"
+				label="${labels.vistanotification.recipients.button.cancel.label}"
+				forward="onClick=onClose" />
+		</hlayout>
 	</window>
 </zk>
