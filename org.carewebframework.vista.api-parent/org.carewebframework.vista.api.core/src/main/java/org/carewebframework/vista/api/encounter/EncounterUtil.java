@@ -20,6 +20,7 @@ import ca.uhn.fhir.model.primitive.DateTimeDt;
 import org.apache.commons.lang.math.NumberUtils;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
+import org.carewebframework.cal.api.ClientUtil;
 import org.carewebframework.cal.api.encounter.EncounterParticipantContext;
 import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.common.StrUtil;
@@ -30,6 +31,8 @@ import org.carewebframework.vista.mbroker.FMDate;
  * Encounter-related utility functions.
  */
 public class EncounterUtil extends org.carewebframework.cal.api.encounter.EncounterUtil {
+    
+    private static final String VSTR_DELIM = ";";
     
     public static boolean forceCreate(Encounter encounter) {
         if (encounter == null || !isPrepared(encounter)) {
@@ -69,7 +72,7 @@ public class EncounterUtil extends org.carewebframework.cal.api.encounter.Encoun
      * @return The decoded encounter.
      */
     public static Encounter decode(String vstr) {
-        String[] pcs = StrUtil.split(vstr, ";", 4);
+        String[] pcs = StrUtil.split(vstr, VSTR_DELIM, 4);
         long encIEN = NumberUtils.toLong(pcs[3]);
         
         if (encIEN > 0) {
@@ -83,12 +86,12 @@ public class EncounterUtil extends org.carewebframework.cal.api.encounter.Encoun
     }
     
     public static String encode(Encounter encounter) {
-        Encounter.Location location = encounter.getLocationFirstRep();
-        String locIEN = location == null ? "" : location.getLocation().getElementSpecificId();
+        Location location = ClientUtil.getResource(encounter.getLocationFirstRep().getLocation(), Location.class);
+        String locIEN = location.isEmpty() ? "" : location.getId().getIdPart();
         DateTimeDt date = encounter.getPeriod().getStart();
         String sc = getServiceCategory(encounter);
-        String ien = encounter.getId().getIdPart();
-        return locIEN + StrUtil.U + new FMDate(date.getValue()).getFMDate() + StrUtil.U + sc + StrUtil.U + ien;
+        String ien = encounter.getId().isEmpty() ? "" : encounter.getId().getIdPart();
+        return locIEN + VSTR_DELIM + new FMDate(date.getValue()).getFMDate() + VSTR_DELIM + sc + VSTR_DELIM + ien;
     }
     
     /**

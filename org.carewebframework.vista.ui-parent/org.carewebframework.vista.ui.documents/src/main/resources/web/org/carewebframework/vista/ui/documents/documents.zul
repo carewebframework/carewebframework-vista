@@ -6,7 +6,7 @@
 	<div apply="${vistaDocumentsMainController}" height="100%" width="100%">
 		<include id="documentList" height="100%" width="100%"
 			src="~./org/carewebframework/vista/ui/documents/documentsList.zul" />
-		<include id="documentDisplay" height="100%" width="100%"
+		<include id="documentDisplay" height="100%" width="100%" visible="false"
 			src="~./org/carewebframework/vista/ui/documents/documentsDisplay.zul" />
 	</div>
 

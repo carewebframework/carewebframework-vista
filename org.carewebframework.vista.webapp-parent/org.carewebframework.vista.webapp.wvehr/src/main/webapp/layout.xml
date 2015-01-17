@@ -1,4 +1,4 @@
-<layout title="CareWeb - WVEHR">
+<layout title="CareWeb - VistA">
 	<_menubar>
 		<menuitem action="chat.create.session" label="Chat..."/>
 	</_menubar>
