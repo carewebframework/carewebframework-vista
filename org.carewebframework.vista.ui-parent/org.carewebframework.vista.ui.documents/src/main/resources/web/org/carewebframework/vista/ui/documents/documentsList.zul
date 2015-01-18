@@ -14,7 +14,7 @@
 						tooltiptext="${cboFilter.tooltiptext}" />
 				</combobox>
 				<datepicker id="dateRangePicker" allowCustom="true"
-					width="10em"
+					width="11em"
 					tooltiptext="Restrict to documents within this date range." />
 			</span>
 			<label id="lblInfo" style="font-size:12px; font-weight:bold"/>
