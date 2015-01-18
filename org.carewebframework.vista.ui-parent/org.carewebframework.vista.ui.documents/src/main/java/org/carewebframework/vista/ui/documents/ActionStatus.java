@@ -26,7 +26,7 @@ public class ActionStatus extends PluginStatus implements IPatientContextEvent {
      */
     @Override
     public boolean checkDisabled() {
-        return DocumentService.getInstance().hasDocuments(PatientContext.getActivePatient());
+        return !DocumentService.getInstance().hasDocuments(PatientContext.getActivePatient());
     }
     
     /**
