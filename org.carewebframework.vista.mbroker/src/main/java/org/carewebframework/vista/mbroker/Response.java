@@ -48,11 +48,25 @@ public class Response {
             if (start != 0) {
                 start = 0;
                 sequenceId = temp[0];
-                responseType = ResponseType.values()[temp[1]];
+                responseType = getResponseType(temp[1]);
             }
         }
         
         data = new String(buffer.toArray(), Constants.UTF8);
+    }
+    
+    /**
+     * Returns the response type from the status value.
+     * 
+     * @param code The response code.
+     * @return The response type.
+     */
+    private ResponseType getResponseType(int code) throws IOException {
+        try {
+            return ResponseType.values()[code];
+        } catch (Exception e) {
+            throw new IOException("Unrecognized response code: " + code);
+        }
     }
     
     /**
