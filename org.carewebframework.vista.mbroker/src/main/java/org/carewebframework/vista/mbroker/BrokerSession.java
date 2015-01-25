@@ -581,7 +581,7 @@ public class BrokerSession {
         try {
             socket.setSoTimeout(timeout);
             DataOutputStream requestPacket = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            request.write(requestPacket, ++netSequence);
+            request.write(requestPacket, getSequence());
             requestPacket.flush();
             DataInputStream responsePacket = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             response = new Response(responsePacket);
@@ -595,6 +595,19 @@ public class BrokerSession {
         }
         
         return response;
+    }
+    
+    /**
+     * Returns the next valid sequence #.
+     * 
+     * @return Sequence #.
+     */
+    private byte getSequence() {
+        do {
+            netSequence++;
+        } while (netSequence == Constants.EOD);
+        
+        return netSequence;
     }
     
     /**
