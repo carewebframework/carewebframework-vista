@@ -581,12 +581,12 @@ public class BrokerSession {
         try {
             socket.setSoTimeout(timeout);
             DataOutputStream requestPacket = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            request.write(requestPacket, getSequence());
+            request.write(requestPacket, nextSequenceId());
             requestPacket.flush();
             DataInputStream responsePacket = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             response = new Response(responsePacket);
             
-            if (response.getSequenceId() != netSequence) {
+            if (response.getSequenceId() != request.getSequenceId()) {
                 throw new IOException("Response is not for current request.");
             }
         } catch (Exception e) {
@@ -602,11 +602,8 @@ public class BrokerSession {
      * 
      * @return Sequence #.
      */
-    private byte getSequence() {
-        do {
-            netSequence++;
-        } while (netSequence == Constants.EOD);
-        
+    private byte nextSequenceId() {
+        while (++netSequence == Constants.EOD) {}
         return netSequence;
     }
     

@@ -49,6 +49,8 @@ public class Request {
     
     private final Action action;
     
+    private byte sequenceId;
+    
     private final DynamicByteBuffer buffer = new DynamicByteBuffer();
     
     public Request(Action action) {
@@ -183,6 +185,15 @@ public class Request {
     }
     
     /**
+     * Returns the sequence id for the request.
+     * 
+     * @return The sequence id.
+     */
+    public byte getSequenceId() {
+        return sequenceId;
+    }
+    
+    /**
      * Write request components to output stream.
      * 
      * @param stream Output stream.
@@ -190,6 +201,7 @@ public class Request {
      * @throws IOException An IO exception.
      */
     public void write(DataOutputStream stream, byte sequenceId) throws IOException {
+        this.sequenceId = sequenceId;
         stream.write(PREAMBLE);
         stream.write(sequenceId);
         stream.write(action.getCode());
