@@ -85,6 +85,8 @@ public class BrokerSession {
         
         private String siteName;
         
+        private String cipherKey;
+        
         public ServerCaps() {
         }
         
@@ -96,15 +98,17 @@ public class BrokerSession {
             concurrentMode = false;
             domainName = null;
             siteName = null;
+            cipherKey = null;
         }
         
         private void init(String init) {
-            String[] pcs = StrUtil.split(init, StrUtil.U, 5, true);
+            String[] pcs = StrUtil.split(init, StrUtil.U, 6, true);
             concurrentMode = StrUtil.toBoolean(pcs[0]);
             authMethod = AuthMethod.values()[StrUtil.toInt(pcs[1])];
             serverVersion = new Version(pcs[2]);
             caseSensitivePassword = StrUtil.toBoolean(pcs[3]);
             contextCached = StrUtil.toBoolean(pcs[4]);
+            cipherKey = pcs[5];
         }
         
         public AuthMethod getAuthMethod() {
@@ -133,6 +137,10 @@ public class BrokerSession {
         
         public String getSiteName() {
             return siteName;
+        }
+        
+        public String getCipherKey() {
+            return cipherKey;
         }
         
     }
@@ -171,7 +179,7 @@ public class BrokerSession {
         setConnectionParams(params);
     }
     
-    public AuthResult connect() {
+    public AuthResult connect(boolean authenticate) {
         ServerSocket listener = null;
         AuthResult authResult = null;
         
@@ -200,7 +208,7 @@ public class BrokerSession {
                 socket = listener.accept();
             }
             
-            authResult = Security.authenticate(this);
+            authResult = authenticate ? Security.authenticate(this) : null;
             
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -281,7 +289,7 @@ public class BrokerSession {
     
     public void ensureConnection() {
         if (!isConnected()) {
-            connect();
+            connect(false);
         }
     }
     

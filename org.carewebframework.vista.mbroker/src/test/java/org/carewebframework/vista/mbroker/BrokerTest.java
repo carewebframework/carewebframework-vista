@@ -70,7 +70,7 @@ public class BrokerTest implements IHostEventHandler, IAsyncRPCEvent {
         String server = System.getenv("cwf_test_server");
         assertTrue("Environment variable 'cwf_test_server' not set.", server != null);
         BrokerSession session = getConnection(server);
-        AuthResult authResult = session.connect();
+        AuthResult authResult = session.connect(true);
         assertEquals(AuthStatus.SUCCESS, authResult.status);
         assertTrue(session.isConnected());
         assertTrue(session.isAuthenticated());

@@ -25,7 +25,7 @@ public class Response {
     
     private final String data;
     
-    private byte sequenceId = 0;
+    private Byte sequenceId;
     
     /**
      * Creates a response from an input stream.
@@ -39,16 +39,27 @@ public class Response {
         DynamicByteBuffer buffer = new DynamicByteBuffer(bufsize, 1000);
         int bytesRead;
         boolean eod = false;
-        int start = 2;
         
-        while (!eod && (bytesRead = stream.read(temp)) > 0) {
-            eod = temp[bytesRead - 1] == Constants.EOD;
-            buffer.put(temp, start, eod ? bytesRead - 1 : bytesRead);
+        while (!eod && (bytesRead = stream.read(temp)) > -1) {
+            int offset = 0;
             
-            if (start != 0) {
-                start = 0;
-                sequenceId = temp[0];
-                responseType = getResponseType(temp[1]);
+            if (bytesRead > 0 && temp[bytesRead - 1] == Constants.EOD) {
+                eod = true;
+                bytesRead--;
+            }
+            
+            if (bytesRead > 0 && sequenceId == null) {
+                sequenceId = temp[offset++];
+                bytesRead--;
+            }
+            
+            if (bytesRead > 0 && responseType == null) {
+                responseType = getResponseType(temp[offset++]);
+                bytesRead--;
+            }
+            
+            if (bytesRead > 0) {
+                buffer.put(temp, offset, offset + bytesRead);
             }
         }
         

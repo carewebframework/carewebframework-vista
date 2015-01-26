@@ -10,8 +10,11 @@
 package org.carewebframework.vista.mbroker;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
 import org.carewebframework.common.StrUtil;
@@ -22,7 +25,9 @@ import org.carewebframework.common.StrUtil;
 
 public class Security {
     
-    private static final String[] cipher = new String[] {
+    private static final Map<String, String[]> cipherRegistry = new HashMap<String, String[]>();
+    
+    private static final String[] defaultCipher = new String[] {
             "wkEo-ZJt!dG)49K{nX1BS$vH<&:Myf*>Ae0jQW=;|#PsO`'%+rmb[gpqN,l6/hFC@DcUa ]z~R}\"V\\iIxu?872.(TYL5_3",
             "rKv`R;M/9BqAF%&tSs#Vh)dO1DZP> *fX'u[.4lY=-mg_ci802N7LTG<]!CWo:3?{+,5Q}(@jaExn$~p\\IyHwzU\"|k6Jeb",
             "\\pV(ZJk\"WQmCn!Y,y@1d+~8s?[lNMxgHEt=uw|X:qSLjAI*}6zoF{T3#;ca)/h5%`P4$r]G'9e2if_>UDKb7<v0&- RBO.",
@@ -44,7 +49,9 @@ public class Security {
             "yYgjf\"5VdHc#uA,W1i+v'6|@pr{n;DJ!8(btPGaQM.LT3oe?NB/&9>Z`-}02*%x<7lsqz4OS ~E$\\R]KI[:UwC_=h)kXmF",
             "5:iar.{YU7mBZR@-K|2 \"+~`M%8sq4JhPo<_X\\Sg3WC;Tuxz,fvEQ1p9=w}FAI&j/keD0c?)LN6OHV]lGy'$*>nd[(tb!#" };
     
-    private static final double MAX_KEYS = cipher.length;
+    static {
+        registerCipher(defaultCipher);
+    }
     
     public enum AuthStatus {
         SUCCESS, EXPIRED, NOLOGINS, LOCKED, FAILURE, CANCELED
@@ -67,6 +74,37 @@ public class Security {
     }
     
     /**
+     * Register a cipher table.
+     * 
+     * @param cipher Cipher table.
+     */
+    public static void registerCipher(String[] cipher) {
+        String key = cipher[0].substring(0, 4);
+        
+        if (cipherRegistry.containsKey(key)) {
+            throw new IllegalArgumentException("Cipher is already registered.");
+        }
+        
+        cipherRegistry.put(key, cipher);
+    }
+    
+    /**
+     * Returns the cipher for the specified key.
+     * 
+     * @param cipherKey The cipher key.
+     * @return The corresponding cipher.
+     */
+    private static String[] getCipher(String cipherKey) {
+        String[] cipher = StringUtils.isEmpty(cipherKey) ? defaultCipher : cipherRegistry.get(cipherKey);
+        
+        if (cipher == null) {
+            throw new IllegalArgumentException("Cipher is unknown.");
+        }
+        
+        return cipher;
+    }
+    
+    /**
      * Validates the current user's password.
      *
      * @param session Broker session.
@@ -74,7 +112,7 @@ public class Security {
      * @return True if the password is valid.
      */
     public static boolean validatePassword(BrokerSession session, String password) {
-        password = encrypt(password);
+        password = encrypt(password, session.getServerCaps().getCipherKey());
         return session.callRPCBool("RGCWFUSR VALIDPSW", password);
     }
     
@@ -87,7 +125,8 @@ public class Security {
      * @return Status message from server.
      */
     public static String changePassword(BrokerSession session, String oldPassword, String newPassword) {
-        String result = session.callRPC("CIANBRPC CVC", encrypt(oldPassword), encrypt(newPassword));
+        String cipherKey = session.getServerCaps().getCipherKey();
+        String result = session.callRPC("CIANBRPC CVC", encrypt(oldPassword, cipherKey), encrypt(newPassword, cipherKey));
         return result.startsWith("0") ? null : StrUtil.piece(result, StrUtil.U, 2);
     }
     
@@ -97,12 +136,13 @@ public class Security {
      * @param value Value to encrypt.
      * @return Encrypted value.
      */
-    protected static String encrypt(String value) {
-        int associatorIndex = randomIndex();
+    protected static String encrypt(String value, String cipherKey) {
+        String[] cipher = getCipher(cipherKey);
+        int associatorIndex = randomIndex(cipher.length);
         int identifierIndex;
         
         do {
-            identifierIndex = randomIndex();
+            identifierIndex = randomIndex(cipher.length);
         } while (associatorIndex == identifierIndex);
         
         return ((char) (associatorIndex + 32)) + StrUtil.xlate(value, cipher[associatorIndex], cipher[identifierIndex])
@@ -115,7 +155,7 @@ public class Security {
      * @param value Value to decrypt.
      * @return Decrypted value.
      */
-    protected static final String decrypt(String value) {
+    protected static final String decrypt(String value, String cipherKey) {
         int len = value == null ? 0 : value.length();
         
         if (len < 3) {
@@ -124,16 +164,19 @@ public class Security {
         
         int identifierIndex = value.charAt(0) - 32;
         int associatorIndex = value.charAt(len - 1) - 32;
+        String[] cipher = getCipher(cipherKey);
+        
         return StrUtil.xlate(value.substring(1, len - 1), cipher[associatorIndex], cipher[identifierIndex]);
     }
     
     /**
      * Return random index into cipher table.
      * 
+     * @param maxKeys Maximum number of keys.
      * @return Cipher table index.
      */
-    private static int randomIndex() {
-        return (int) Math.floor(Math.random() * MAX_KEYS);
+    private static int randomIndex(int maxKeys) {
+        return (int) Math.floor(Math.random() * maxKeys);
     }
     
     /**
@@ -157,10 +200,11 @@ public class Security {
      * @return Result of authentication.
      */
     public static AuthResult authenticate(BrokerSession session, String username, String password, String division) {
+        session.ensureConnection();
         String av = username + ";" + password;
         List<String> results = session.callRPCList("CIANBRPC AUTH", null, session.getConnectionParams().getAppid(),
             session.getLocalName(), "", // This is the pre-authentication token
-            ";".equals(av) ? av : encrypt(av), session.getLocalAddress(), division);
+            ";".equals(av) ? av : encrypt(av, session.getServerCaps().getCipherKey()), session.getLocalAddress(), division);
         AuthResult authResult = new AuthResult(results.get(0));
         List<String> message = results.subList(2, results.size());
         
