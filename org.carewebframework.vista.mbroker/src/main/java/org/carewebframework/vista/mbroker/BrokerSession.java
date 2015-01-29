@@ -66,88 +66,9 @@ public class BrokerSession {
         Normal, Cache, NT
     }
     
-    /**
-     * Server capabilities descriptor.
-     */
-    public static class ServerCaps implements Cloneable {
-        
-        private AuthMethod authMethod = AuthMethod.Normal;
-        
-        private Version serverVersion;
-        
-        private boolean caseSensitivePassword;
-        
-        private boolean contextCached;
-        
-        private boolean concurrentMode;
-        
-        private String domainName;
-        
-        private String siteName;
-        
-        private String cipherKey;
-        
-        public ServerCaps() {
-        }
-        
-        public void clear() {
-            authMethod = AuthMethod.Normal;
-            serverVersion = null;
-            caseSensitivePassword = false;
-            contextCached = false;
-            concurrentMode = false;
-            domainName = null;
-            siteName = null;
-            cipherKey = null;
-        }
-        
-        private void init(String init) {
-            String[] pcs = StrUtil.split(init, StrUtil.U, 6, true);
-            concurrentMode = StrUtil.toBoolean(pcs[0]);
-            authMethod = AuthMethod.values()[StrUtil.toInt(pcs[1])];
-            serverVersion = new Version(pcs[2]);
-            caseSensitivePassword = StrUtil.toBoolean(pcs[3]);
-            contextCached = StrUtil.toBoolean(pcs[4]);
-            cipherKey = pcs[5];
-        }
-        
-        public AuthMethod getAuthMethod() {
-            return authMethod;
-        }
-        
-        public Version getServerVersion() {
-            return serverVersion;
-        }
-        
-        public boolean isCaseSensitivePassword() {
-            return caseSensitivePassword;
-        }
-        
-        public boolean isContextCached() {
-            return contextCached;
-        }
-        
-        public boolean isConcurrentMode() {
-            return concurrentMode;
-        }
-        
-        public String getDomainName() {
-            return domainName;
-        }
-        
-        public String getSiteName() {
-            return siteName;
-        }
-        
-        public String getCipherKey() {
-            return cipherKey;
-        }
-        
-    }
-    
     private ConnectionParams connectionParams;
     
-    private final ServerCaps serverCaps = new ServerCaps();
+    private ServerCaps serverCaps;
     
     private ExecutorService executorService;
     
@@ -164,8 +85,6 @@ public class BrokerSession {
     private final List<IHostEventHandler> hostEventHandlers = new ArrayList<IHostEventHandler>();
     
     private PollingThread pollingThread;
-    
-    private final List<String> preLoginMessage = new ArrayList<String>();
     
     private final List<String> postLoginMessage = new ArrayList<String>();
     
@@ -200,7 +119,7 @@ public class BrokerSession {
             request.addParameter("UCI", connectionParams.getNamespace());
             request.addParameter("DBG", connectionParams.isDebug());
             request.addParameter("VER", Constants.BROKER_VERSION);
-            serverCaps.init(netCall(request, connectionParams.getTimeout()).getData());
+            serverCaps = new ServerCaps(netCall(request, connectionParams.getTimeout()).getData());
             
             if (!serverCaps.concurrentMode) {
                 close();
@@ -208,7 +127,9 @@ public class BrokerSession {
                 socket = listener.accept();
             }
             
-            authResult = Security.authenticate(this);
+            if (!StringUtils.isEmpty(connectionParams.getUsername()) && !StringUtils.isEmpty(connectionParams.getPassword())) {
+                authResult = Security.authenticate(this);
+            }
             
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -223,8 +144,9 @@ public class BrokerSession {
     public void disconnect() {
         callbacks.clear();
         polling(false);
-        preLoginMessage.clear();
         postLoginMessage.clear();
+        serverCaps = null;
+        userId = 0;
         
         if (socket != null) {
             Request request = new Request(Action.DISCONNECT);
@@ -236,6 +158,8 @@ public class BrokerSession {
             
             close();
         }
+        
+        id = 0;
     }
     
     private void close() {
@@ -269,7 +193,6 @@ public class BrokerSession {
     }
     
     private void reset() {
-        serverCaps.clear();
         id = 0;
         userId = 0;
         netSequence = 0;
@@ -674,17 +597,7 @@ public class BrokerSession {
      * @return Pre-login message text.
      */
     public List<String> getPreLoginMessage() {
-        return preLoginMessage;
-    }
-    
-    /**
-     * Sets the pre-login message text.
-     *
-     * @param message Pre-login message text.
-     */
-    protected void setPreLoginMessage(List<String> message) {
-        preLoginMessage.clear();
-        preLoginMessage.addAll(message);
+        return serverCaps.getPreLoginMessage();
     }
     
     /**

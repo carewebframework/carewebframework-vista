@@ -24,7 +24,7 @@ public class Constants {
     
     public static final byte EOD = -1;
     
-    public static final String BROKER_VERSION = "1.6.5";
+    public static final String BROKER_VERSION = "1.7";
     
     public static final String DEFAULT_APP_ID = "XWB RPC TEST";
     

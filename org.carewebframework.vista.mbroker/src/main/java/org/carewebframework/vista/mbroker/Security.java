@@ -9,7 +9,6 @@
  */
 package org.carewebframework.vista.mbroker;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -201,20 +200,20 @@ public class Security {
      */
     public static AuthResult authenticate(BrokerSession session, String username, String password, String division) {
         session.ensureConnection();
+        
+        if (session.isAuthenticated()) {
+            return new AuthResult("0");
+        }
+        
         String av = username + ";" + password;
-        List<String> results = session.callRPCList("CIANBRPC AUTH", null, session.getConnectionParams().getAppid(),
-            session.getLocalName(), "", // This is the pre-authentication token
+        List<String> results = session.callRPCList("CIANBRPC AUTH:" + Constants.BROKER_VERSION, null, session
+                .getConnectionParams().getAppid(), session.getLocalName(), "", // This is the pre-authentication token
             ";".equals(av) ? av : encrypt(av, session.getServerCaps().getCipherKey()), session.getLocalAddress(), division);
         AuthResult authResult = new AuthResult(results.get(0));
-        List<String> message = results.subList(2, results.size());
         
         if (authResult.status == AuthStatus.SUCCESS || authResult.status == AuthStatus.EXPIRED) {
-            session.setPostLoginMessage(message);
+            session.setPostLoginMessage(results.subList(2, results.size()));
             session.init(results.get(1));
-        } else if (!message.isEmpty()) {
-            session.setPreLoginMessage(message);
-        } else {
-            session.setPreLoginMessage(Collections.singletonList(authResult.reason));
         }
         
         return authResult;
