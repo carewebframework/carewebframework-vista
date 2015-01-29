@@ -179,7 +179,7 @@ public class BrokerSession {
         setConnectionParams(params);
     }
     
-    public AuthResult connect(boolean authenticate) {
+    public AuthResult connect() {
         ServerSocket listener = null;
         AuthResult authResult = null;
         
@@ -208,7 +208,7 @@ public class BrokerSession {
                 socket = listener.accept();
             }
             
-            authResult = authenticate ? Security.authenticate(this) : null;
+            authResult = Security.authenticate(this);
             
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -289,7 +289,7 @@ public class BrokerSession {
     
     public void ensureConnection() {
         if (!isConnected()) {
-            connect(false);
+            connect();
         }
     }
     
