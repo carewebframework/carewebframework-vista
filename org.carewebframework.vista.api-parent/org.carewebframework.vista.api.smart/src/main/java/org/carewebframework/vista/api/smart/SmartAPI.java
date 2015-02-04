@@ -31,6 +31,11 @@ public class SmartAPI extends org.carewebframework.cal.api.smart.SmartAPIBase {
     public Object handleAPI(Map<String, String> params) {
         List<String> data = VistAUtil.getBrokerSession().callRPCList("RGCWSMRT GET", null, params.get("record_id"), ztyp,
             "rdf");
+        
+        if (data.isEmpty()) {
+            data.add("<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"/>");
+        }
+        
         return StrUtil.fromList(data);
     }
 }
