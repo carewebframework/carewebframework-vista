@@ -106,13 +106,17 @@ public class NewSelector extends EncounterSelector {
     
     @Override
     protected Encounter getEncounterInternal() {
-        Encounter encounter = null;
+        if (!isComplete()) {
+            return null;
+        }
+        
         Listitem item = lstLocation.getSelectedItem();
         String locid = item == null ? null : (String) item.getValue();
         Location location = locid != null ? DomainFactoryRegistry.fetchObject(Location.class, locid) : null;
         Comboitem cboitem = cboServiceCategory.getSelectedItem();
+        String sc = cboitem == null ? null : (String) cboitem.getValue();
         Date date = datEncounter.getDate();
-        encounter = EncounterUtil.create(mainController.patient, date, location, (String) cboitem.getValue());
+        Encounter encounter = EncounterUtil.create(mainController.patient, date, location, sc);
         
         if (chkForceCreate.isChecked()) {
             mainController.flags.add(EncounterFlag.FORCE);
