@@ -34,7 +34,7 @@ import org.junit.Test;
 
 public class FhirTest extends CommonTest {
     
-    private static final String ROOT = "http://broker/FHIR/";
+    private static final String ROOT = "http://broker/DSTU1/";
     
     private static final String[] PAT_IDS = { "1", "2" };
     
