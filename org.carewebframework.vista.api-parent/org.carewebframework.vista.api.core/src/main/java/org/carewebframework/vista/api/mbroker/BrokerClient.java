@@ -58,7 +58,7 @@ public class BrokerClient extends CloseableHttpClient {
         
         data.add("");
         RequestLine requestLine = request.getRequestLine();
-        List<String> response = VistAUtil.getBrokerSession().callRPCList("RGCWSER REST", null, requestLine.toString(),
+        List<String> response = VistAUtil.getBrokerSession().callRPCList("RGSER REST", null, requestLine.toString(),
             target.toURI());
         return new BrokerResponse(response);
     }

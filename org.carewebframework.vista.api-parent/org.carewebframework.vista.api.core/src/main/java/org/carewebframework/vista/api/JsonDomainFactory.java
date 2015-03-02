@@ -54,7 +54,7 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
             return null;
         }
         
-        String json = VistAUtil.getBrokerSession().callRPC("RGCWSER FETCH", PREFIX + getAlias(clazz), id);
+        String json = VistAUtil.getBrokerSession().callRPC("RGSER FETCH", PREFIX + getAlias(clazz), id);
         return (T) JSONUtil.deserialize(json);
     }
     
@@ -68,7 +68,7 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
             return Collections.emptyList();
         }
         
-        String json = VistAUtil.getBrokerSession().callRPC("RGCWSER FETCH", PREFIX + getAlias(clazz), ids);
+        String json = VistAUtil.getBrokerSession().callRPC("RGSER FETCH", PREFIX + getAlias(clazz), ids);
         return (List<T>) JSONUtil.deserialize(json);
     }
     
