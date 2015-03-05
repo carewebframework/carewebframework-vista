@@ -25,7 +25,7 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
     
     private static final IDomainFactory<Object> instance = new JsonDomainFactory();
     
-    private static final String PREFIX = "VISTA/";
+    private static final String PREFIX = "CWF/";
     
     public static IDomainFactory<Object> getInstance() {
         return instance;
