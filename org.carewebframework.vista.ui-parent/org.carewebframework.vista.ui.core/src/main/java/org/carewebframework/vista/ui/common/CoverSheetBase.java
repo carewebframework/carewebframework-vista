@@ -23,11 +23,11 @@ import org.carewebframework.fhir.common.IReferenceable;
 import org.carewebframework.ui.sharedforms.ListViewForm;
 import org.carewebframework.ui.zk.ReportBox;
 import org.carewebframework.vista.mbroker.BrokerSession;
-import org.carewebframework.vista.mbroker.BrokerSession.IAsyncRPCEvent;
+import org.carewebframework.vista.ui.mbroker.AsyncRPCCompleteEvent;
+import org.carewebframework.vista.ui.mbroker.AsyncRPCErrorEvent;
+import org.carewebframework.vista.ui.mbroker.AsyncRPCEventDispatcher;
 
-import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Listitem;
 
@@ -36,15 +36,13 @@ import org.zkoss.zul.Listitem;
  *
  * @param <T> Type of model object.
  */
-public abstract class CoverSheetBase<T> extends ListViewForm<T> implements PatientContext.IPatientContextEvent, IAsyncRPCEvent {
+public abstract class CoverSheetBase<T> extends ListViewForm<T> implements PatientContext.IPatientContextEvent {
     
     private static final long serialVersionUID = 1L;
     
     protected Label detailView;
     
     protected Patient patient;
-    
-    protected int asyncHandle;
     
     private String detailTitle;
     
@@ -54,45 +52,18 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
     
     private BrokerSession broker;
     
-    /**
-     * Callback for status update.
-     */
-    private final EventListener<Event> statusCallback = new EventListener<Event>() {
-        
-        @Override
-        public void onEvent(Event event) throws Exception {
-            status(event.getData().toString());
-        }
-        
-    };
+    private AsyncRPCEventDispatcher asyncDispatcher;
+    
+    private Component target;
     
     /**
-     * Callback for list update.
+     * Get top level component.
      */
-    private final EventListener<Event> dataCallback = new EventListener<Event>() {
-        
-        @Override
-        public void onEvent(Event event) throws Exception {
-            List<String> results = toList(event.getData().toString(), null, "\r");
-            String error = getError(results);
-            
-            if (error != null) {
-                status(error);
-                model.clear();
-            } else {
-                for (String result : results) {
-                    T value = parseData(result);
-                    
-                    if (value != null) {
-                        model.add(value);
-                    }
-                }
-                
-                renderData();
-            }
-        }
-        
-    };
+    @Override
+    public void doAfterCompose(Component comp) throws Exception {
+        super.doAfterCompose(comp);
+        this.target = comp;
+    }
     
     @SuppressWarnings("unchecked")
     protected T parseData(String data) {
@@ -122,17 +93,6 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
     }
     
     /**
-     * Abort any async call in progress.
-     */
-    @Override
-    protected void asyncAbort() {
-        if (asyncHandle > 0) {
-            broker.callRPCAbort(asyncHandle);
-            asyncHandle = 0;
-        }
-    }
-    
-    /**
      * Override load list to clear display if no patient in context.
      */
     @Override
@@ -150,7 +110,7 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
     
     @Override
     protected void requestData() {
-        asyncHandle = getBroker().callRPCAsync(listRPC, this, patient.getId().getIdPart());
+        getAsyncDispatcher().callRPCAsync(listRPC, patient.getId().getIdPart());
     }
     
     /**
@@ -211,21 +171,41 @@ public abstract class CoverSheetBase<T> extends ListViewForm<T> implements Patie
         committed();
     }
     
-    @Override
-    public void onRPCComplete(int handle, String data) {
-        callback(handle, dataCallback, data);
-    }
-    
-    @Override
-    public void onRPCError(int handle, int code, String text) {
-        callback(handle, statusCallback, text);
-    }
-    
-    private void callback(int handle, EventListener<Event> listener, Object data) {
-        if (handle == asyncHandle) {
-            asyncHandle = 0;
-            Executions.schedule(desktop, listener, new Event("onCallback", null, data));
+    public void onAsyncRPCComplete(AsyncRPCCompleteEvent event) {
+        List<String> results = toList(event.getData(), null, "\r");
+        String error = getError(results);
+        
+        if (error != null) {
+            status(error);
+            model.clear();
+        } else {
+            for (String result : results) {
+                T value = parseData(result);
+                
+                if (value != null) {
+                    model.add(value);
+                }
+            }
+            
+            renderData();
         }
+    }
+    
+    public void onAsyncRPCError(AsyncRPCErrorEvent event) {
+        status(event.getData());
+    }
+    
+    @Override
+    protected void asyncAbort() {
+        getAsyncDispatcher().abort();
+    }
+    
+    public AsyncRPCEventDispatcher getAsyncDispatcher() {
+        if (asyncDispatcher == null) {
+            asyncDispatcher = new AsyncRPCEventDispatcher(broker, target);
+        }
+        
+        return asyncDispatcher;
     }
     
     public BrokerSession getBroker() {
