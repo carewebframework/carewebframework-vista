@@ -25,8 +25,6 @@ import org.junit.Test;
 
 public class BrokerTest implements IHostEventHandler, IAsyncRPCEvent {
     
-    private static final boolean debug = false;
-    
     public static class TestBean implements Serializable {
         
         private static final long serialVersionUID = 1L;
@@ -108,7 +106,6 @@ public class BrokerTest implements IHostEventHandler, IAsyncRPCEvent {
     
     public BrokerSession getConnection(String params) throws Exception {
         ConnectionParams connectionParams = new ConnectionParams(params);
-        connectionParams.setDebug(debug);
         System.out.println("Requesting connection from " + connectionParams);
         return new BrokerSession(connectionParams);
     }

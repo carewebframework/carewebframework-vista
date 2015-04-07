@@ -10,7 +10,6 @@
 package org.carewebframework.vista.mbroker;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -53,7 +52,11 @@ public class Security {
     }
     
     public enum AuthStatus {
-        SUCCESS, EXPIRED, NOLOGINS, LOCKED, FAILURE, CANCELED
+        SUCCESS, EXPIRED, NOLOGINS, LOCKED, FAILURE, CANCELED;
+        
+        public boolean succeeded() {
+            return this == SUCCESS || this == EXPIRED;
+        }
     };
     
     /**
@@ -65,7 +68,7 @@ public class Security {
         
         public final String reason;
         
-        private AuthResult(String data) {
+        public AuthResult(String data) {
             String[] pcs = StrUtil.split(data, StrUtil.U, 2);
             status = AuthStatus.values()[NumberUtils.toInt(pcs[0], AuthStatus.FAILURE.ordinal())];
             reason = pcs[1];
@@ -125,7 +128,7 @@ public class Security {
      */
     public static String changePassword(BrokerSession session, String oldPassword, String newPassword) {
         String cipherKey = session.getServerCaps().getCipherKey();
-        String result = session.callRPC("CIANBRPC CVC", encrypt(oldPassword, cipherKey), encrypt(newPassword, cipherKey));
+        String result = session.callRPC("RGNETBRP CVC", encrypt(oldPassword, cipherKey), encrypt(newPassword, cipherKey));
         return result.startsWith("0") ? null : StrUtil.piece(result, StrUtil.U, 2);
     }
     
@@ -176,47 +179,6 @@ public class Security {
      */
     private static int randomIndex(int maxKeys) {
         return (int) Math.floor(Math.random() * maxKeys);
-    }
-    
-    /**
-     * Request authentication from the server.
-     *
-     * @param session Broker session.
-     * @return Result of authentication.
-     */
-    public static AuthResult authenticate(BrokerSession session) {
-        ConnectionParams params = session.getConnectionParams();
-        return authenticate(session, params.getUsername(), params.getPassword(), null);
-    }
-    
-    /**
-     * Request authentication from the server.
-     *
-     * @param session Broker session.
-     * @param username User name.
-     * @param password Password.
-     * @param division Login division (may be null).
-     * @return Result of authentication.
-     */
-    public static AuthResult authenticate(BrokerSession session, String username, String password, String division) {
-        session.ensureConnection();
-        
-        if (session.isAuthenticated()) {
-            return new AuthResult("0");
-        }
-        
-        String av = username + ";" + password;
-        List<String> results = session.callRPCList("CIANBRPC AUTH:" + Constants.BROKER_VERSION, null, session
-                .getConnectionParams().getAppid(), session.getLocalName(), "", // This is the pre-authentication token
-            ";".equals(av) ? av : encrypt(av, session.getServerCaps().getCipherKey()), session.getLocalAddress(), division);
-        AuthResult authResult = new AuthResult(results.get(0));
-        
-        if (authResult.status == AuthStatus.SUCCESS || authResult.status == AuthStatus.EXPIRED) {
-            session.setPostLoginMessage(results.subList(2, results.size()));
-            session.init(results.get(1));
-        }
-        
-        return authResult;
     }
     
     /**

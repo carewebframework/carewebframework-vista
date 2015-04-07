@@ -97,7 +97,7 @@ class BrokerResponse extends BasicHttpResponse implements CloseableHttpResponse 
         return new BasicStatusLine(protocolVersion, statusCode, reasonPhrase);
     }
     
-    public BrokerResponse(final List<String> response) {
+    public BrokerResponse(List<String> response) {
         super(createStatusLine(response.get(0)));
         ContentType contentType = null;
         InputStream body = null;
@@ -114,12 +114,35 @@ class BrokerResponse extends BasicHttpResponse implements CloseableHttpResponse 
             Header header = new BasicHeader(pcs[0].trim(), pcs[1].trim());
             addHeader(header);
             
-            if (contentType == null && header.getName().equals(HttpHeaders.CONTENT_TYPE)) {
-                contentType = ContentType.create(header.getValue(), "UTF-8");
+            if (contentType == null && header.getName().equalsIgnoreCase(HttpHeaders.CONTENT_TYPE)) {
+                contentType = parseContentType(header.getValue());
             }
         }
         
         setEntity(new InputStreamEntity(body, contentType));
+    }
+    
+    /**
+     * Parse the returned content type.
+     * 
+     * @param value Value to parse
+     * @return ContentType instance
+     */
+    private ContentType parseContentType(String value) {
+        String[] pcs = value.split("\\;");
+        String mimeType = pcs[0].trim();
+        String charSet = "UTF-8";
+        
+        for (int i = 1; i < pcs.length; i++) {
+            String s = pcs[i].trim().toUpperCase();
+            
+            if (s.startsWith("CHARSET=")) {
+                charSet = s.substring(8);
+                break;
+            }
+        }
+        
+        return ContentType.create(mimeType, charSet);
     }
     
     @Override

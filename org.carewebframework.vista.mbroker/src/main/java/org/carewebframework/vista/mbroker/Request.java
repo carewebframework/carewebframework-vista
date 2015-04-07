@@ -45,7 +45,7 @@ public class Request {
         }
     };
     
-    private static final byte[] PREAMBLE = new byte[] { '{', 'C', 'I', 'A', '}', Constants.EOD };
+    private static final byte[] PREAMBLE = new byte[] { '{', 'R', 'G', 'N', '}', Constants.EOD };
     
     private final Action action;
     

@@ -136,12 +136,11 @@ public class SettingsProvider implements ISettingsProvider {
      * Fetches specified parameter template. RPC return format is:
      * 
      * <pre>
-     * 98^CIAVM SITE PARAMETERS^VueCentric Site Parameters^SYS
-     * 49^CIAVM DEFAULT SOURCE^Default object source path^F^^Default path to the object repository.
-     * 36^CIAVM DEFAULT TEMPLATE^Default login template^P^19930.3^Name of a template that becomes the login default."
-     * 316^CIANB POLLING INTERVAL^Host polling interval^N^^Number of seconds (1-60) between polls."
-     * 4740^CIAVM PRIMARY TIMEOUT^Primary inactivity timeout^N^30:999999^Number of seconds (30+) of inactivity before locking application."
-     * 89^CIAVM DISABLE CCOW^Disable CCOW support^Y^^Disables connection to a CCOW-compliant context manager."
+     * 210^RGNETB SITE PARAMETERS^NETSERV RPC Broker Site Parameters^SYS
+     * 413^RGNETB POLLING INTERVAL^Host polling interval^N^^Number of seconds (1-60) between polls.
+     * 414^RGNETB RESOURCE DEVICE COUNT^Maximum number of resource devices^N^^The maximum number (1-20) of resource devices that may be created.
+     * 415^RGNETB RESOURCE DEVICE SLOTS^Number of resource slots to allocate^N^^Maximum number (1-20) of slots per resource device.
+     * 412^RGNETB AUTHENTICATION^Authentication method^S^0:Normal;1:Client Cached;2:Server Cached
      * </pre>
      * 
      * @param id Id of parameter template.
@@ -230,7 +229,7 @@ public class SettingsProvider implements ISettingsProvider {
     }
     
     private void getFileEntries(Properties config, String file) {
-        List<String> entries = broker.callRPCList("CIAURPC FILENT", null, file);
+        List<String> entries = broker.callRPCList("RGNETBRP FILENT", null, file);
         getArrayEntries(config, entries.toArray(new String[entries.size()]), "\\^");
     }
     

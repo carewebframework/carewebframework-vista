@@ -33,8 +33,6 @@ public class ConnectionParams {
     
     private int timeout; // Default connection timeout
     
-    private boolean debug; // Debug mode flag
-    
     /**
      * Create with all default values
      */
@@ -48,7 +46,7 @@ public class ConnectionParams {
      * @param value Connection parameter string.
      */
     public ConnectionParams(String value) {
-        this(value, null, 10000, false);
+        this(value, null, 10000);
     }
     
     /**
@@ -57,9 +55,8 @@ public class ConnectionParams {
      * @param value The connection parameter string.
      * @param appid The id of the application requesting the connection.
      * @param timeout Default timeout value, in milliseconds.
-     * @param debug Debug flag. If set, server will initiate a callback connection.
      */
-    public ConnectionParams(String value, String appid, int timeout, boolean debug) {
+    public ConnectionParams(String value, String appid, int timeout) {
         String[] pcs = value.split("\\@", 2);
         
         if (pcs.length == 1) {
@@ -78,7 +75,6 @@ public class ConnectionParams {
         port = NumberUtils.toInt(pcs[1], port);
         namespace = pcs[2];
         this.timeout = timeout;
-        this.debug = debug;
         this.appid = StringUtils.isEmpty(appid) ? Constants.DEFAULT_APP_ID : appid;
     }
     
@@ -89,7 +85,6 @@ public class ConnectionParams {
      */
     public ConnectionParams(ConnectionParams source) {
         appid = source.appid;
-        debug = source.debug;
         namespace = source.namespace;
         password = source.password;
         port = source.port;
@@ -114,24 +109,6 @@ public class ConnectionParams {
      */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
-    }
-    
-    /**
-     * Returns true if debug mode is active.
-     * 
-     * @return Debug mode.
-     */
-    public boolean isDebug() {
-        return debug;
-    }
-    
-    /**
-     * Sets debug mode.
-     * 
-     * @param debug Debug mode state.
-     */
-    public void setDebug(boolean debug) {
-        this.debug = debug;
     }
     
     /**

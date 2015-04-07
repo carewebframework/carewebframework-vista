@@ -46,7 +46,7 @@ public class NotificationService {
      * @param result Result of lookup.
      */
     public void getGroups(String startFrom, boolean forward, Collection<Recipient> result) {
-        List<String> lst = broker.callRPCList("CIAURPC FILGET", null, 3.8, startFrom, forward ? 1 : -1, MG_SCREEN, 40);
+        List<String> lst = broker.callRPCList("RGNETBRP FILGET", null, 3.8, startFrom, forward ? 1 : -1, MG_SCREEN, 40);
         toRecipients(lst, true, startFrom, result);
     }
     

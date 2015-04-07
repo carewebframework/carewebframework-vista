@@ -25,9 +25,7 @@ public class ServerCaps implements Cloneable {
     
     private final boolean caseSensitivePassword;
     
-    private final boolean contextCached;
-    
-    boolean concurrentMode;
+    boolean debugMode;
     
     String domainName;
     
@@ -40,12 +38,11 @@ public class ServerCaps implements Cloneable {
     public ServerCaps(String init) {
         List<String> data = StrUtil.toList(init, null, Constants.LINE_SEPARATOR);
         String[] pcs = StrUtil.split(data.get(0), StrUtil.U, 6, true);
-        concurrentMode = StrUtil.toBoolean(pcs[0]);
+        debugMode = StrUtil.toBoolean(pcs[0]);
         authMethod = AuthMethod.values()[StrUtil.toInt(pcs[1])];
         serverVersion = new Version(pcs[2]);
         caseSensitivePassword = StrUtil.toBoolean(pcs[3]);
-        contextCached = StrUtil.toBoolean(pcs[4]);
-        cipherKey = pcs[5];
+        cipherKey = pcs[4];
         data.remove(0);
         preLoginMessage = data;
     }
@@ -62,12 +59,8 @@ public class ServerCaps implements Cloneable {
         return caseSensitivePassword;
     }
     
-    public boolean isContextCached() {
-        return contextCached;
-    }
-    
-    public boolean isConcurrentMode() {
-        return concurrentMode;
+    public boolean isDebugMode() {
+        return debugMode;
     }
     
     public String getDomainName() {

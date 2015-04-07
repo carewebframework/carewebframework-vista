@@ -66,7 +66,7 @@ public class BaseSecurityService extends AbstractSecurityService {
      */
     @Override
     public String loginDisabled() {
-        AuthResult result = Security.authenticate(brokerSession, "dummy", "dummy", null);
+        AuthResult result = brokerSession.authenticate("dummy", "dummy", null);
         return result.status == AuthStatus.NOLOGINS ? result.reason : null;
     }
     
@@ -85,7 +85,7 @@ public class BaseSecurityService extends AbstractSecurityService {
     @Override
     protected void initSecurityDomains() {
         log.trace("Retrieving Security Domains");
-        List<String> results = brokerSession.callRPCList("CIANBRPC DIVGET", null);
+        List<String> results = brokerSession.callRPCList("RGNETBRP DIVGET", null);
         String preLoginMessage = StringUtils.collectionToDelimitedString(brokerSession.getPreLoginMessage(), "\n");
         
         for (String result : results) {

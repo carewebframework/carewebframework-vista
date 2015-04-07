@@ -44,7 +44,7 @@ public class DocumentService {
     public List<DocumentCategory> getCategories() {
         List<DocumentCategory> categories = new ArrayList<DocumentCategory>();
         
-        for (String result : broker.callRPCList("CIAURPC FILGET", null, 8925.1, null, null, "I $P(^(0),U,4)=\"CL\"")) {
+        for (String result : broker.callRPCList("RGUTRPC FILGET", null, 8925.1, null, null, "I $P(^(0),U,4)=\"CL\"")) {
             String[] pcs = StrUtil.split(result, StrUtil.U);
             DocumentCategory cat = new DocumentCategory(pcs[0]);
             cat.setName(pcs[1]);

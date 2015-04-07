@@ -29,7 +29,6 @@
 			<property name="server" value="${broker.server}" />
 			<property name="port" value="${broker.port}" />
 			<property name="namespace" value="${broker.namespace:}" />
-			<property name="debug" value="${broker.debug:0}" />
 			<property name="timeout" value="${broker.timeout:30000}" />
 			<property name="username" value="${broker.username:}" />
 			<property name="password" value="${broker.password:}" />

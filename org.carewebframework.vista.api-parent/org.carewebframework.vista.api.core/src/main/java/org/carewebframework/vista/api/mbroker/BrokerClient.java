@@ -16,7 +16,6 @@ import java.util.List;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
-import org.apache.http.RequestLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.conn.ClientConnectionManager;
@@ -50,16 +49,23 @@ public class BrokerClient extends CloseableHttpClient {
     protected CloseableHttpResponse doExecute(HttpHost target, HttpRequest request, HttpContext context) throws IOException,
                                                                                                         ClientProtocolException {
         List<String> data = new ArrayList<String>();
-        data.add(request.getRequestLine().toString());
+        String[] requestLine = request.getRequestLine().toString().split("\\ ", 3);
+        String uri = requestLine[1];
+        
+        if (uri.startsWith("http://")) {
+            uri = uri.substring(7);
+        }
+        
+        String[] pcs = uri.split("\\/", 2);
+        data.add(requestLine[0] + " " + pcs[1] + " " + requestLine[2]);
         
         for (Header header : request.getAllHeaders()) {
             data.add(header.getName() + ": " + header.getValue());
         }
         
+        data.add("Host: " + pcs[0]);
         data.add("");
-        RequestLine requestLine = request.getRequestLine();
-        List<String> response = VistAUtil.getBrokerSession().callRPCList("RGSER REST", null, requestLine.toString(),
-            target.toURI());
+        List<String> response = VistAUtil.getBrokerSession().callRPCList("RGSER REST", null, data);
         return new BrokerResponse(response);
     }
     

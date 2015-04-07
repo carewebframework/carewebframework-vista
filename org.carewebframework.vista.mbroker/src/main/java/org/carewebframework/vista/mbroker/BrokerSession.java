@@ -15,7 +15,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,42 +98,24 @@ public class BrokerSession {
     }
     
     public AuthResult connect() {
-        ServerSocket listener = null;
         AuthResult authResult = null;
         
         try {
             close();
             socket = new Socket(connectionParams.getServer(), connectionParams.getPort());
-            listener = new ServerSocket(0, 0, socket.getLocalAddress());
-            
-            if (connectionParams.isDebug()) {
-                System.out.println("Start M process:  D DEBUG^CIANBLIS");
-                System.out.println("Addr = " + listener.getInetAddress().getHostAddress());
-                System.out.println("Port = " + listener.getLocalPort());
-            }
-            
             Request request = new Request(Action.CONNECT);
             request.addParameter("IP", socket.getLocalAddress());
             request.addParameter("LP", socket.getLocalPort());
             request.addParameter("UCI", connectionParams.getNamespace());
-            request.addParameter("DBG", connectionParams.isDebug());
-            request.addParameter("VER", Constants.BROKER_VERSION);
+            request.addParameter("VER", Constants.VERSION);
             serverCaps = new ServerCaps(netCall(request, connectionParams.getTimeout()).getData());
             
-            if (!serverCaps.concurrentMode) {
-                close();
-                listener.setSoTimeout(60000);
-                socket = listener.accept();
-            }
-            
             if (!StringUtils.isEmpty(connectionParams.getUsername()) && !StringUtils.isEmpty(connectionParams.getPassword())) {
-                authResult = Security.authenticate(this);
+                authResult = authenticate();
             }
             
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            close(listener);
         }
         
         polling(true);
@@ -204,12 +185,6 @@ public class BrokerSession {
         } catch (Exception e) {}
     }
     
-    private void close(ServerSocket socket) {
-        try {
-            socket.close();
-        } catch (Exception e) {}
-    }
-    
     public void ensureConnection() {
         if (!isConnected()) {
             connect();
@@ -218,7 +193,7 @@ public class BrokerSession {
     
     public boolean callRPCAbort(int handle) {
         if (getCallback(handle) != null) {
-            return callRPCBool("CIANBASY STOP", handle);
+            return callRPCBool("RGNETBAS STOP", handle);
         } else {
             return false;
         }
@@ -377,7 +352,7 @@ public class BrokerSession {
             }
         }
         
-        callRPC("CIANBEVT BCAST", params);
+        callRPC("RGNETBEV BCAST", params);
     }
     
     private boolean processRecipient(RPCParameter param, String prefix, String subscript, String recipient) {
@@ -423,6 +398,44 @@ public class BrokerSession {
      */
     public boolean isAuthenticated() {
         return userId != 0;
+    }
+    
+    /**
+     * Request authentication using default settings.
+     * 
+     * @return Result of authentication.
+     */
+    public AuthResult authenticate() {
+        return authenticate(connectionParams.getUsername(), connectionParams.getPassword(), null);
+    }
+    
+    /**
+     * Request authentication from the server.
+     *
+     * @param username User name.
+     * @param password Password.
+     * @param division Login division (may be null).
+     * @return Result of authentication.
+     */
+    public AuthResult authenticate(String username, String password, String division) {
+        ensureConnection();
+        
+        if (isAuthenticated()) {
+            return new AuthResult("0");
+        }
+        
+        String av = username + ";" + password;
+        List<String> results = callRPCList("RGNETBRP AUTH:" + Constants.VERSION, null, connectionParams.getAppid(),
+            getLocalName(), "", // This is the pre-authentication token
+            ";".equals(av) ? av : Security.encrypt(av, serverCaps.getCipherKey()), getLocalAddress(), division);
+        AuthResult authResult = new AuthResult(results.get(0));
+        
+        if (authResult.status.succeeded()) {
+            setPostLoginMessage(results.subList(2, results.size()));
+            init(results.get(1));
+        }
+        
+        return authResult;
     }
     
     /**
@@ -679,7 +692,7 @@ public class BrokerSession {
     }
     
     /**
-     * Returns the executor service used by the session for handling background pollings.
+     * Returns the executor service used by the session for handling background polling.
      *
      * @return Executor service.
      */
@@ -688,7 +701,7 @@ public class BrokerSession {
     }
     
     /**
-     * Sets the executor service used by the session for handling background pollings.
+     * Sets the executor service used by the session for handling background polling.
      *
      * @param executorService Executor service.
      */

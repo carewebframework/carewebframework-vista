@@ -13,18 +13,9 @@ import java.nio.charset.Charset;
 
 public class Constants {
     
-    public static final String TC_RECONNECT = "Connection Lost";
-    
-    public static final String TC_RECONNECTING = "Reconnecting";
-    
-    public static final String TX_RECONNECT = "The connection to the host has been terminated.\r\n"
-            + "Do you wish to reconnect";
-    
-    public static final String TX_RECONNECTING = "Attempting to re-establish a connection to the host...";
-    
     public static final byte EOD = -1;
     
-    public static final String BROKER_VERSION = "1.7";
+    public static final String VERSION = "1.0";
     
     public static final String DEFAULT_APP_ID = "XWB RPC TEST";
     

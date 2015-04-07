@@ -22,9 +22,7 @@ import org.carewebframework.cal.api.user.UserProxy;
 import org.carewebframework.security.spring.AbstractAuthenticationProvider;
 import org.carewebframework.security.spring.AuthenticationCancelledException;
 import org.carewebframework.security.spring.CWFAuthenticationDetails;
-import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
-import org.carewebframework.vista.mbroker.Security;
 import org.carewebframework.vista.mbroker.Security.AuthResult;
 
 import org.springframework.security.authentication.BadCredentialsException;
@@ -64,7 +62,7 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider {
      */
     @Override
     protected IUser authenticate(String username, String password, ISecurityDomain domain, CWFAuthenticationDetails details) {
-        AuthResult authResult = Security.authenticate(brokerSession, username, password, domain.getLogicalId());
+        AuthResult authResult = brokerSession.authenticate(username, password, domain.getLogicalId());
         IUser user = getAuthenticatedUser();
         checkAuthResult(authResult, user);
         return user;
@@ -72,7 +70,7 @@ public class BaseAuthenticationProvider extends AbstractAuthenticationProvider {
     
     @Override
     protected List<String> getAuthorities(IUser user) {
-        return user == null ? null : VistAUtil.getBrokerSession().callRPCList("RGCWFUSR GETPRIV", null, user.getLogicalId());
+        return user == null ? null : brokerSession.callRPCList("RGCWFUSR GETPRIV", null, user.getLogicalId());
     }
     
     private IUser getAuthenticatedUser() {
