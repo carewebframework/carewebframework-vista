@@ -108,7 +108,8 @@ public class BrokerSession {
             request.addParameter("LP", socket.getLocalPort());
             request.addParameter("UCI", connectionParams.getNamespace());
             request.addParameter("VER", Constants.VERSION);
-            serverCaps = new ServerCaps(netCall(request, connectionParams.getTimeout()).getData());
+            Response response = netCall(request, connectionParams.getTimeout());
+            serverCaps = new ServerCaps(response.getData());
             
             if (!StringUtils.isEmpty(connectionParams.getUsername()) && !StringUtils.isEmpty(connectionParams.getPassword())) {
                 authResult = authenticate();
@@ -290,11 +291,6 @@ public class BrokerSession {
         }
         
         Response response = netCall(request, timeout);
-        
-        if (response.getResponseType() == ResponseType.ERROR) {
-            throw new RPCException(response.getData());
-        }
-        
         return response.getData();
     }
     
@@ -536,6 +532,10 @@ public class BrokerSession {
         } catch (Exception e) {
             netFlush();
             throw new RuntimeException(e);
+        }
+        
+        if (response.getResponseType() == ResponseType.ERROR) {
+            throw new RPCException(response.getData());
         }
         
         return response;
