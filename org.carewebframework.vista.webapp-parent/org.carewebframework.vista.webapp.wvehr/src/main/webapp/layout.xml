@@ -79,7 +79,7 @@
 					</treeview>
 				</tabpane>
 				<tabpane label="Settings">
-					<settingsEditor group="CIANB SITE PARAMETERS"
+					<settingsEditor group="RGNETB SITE PARAMETERS"
 						provider="settingsProvider" />
 				</tabpane>
 			</tabview>
