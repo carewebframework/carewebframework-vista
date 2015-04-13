@@ -71,6 +71,20 @@ public class BaseSecurityService extends AbstractSecurityService {
     }
     
     /**
+     * Override to disconnect broker.
+     */
+    @Override
+    public boolean logout(boolean force, String target, String message) {
+        boolean result = super.logout(force, target, message);
+        
+        if (result) {
+            brokerSession.disconnect();
+        }
+        
+        return result;
+    }
+    
+    /**
      * Injection point for broker session.
      * 
      * @param brokerSession The broker session.
