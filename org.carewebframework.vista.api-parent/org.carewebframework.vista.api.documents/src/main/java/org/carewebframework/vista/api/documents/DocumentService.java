@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.List;
 
 import ca.uhn.fhir.model.dstu.resource.Patient;
-import ca.uhn.fhir.model.dstu.resource.User;
 
 import org.carewebframework.api.spring.SpringUtil;
 import org.carewebframework.common.StrUtil;
@@ -132,19 +131,18 @@ public class DocumentService {
      * </pre>
      *
      * @param patient The patient.
-     * @param user The user.
      * @param startDate The start date for retrieval.
      * @param endDate The end date for retrieval.
      * @param category The document category.
      * @return List of matching documents.
      */
-    public List<Document> retrieveHeaders(Patient patient, User user, Date startDate, Date endDate, DocumentCategory category) {
+    public List<Document> retrieveHeaders(Patient patient, Date startDate, Date endDate, DocumentCategory category) {
         List<DocumentCategory> categories = category == null ? getCategories() : Collections.singletonList(category);
         List<Document> results = new ArrayList<Document>();
         
         for (DocumentCategory cat : categories) {
             for (String result : broker.callRPCList("TIU DOCUMENTS BY CONTEXT", null, cat.getId().getIdPart(), 1, patient
-                    .getId().getIdPart(), startDate, endDate, user.getId().getIdPart())) {
+                    .getId().getIdPart(), startDate, endDate)) {
                 String[] pcs = StrUtil.split(result, StrUtil.U, 14);
                 Document doc = new Document();
                 doc.setId(pcs[0]);

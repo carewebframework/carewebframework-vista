@@ -1,0 +1,12 @@
+{
+    "author": "MedAppTech", 
+    "description": "Displays vital signs data plotted on standard growth curves (for pediatric patients)", 
+    "icon": "http://sample-apps.smartplatforms.org/framework/growth_charts/img/icon.png", 
+    "id": "growth_charts2@apps.smartplatforms.org", 
+    "index": "http://fhir.smartplatforms.org/apps/growth-chart/launch.html", 
+    "mode": "ui", 
+    "name": "Growth Charts 2", 
+    "scope": "record", 
+    "smart_version": "2.0", 
+    "version": "0.9.5-beta"
+}

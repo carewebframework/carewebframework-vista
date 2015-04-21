@@ -1,0 +1,12 @@
+{
+    "author": "Nikolai Schwertner", 
+    "description": "Displays blood pressure data with calculated percentiles (for pediatric patients)", 
+    "icon": "https://fhir.smarthealthit.org/apps/bp-centiles/icon.png", 
+    "id": "bp_centile2s@apps.smartplatforms.org", 
+    "index": "https://fhir.smarthealthit.org/apps/bp-centiles/launch.html", 
+    "mode": "ui", 
+    "name": "BP Centiles 2", 
+    "scope": "record", 
+    "smart_version": "2.0", 
+    "version": ".1a"
+}

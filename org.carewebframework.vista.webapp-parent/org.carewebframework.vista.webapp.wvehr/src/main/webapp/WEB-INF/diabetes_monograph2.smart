@@ -1,0 +1,12 @@
+{
+    "author": "Unknown", 
+    "description": "Display diabetes monograph", 
+    "icon": "", 
+    "id": "diab_monograph2@apps.smartplatforms.org", 
+    "index": "http://fhir.smartplatforms.org/apps/diabetes-monograph/launch.html", 
+    "mode": "ui", 
+    "name": "Diabetes Monograph 2", 
+    "scope": "record", 
+    "smart_version": "2.0", 
+    "version": ".1a"
+}

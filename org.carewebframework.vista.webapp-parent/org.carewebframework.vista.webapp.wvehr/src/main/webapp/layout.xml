@@ -64,17 +64,23 @@
 				</tabpane>
 				<tabpane label="SMART Apps">
 					<treeview open="true">
-						<treepane label="Got Statins?">
-							<got-statins_apps.smartplatforms.org />
+						<treepane label="BP Percentiles">
+							<bp_centile2s_apps.smartplatforms.org />
 						</treepane>
-						<treepane label="Med Adherence">
-							<med-adherence_apps.smartplatforms.org />
+						<treepane label="Cardiac Risk">
+							<cardiac_ris2k_apps.smartplatforms.org />
+						</treepane>
+						<treepane label="Diabetes Monograph">
+							<diab_monograph2_apps.smartplatforms.org />
+						</treepane>
+						<treepane label="Disease Monograph">
+							<disease_monograph2_apps.smartplatforms.org />
+						</treepane>
+						<treepane label="Growth Charts">
+							<growth_charts2_apps.smartplatforms.org />
 						</treepane>
 						<treepane label="Meducation">
-							<meducation_apps.smartplatforms.org />
-						</treepane>
-						<treepane label="Problem List">
-							<problem-list_apps.smartplatforms.org />
+							<meducation2_apps.smartplatforms.org />
 						</treepane>
 					</treeview>
 				</tabpane>

@@ -29,7 +29,7 @@ public class DocumentListDataService extends AbstractDataService<DocumentService
     public IQueryResult<Document> fetchData(AbstractServiceContext<Document> ctx) throws Exception {
         Date startDate = ctx.dateRange.getStartDate();
         Date endDate = DateUtil.endOfDay(ctx.dateRange.getEndDate());
-        return packageResult(service.retrieveHeaders(ctx.patient, ctx.user, startDate, endDate,
+        return packageResult(service.retrieveHeaders(ctx.patient, startDate, endDate,
             (DocumentCategory) ctx.getParam("category")));
     }
 }

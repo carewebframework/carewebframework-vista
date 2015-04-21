@@ -2,10 +2,11 @@
     "author": "Daniel Fritsch, PhD and Charles Lee, MD - Polyglot Systems", 
     "description": "Generates simpler medication instructions in multiple languages", 
     "icon": "http://smartapp.meducation.com/smartapp/icon.png", 
-    "id": "meducation@apps.smartplatforms.org", 
-    "index": "http://smartapp.meducation.com/smartapp/index.html", 
+    "id": "meducation2@apps.smartplatforms.org", 
+    "index": "http://fhir.meducation.com/launch.html", 
     "mode": "ui", 
-    "name": "Meducation", 
+    "name": "Meducation 2", 
     "scope": "record", 
+    "smart_version": "2.0",
     "version": "1.0"
 }
