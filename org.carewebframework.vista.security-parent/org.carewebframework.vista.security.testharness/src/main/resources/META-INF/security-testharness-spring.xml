@@ -18,7 +18,8 @@
 		</bean>
 
 		<bean id="securityAuthenticationProvider"
-			class="org.carewebframework.vista.security.base.BaseAuthenticationProvider">
+			class="org.carewebframework.security.spring.BaseAuthenticationProvider"
+			cwf:override="always">
 			<constructor-arg>
 				<bean class="org.springframework.util.StringUtils"
 					factory-method="delimitedListToStringArray">
@@ -26,14 +27,13 @@
 					<constructor-arg value="," />
 				</bean>
 			</constructor-arg>
-			<property name="brokerSession" ref="brokerSession" />
 		</bean>
 
 		<!-- Controllers -->
 		<bean id="securityLoginPaneController"
 			class="org.carewebframework.security.spring.controller.LoginPaneController"
 			scope="prototype" cwf:override="always">
-			<property name="securityService" ref="securityService" />
+			<property name="securityDomainRegistry" ref="securityDomainRegistry" />
 			<property name="defaultUsername" value="${test.username:}" />
 			<property name="defaultPassword" value="${test.password:}" />
 			<property name="defaultDomain" value="${test.domain:}" />

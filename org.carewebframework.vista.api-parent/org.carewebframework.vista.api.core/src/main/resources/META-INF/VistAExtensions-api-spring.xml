@@ -11,12 +11,6 @@
 		http://www.carewebframework.org/schema/spring/spring-extensions.xsd">
 
 	<beans profile="root">
-		<!-- Service for reading and writing persisted properties. -->
-		<bean id="propertyService" class="org.carewebframework.vista.api.property.PropertyService"
-			cwf:override="always">
-			<constructor-arg ref="brokerSession" />
-		</bean>
-
 		<!-- RPC broker -->
 		<bean id="brokerSession" class="org.carewebframework.vista.api.mbroker.BrokerSessionEx"
 			init-method="connect" destroy-method="disconnect">
@@ -35,6 +29,12 @@
 			<property name="appid" value="${broker.appid:RGCWF CAREWEB FRAMEWORK}" />
 		</bean>
 		
+		<!-- Service for reading and writing persisted properties. -->
+		<bean id="propertyService" class="org.carewebframework.vista.api.property.PropertyService"
+			cwf:override="always">
+			<constructor-arg ref="brokerSession" />
+		</bean>
+
 		<!-- Register additional cipher tables. -->
 		<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		 	<property name="staticMethod" value="org.carewebframework.vista.mbroker.Security.registerCipher" />

@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.carewebframework.api.domain.IDomainFactory;
+import org.carewebframework.api.domain.User;
 import org.carewebframework.common.JSONUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 
@@ -26,6 +27,10 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
     private static final IDomainFactory<Object> instance = new JsonDomainFactory();
     
     private static final String PREFIX = "CWF/";
+    
+    static {
+        JSONUtil.registerAlias("User", User.class);
+    }
     
     public static IDomainFactory<Object> getInstance() {
         return instance;

@@ -9,12 +9,10 @@
  */
 package org.carewebframework.vista.ui.notification;
 
-import ca.uhn.fhir.model.dstu.resource.User;
-
 import org.apache.commons.lang.math.NumberUtils;
 
+import org.carewebframework.api.domain.IUser;
 import org.carewebframework.common.StrUtil;
-import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 /**
@@ -31,9 +29,9 @@ public class Recipient {
      *
      * @param user A user.
      */
-    protected Recipient(User user) {
-        this.name = FhirUtil.formatName(user.getName());
-        this.ien = VistAUtil.parseIEN(user);
+    protected Recipient(IUser user) {
+        this.name = user.getFullName();
+        this.ien = VistAUtil.parseIEN(user.getLogicalId());
     }
     
     /**

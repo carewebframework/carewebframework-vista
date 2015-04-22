@@ -9,32 +9,16 @@
  */
 package org.carewebframework.vista.security.base;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import ca.uhn.fhir.model.dstu.resource.Organization;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.carewebframework.cal.api.SecurityDomainProxy;
-import org.carewebframework.common.StrUtil;
 import org.carewebframework.security.spring.AbstractSecurityService;
-import org.carewebframework.security.spring.Constants;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.Security;
 import org.carewebframework.vista.mbroker.Security.AuthResult;
 import org.carewebframework.vista.mbroker.Security.AuthStatus;
 
-import org.springframework.util.StringUtils;
-
 /**
  * Security service implementation.
  */
 public class BaseSecurityService extends AbstractSecurityService {
-    
-    private static final Log log = LogFactory.getLog(BaseSecurityService.class);
     
     private BrokerSession brokerSession;
     
@@ -91,29 +75,6 @@ public class BaseSecurityService extends AbstractSecurityService {
      */
     public void setBrokerSession(BrokerSession brokerSession) {
         this.brokerSession = brokerSession;
-    }
-    
-    /**
-     * Initialize security domain list.
-     */
-    @Override
-    protected void initSecurityDomains() {
-        log.trace("Retrieving Security Domains");
-        List<String> results = brokerSession.callRPCList("RGNETBRP DIVGET", null);
-        String preLoginMessage = StringUtils.collectionToDelimitedString(brokerSession.getPreLoginMessage(), "\n");
-        
-        for (String result : results) {
-            String[] pcs = StrUtil.split(result, StrUtil.U, 4);
-            
-            if (!pcs[2].isEmpty()) {
-                Organization organization = new Organization();
-                organization.setId(pcs[0]);
-                organization.setName(pcs[1]);
-                Map<String, String> attributes = new HashMap<String, String>();
-                attributes.put(Constants.PROP_LOGIN_INFO, preLoginMessage);
-                registerSecurityDomain(new SecurityDomainProxy(organization, attributes));
-            }
-        }
     }
     
 }

@@ -23,7 +23,7 @@ import ca.uhn.fhir.model.dstu.resource.Condition;
 import ca.uhn.fhir.model.dstu.resource.DocumentReference;
 import ca.uhn.fhir.model.dstu.resource.Patient;
 import ca.uhn.fhir.model.primitive.UriDt;
-import ca.uhn.fhir.rest.client.GenericClient;
+import ca.uhn.fhir.rest.client.IGenericClient;
 
 import org.carewebframework.api.domain.IDomainFactory;
 import org.carewebframework.api.test.CommonTest;
@@ -52,7 +52,7 @@ public class FhirTest extends CommonTest {
         DocumentReference dr = factory.fetchObject(DocumentReference.class, "1");
         assertNotNull(dr);
         UriDt uri = dr.getLocation();
-        GenericClient client = ClientUtil.getFhirClient();
+        IGenericClient client = ClientUtil.getFhirClient();
         Binary result = (Binary) client.read(uri);
         assertNotNull(result);
         byte[] text = result.getContent();
@@ -62,7 +62,7 @@ public class FhirTest extends CommonTest {
         testException(client, ROOT + "Patient/309349993439");
     }
     
-    private void testException(GenericClient client, String url) {
+    private void testException(IGenericClient client, String url) {
         try {
             UriDt _url = new UriDt(url);
             client.read(_url);

@@ -9,9 +9,7 @@
  */
 package org.carewebframework.vista.api.property;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.carewebframework.cal.api.DomainObject;
@@ -35,7 +33,9 @@ public class PropertyDefinition extends DomainObject {
     
     private boolean readOnly;
     
-    private final List<String> description = new ArrayList<String>();
+    private String description;
+    
+    private String hint;
     
     public static synchronized PropertyDefinition get(String name) {
         PropertyDefinition def = cache.get(name);
@@ -52,53 +52,60 @@ public class PropertyDefinition extends DomainObject {
         cache.clear();
     }
     
-    protected void setName(String name) {
-        this.name = name;
-    }
-    
-    protected void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-    
-    protected void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
-    }
-    
-    protected void setDescription(List<String> description) {
-        this.description.clear();
-        this.description.addAll(description);
-    }
-    
-    protected void setMultiValued(boolean multiValued) {
-        this.multiValued = multiValued;
-    }
-    
-    protected void setDataType(String dataType) {
-        this.dataType = dataType;
-    }
-    
     public String getName() {
         return name;
+    }
+    
+    protected void setName(String name) {
+        this.name = name;
     }
     
     public String getDisplayName() {
         return displayName;
     }
     
-    public boolean isMultiValued() {
-        return multiValued;
-    }
-    
-    public String getDataType() {
-        return dataType;
+    protected void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
     
     public boolean isReadOnly() {
         return readOnly;
     }
     
-    public List<String> getDescription() {
+    protected void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+    
+    public String getDescription() {
         return description;
+    }
+    
+    protected void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public String getHint() {
+        return hint;
+    }
+    
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+    
+    public boolean isMultiValued() {
+        return multiValued;
+    }
+    
+    protected void setMultiValued(boolean multiValued) {
+        this.multiValued = multiValued;
+    }
+    
+    public String getDataType() {
+        return dataType;
+    }
+    
+    protected void setDataType(String dataType) {
+        this.dataType = dataType;
     }
     
 }

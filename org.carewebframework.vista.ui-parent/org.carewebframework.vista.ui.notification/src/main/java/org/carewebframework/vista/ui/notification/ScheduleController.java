@@ -19,8 +19,8 @@ import ca.uhn.fhir.model.dstu.resource.Patient;
 
 import org.apache.commons.lang.StringUtils;
 
+import org.carewebframework.api.context.UserContext;
 import org.carewebframework.cal.api.patient.PatientContext;
-import org.carewebframework.cal.api.user.UserContext;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.FrameworkController;
@@ -104,7 +104,7 @@ public class ScheduleController extends FrameworkController {
             notification = new ScheduledNotification();
             notification.setPriority(Priority.LOW);
             notification.setDeliveryDate(new FMDate());
-            recipients.add(new Recipient(UserContext.getActiveUser().getNativeUser()));
+            recipients.add(new Recipient(UserContext.getActiveUser()));
         } else {
             service.getScheduledNotificationRecipients(notification, recipients);
         }

@@ -69,11 +69,6 @@ public class Property {
         return values;
     }
     
-    public String getValue() {
-        fetch();
-        return StrUtil.fromList(values);
-    }
-    
     public void setValues(Iterable<String> values) {
         checkReadOnly();
         clearValues();
@@ -83,6 +78,11 @@ public class Property {
                 this.values.add(value);
             }
         }
+    }
+    
+    public String getValue() {
+        fetch();
+        return StrUtil.fromList(values);
     }
     
     public void setValue(String value) {
@@ -107,7 +107,7 @@ public class Property {
     }
     
     public String getDescription() {
-        return StrUtil.fromList(definition.getDescription());
+        return definition.getHint() + "\r\n\r\n" + definition.getDescription();
     }
     
     public boolean isMultiValued() {
@@ -118,22 +118,22 @@ public class Property {
         return definition.getDataType();
     }
     
+    public String getInstanceId() {
+        return instanceId;
+    }
+    
     public void setInstanceId(String instanceId) {
         this.instanceId = instanceId;
         reset();
     }
     
-    public String getInstanceId() {
-        return instanceId;
+    public String getEntityList() {
+        return entityList;
     }
     
     public void setEntityList(String entityList) {
         this.entityList = entityList;
         reset();
-    }
-    
-    public String getEntityList() {
-        return entityList;
     }
     
     public int getEntityPriority(String entity) {
@@ -144,13 +144,13 @@ public class Property {
         return StrUtil.toList(entityList, ";").indexOf(entity);
     }
     
+    public String getFormat() {
+        return format;
+    }
+    
     public void setFormat(String format) {
         this.format = format;
         reset();
-    }
-    
-    public String getFormat() {
-        return format;
     }
     
     public void clearValues() {

@@ -11,11 +11,9 @@
 
 	<beans profile="root">
 
-		<bean id="securityService" class="org.carewebframework.vista.security.base.BaseSecurityService">
-			<property name="logoutTarget" value="${org.carewebframework.security.logout.url}" />
-			<property name="passwordChangeUrl" value="${org.carewebframework.security.password.change.url}" />
-			<property name="brokerSession" ref="brokerSession" />
+		<bean class="org.carewebframework.vista.security.base.SecurityDomainLoader">
+			<constructor-arg ref="brokerSession" />
 		</bean>
-
+		
 	</beans>
 </beans>
