@@ -60,7 +60,9 @@ public class BrokerClient extends CloseableHttpClient {
         data.add(requestLine[0] + " " + pcs[1] + " " + requestLine[2]);
         
         for (Header header : request.getAllHeaders()) {
-            data.add(header.getName() + ": " + header.getValue());
+            if (!"Authentication".equalsIgnoreCase(header.getName())) {
+                data.add(header.getName() + ": " + header.getValue());
+            }
         }
         
         data.add("Host: " + pcs[0]);
