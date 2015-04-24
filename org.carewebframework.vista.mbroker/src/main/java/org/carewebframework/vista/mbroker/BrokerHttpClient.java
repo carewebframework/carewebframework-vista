@@ -7,7 +7,7 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.api.mbroker;
+package org.carewebframework.vista.mbroker;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,13 +23,17 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 
-import org.carewebframework.vista.api.util.VistAUtil;
-
 /**
- * Allows http requests to be handled by the broker.
+ * Allows HTTP requests to be handled by the broker.
  */
 @SuppressWarnings("deprecation")
-public class BrokerClient extends CloseableHttpClient {
+public class BrokerHttpClient extends CloseableHttpClient {
+    
+    private final BrokerSession brokerSession;
+    
+    public BrokerHttpClient(BrokerSession brokerSession) {
+        this.brokerSession = brokerSession;
+    }
     
     @Override
     public HttpParams getParams() {
@@ -67,8 +71,8 @@ public class BrokerClient extends CloseableHttpClient {
         
         data.add("Host: " + pcs[0]);
         data.add("");
-        List<String> response = VistAUtil.getBrokerSession().callRPCList("RGSER REST", null, data);
-        return new BrokerResponse(response);
+        List<String> response = brokerSession.callRPCList("RGNETBRP HTTPREQ", null, data);
+        return new BrokerHttpResponse(response);
     }
     
 }

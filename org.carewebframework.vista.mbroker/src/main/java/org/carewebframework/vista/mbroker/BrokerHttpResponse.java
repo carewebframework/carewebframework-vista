@@ -7,7 +7,7 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.api.mbroker;
+package org.carewebframework.vista.mbroker;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,7 @@ import org.apache.http.message.BasicStatusLine;
 /**
  * Converts the response from a REST call via the broker to an http response.
  */
-class BrokerResponse extends BasicHttpResponse implements CloseableHttpResponse {
+class BrokerHttpResponse extends BasicHttpResponse implements CloseableHttpResponse {
     
     /**
      * Delivers the string list as a stream.
@@ -97,7 +97,7 @@ class BrokerResponse extends BasicHttpResponse implements CloseableHttpResponse 
         return new BasicStatusLine(protocolVersion, statusCode, reasonPhrase);
     }
     
-    public BrokerResponse(List<String> response) {
+    public BrokerHttpResponse(List<String> response) {
         super(createStatusLine(response.get(0)));
         ContentType contentType = null;
         InputStream body = null;

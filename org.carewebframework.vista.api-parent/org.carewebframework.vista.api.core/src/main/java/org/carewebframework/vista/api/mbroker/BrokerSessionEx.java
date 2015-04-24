@@ -11,19 +11,13 @@ package org.carewebframework.vista.api.mbroker;
 
 import org.carewebframework.api.alias.AliasType;
 import org.carewebframework.api.alias.AliasTypeRegistry;
-import org.carewebframework.cal.api.ClientUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.RPCParameters;
 
 /**
- * This subclass exists to allow transparent use of RPC aliases in broker calls and registers a
- * special http client to allow making RESTful calls via the broker.
+ * This subclass exists to allow transparent use of RPC aliases in broker calls.
  */
 public class BrokerSessionEx extends BrokerSession {
-    
-    static {
-        ClientUtil.registerHttpClient("http://broker/*", new BrokerClient());
-    }
     
     private final AliasType rpcAliasType = AliasTypeRegistry.getType("RPC");
     

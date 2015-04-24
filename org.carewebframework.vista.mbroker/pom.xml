@@ -8,19 +8,21 @@
 	</parent>
 
 	<artifactId>org.carewebframework.vista.mbroker</artifactId>
-	<name>VistA RPC Broker Client (CIA)</name>
+	<name>VistA NETSERV RPC Broker Client</name>
 	<description>
-		This is a Java implementation of the CIA RPC broker client.  It supports all
+		This is a Java implementation of the NETSERV RPC broker client.  It supports all
 		of the features of this client including asynchronous RPC's and global event
-		delivery.  It requires a slightly modified version of the CIA RPC broker
-		server code, which is provided in the KIDS installation package that is
-		part of this distribution.
+		delivery.  
 	</description>
 	
 	<dependencies>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>

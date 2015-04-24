@@ -16,8 +16,8 @@ import static org.junit.Assert.fail;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import ca.uhn.fhir.model.api.BaseResource;
 import ca.uhn.fhir.model.api.ExtensionDt;
+import ca.uhn.fhir.model.dstu.resource.BaseResource;
 import ca.uhn.fhir.model.dstu.resource.Binary;
 import ca.uhn.fhir.model.dstu.resource.Condition;
 import ca.uhn.fhir.model.dstu.resource.DocumentReference;

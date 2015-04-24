@@ -22,6 +22,20 @@
 			<aop:scoped-proxy />
 		</bean>
 
+		<!-- Register a broker-based HTTP client -->
+		<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+			<property name="targetClass" value="org.carewebframework.cal.api.ClientUtil" />
+			<property name="targetMethod" value="registerHttpClient" />
+			<property name="arguments">
+				<list>
+					<value>http://broker/*</value>
+					<bean class="org.carewebframework.vista.mbroker.BrokerHttpClient">
+						<constructor-arg ref="brokerSession" />
+					</bean>
+				</list>
+			</property>
+		</bean>
+		
 	</beans>
 
 	<beans profile="desktop">
