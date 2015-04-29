@@ -9,7 +9,7 @@
  */
 package org.carewebframework.vista.api.event;
 
-public class GenericEventTest extends org.carewebframework.api.event.GenericEventTest {
+public class GenericEventTest extends org.carewebframework.api.test.GenericEventTest {
     
     public GenericEventTest() {
         super();

@@ -76,13 +76,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.carewebframework</groupId>
-				<artifactId>org.carewebframework.vista.api.core</artifactId>
-				<version>${org.carewebframework.vista.version}</version>
-				<type>test-jar</type>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.carewebframework</groupId>
 				<artifactId>org.carewebframework.vista.ui.core</artifactId>
 				<version>${org.carewebframework.vista.version}</version>
 			</dependency>
