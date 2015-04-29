@@ -67,6 +67,7 @@ public class BrokerTest implements IHostEventHandler, IAsyncRPCEvent {
     public void testConnection() throws Exception {
         String server = System.getenv("cwf_test_server");
         assertTrue("Environment variable 'cwf_test_server' not set.", server != null);
+        CipherRegistry.registerCiphers(BrokerTest.class.getResourceAsStream("/mbroker.ciphers"));
         BrokerSession session = getConnection(server);
         AuthResult authResult = session.connect();
         assertEquals(AuthStatus.SUCCESS, authResult.status);

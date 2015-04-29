@@ -15,27 +15,13 @@
 
 		<!-- RPC broker -->
 		<bean id="brokerSession" class="org.carewebframework.vista.api.mbroker.BrokerSessionEx"
-			scope="auth" destroy-method="disconnect" 
+			scope="auth" destroy-method="disconnect" depends-on="brokerCipherRegistry"
 			cwf:override="always">
 			<property name="connectionParams" ref="brokerConnectionParams" />
 			<property name="executorService" ref="taskExecutor" />
 			<aop:scoped-proxy />
 		</bean>
 
-		<!-- Register a broker-based HTTP client -->
-		<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-			<property name="targetClass" value="org.carewebframework.cal.api.ClientUtil" />
-			<property name="targetMethod" value="registerHttpClient" />
-			<property name="arguments">
-				<list>
-					<value>http://broker/*</value>
-					<bean class="org.carewebframework.vista.mbroker.BrokerHttpClient">
-						<constructor-arg ref="brokerSession" />
-					</bean>
-				</list>
-			</property>
-		</bean>
-		
 	</beans>
 
 	<beans profile="desktop">
