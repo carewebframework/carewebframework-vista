@@ -32,8 +32,6 @@ import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.RowComparator;
 import org.carewebframework.ui.zk.ZKUtil;
 
-import org.springframework.util.StringUtils;
-
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
@@ -591,8 +589,8 @@ public class MainController extends CaptionedForm implements IPatientContextEven
      *
      * @return The alert threshold.
      */
-    public String getAlertThreshold() {
-        return alertThreshold == null ? "" : alertThreshold.name();
+    public Priority getAlertThreshold() {
+        return alertThreshold;
     }
     
     /**
@@ -601,8 +599,8 @@ public class MainController extends CaptionedForm implements IPatientContextEven
      *
      * @param value The alert threshold.
      */
-    public void setAlertThreshold(String value) {
-        this.alertThreshold = StringUtils.isEmpty(value) ? null : Priority.fromString(value);
+    public void setAlertThreshold(Priority value) {
+        this.alertThreshold = value;
     }
     
     /**
