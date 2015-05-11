@@ -32,6 +32,8 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 
+import org.zkoss.zk.ui.Sessions;
+
 /**
  * Security Domain implementation.
  */
@@ -74,10 +76,10 @@ public class SecurityDomain implements ISecurityDomain {
         BrokerSession broker = VistAUtil.getBrokerSession();
         AuthResult authResult = broker.authenticate(username, password, getLogicalId());
         User user = getAuthenticatedUser(broker);
-        checkAuthResult(authResult, user);
         user.setLoginName(username);
         user.setPassword(password);
         user.setSecurityDomain(this);
+        checkAuthResult(authResult, user);
         return user;
     }
     
@@ -96,7 +98,6 @@ public class SecurityDomain implements ISecurityDomain {
                 .fetchObject(User.class, Integer.toString(broker.getUserId())) : null;
     }
     
-    @SuppressWarnings("deprecation")
     private void checkAuthResult(AuthResult result, IUser user) throws AuthenticationException {
         switch (result.status) {
             case SUCCESS:
@@ -107,8 +108,9 @@ public class SecurityDomain implements ISecurityDomain {
                     "Authentication attempt was cancelled."));
                 
             case EXPIRED:
+                Sessions.getCurrent().setAttribute(org.carewebframework.security.spring.Constants.SAVED_USER, user);
                 throw new CredentialsExpiredException(
-                        StringUtils.defaultIfEmpty(result.reason, "Your password has expired."), user);
+                        StringUtils.defaultIfEmpty(result.reason, "Your password has expired."));
                 
             case FAILURE:
                 throw new BadCredentialsException(StringUtils.defaultIfEmpty(result.reason,
