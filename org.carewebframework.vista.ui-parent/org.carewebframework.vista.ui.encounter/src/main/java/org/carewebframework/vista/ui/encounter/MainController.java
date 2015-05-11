@@ -12,8 +12,8 @@ package org.carewebframework.vista.ui.encounter;
 import java.util.EnumSet;
 import java.util.Set;
 
-import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 import org.carewebframework.api.FrameworkUtil;
 import org.carewebframework.cal.api.encounter.EncounterContext;

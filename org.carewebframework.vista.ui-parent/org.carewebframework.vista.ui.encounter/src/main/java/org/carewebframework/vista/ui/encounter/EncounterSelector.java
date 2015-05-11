@@ -14,8 +14,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 
-import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Encounter.Participant;
 
 import org.apache.commons.lang.ObjectUtils;
 

@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 import org.carewebframework.api.event.IGenericEvent;
 import org.carewebframework.cal.api.patient.PatientContext;

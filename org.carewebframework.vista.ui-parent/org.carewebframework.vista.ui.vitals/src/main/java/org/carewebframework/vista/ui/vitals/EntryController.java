@@ -16,9 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Patient;
-import ca.uhn.fhir.model.dstu.valueset.EncounterStateEnum;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.dstu2.valueset.EncounterStateEnum;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -182,11 +182,12 @@ public class EntryController extends FrameworkController implements PatientConte
             return;
         }
         
-        imgLocked.setVisible(encounter != null && encounter.getStatus().getValueAsEnum() == EncounterStateEnum.FINISHED);
+        imgLocked.setVisible(encounter != null
+                && encounter.getStatusElement().getValueAsEnum() == EncounterStateEnum.FINISHED);
         btnNew.setDisabled(!imgLocked.isVisible());
         btnCancel.setDisabled(btnNew.isDisabled());
         btnOK.setDisabled(false);
-        lastDateTime = lastDateTime != null ? lastDateTime : useEncounterDate ? encounter.getPeriod().getStart().getValue()
+        lastDateTime = lastDateTime != null ? lastDateTime : useEncounterDate ? encounter.getPeriod().getStart()
                 : new FMDate();
         loadGrid();
         val = getValue(colIndex, rowIndex);

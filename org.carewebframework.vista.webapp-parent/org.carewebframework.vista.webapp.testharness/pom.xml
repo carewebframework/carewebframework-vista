@@ -58,7 +58,11 @@
 	
 	<dependencies>
 		<!-- Insert any plugins to be tested here. -->
-
+		<dependency>
+			<groupId>org.carewebframework</groupId>
+			<artifactId>org.carewebframework.vista.ui.cirtool</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- CareWeb Framework Components -->
 		<dependency>
 			<groupId>org.carewebframework</groupId>

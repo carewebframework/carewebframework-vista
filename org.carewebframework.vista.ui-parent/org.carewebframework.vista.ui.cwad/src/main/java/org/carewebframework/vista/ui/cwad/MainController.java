@@ -11,7 +11,7 @@ package org.carewebframework.vista.ui.cwad;
 
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 import org.carewebframework.api.event.IGenericEvent;
 import org.carewebframework.cal.api.patient.PatientContext;

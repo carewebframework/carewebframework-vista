@@ -11,8 +11,8 @@ package org.carewebframework.vista.ui.encounter;
 
 import java.util.Set;
 
-import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Encounter.Participant;
 
 import org.carewebframework.cal.api.encounter.EncounterContext;
 import org.carewebframework.cal.api.encounter.EncounterParticipantContext;
@@ -73,7 +73,7 @@ public class EncounterUtil extends org.carewebframework.vista.api.encounter.Enco
         }
         
         if (EncounterFlag.hasFlag(flags, EncounterFlag.FORCE) && VistAUtil.parseIEN(encounter) <= 0
-                && DateUtil.stripTime(encounter.getPeriod().getStart().getValue()).after(DateUtil.today())) {
+                && DateUtil.stripTime(encounter.getPeriod().getStart()).after(DateUtil.today())) {
             return Constants.TX_NO_FUT;
         }
         

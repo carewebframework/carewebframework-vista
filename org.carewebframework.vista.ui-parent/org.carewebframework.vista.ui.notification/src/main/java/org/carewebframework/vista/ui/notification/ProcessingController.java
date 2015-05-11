@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.api.spring.SpringUtil;

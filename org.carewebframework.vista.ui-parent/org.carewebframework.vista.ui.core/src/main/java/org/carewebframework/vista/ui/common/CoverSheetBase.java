@@ -16,7 +16,7 @@ import static org.carewebframework.common.StrUtil.toList;
 
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.fhir.common.IReferenceable;

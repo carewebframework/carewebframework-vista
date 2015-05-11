@@ -11,17 +11,13 @@ package org.carewebframework.vista.ui.encounter;
 
 import java.util.Date;
 
-import ca.uhn.fhir.model.dstu.composite.PeriodDt;
-import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Encounter.Hospitalization;
-import ca.uhn.fhir.model.dstu.resource.Encounter.HospitalizationAccomodation;
-import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
-import ca.uhn.fhir.model.dstu.resource.Location;
+import ca.uhn.fhir.model.dstu2.composite.PeriodDt;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Encounter.Participant;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.carewebframework.cal.api.ClientUtil;
 import org.carewebframework.cal.api.encounter.EncounterContext;
 import org.carewebframework.cal.api.encounter.EncounterParticipantContext;
 import org.carewebframework.cal.api.patient.PatientContext;
@@ -118,31 +114,23 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
             lblServiceCategory.setValue(null);
             imgLocked.setVisible(false);
         } else {
-            Location location = encounter.getLocation().isEmpty() ? null : ClientUtil.getResource(encounter
-                    .getLocationFirstRep().getLocation(), Location.class);
-            String text = location == null ? "" : location.getName().getValue();
-            Hospitalization hospitalization = encounter.getHospitalization();
+            StringBuilder sb = new StringBuilder();
             
-            if (!hospitalization.isEmpty()) {
-                HospitalizationAccomodation accomodation = FhirUtil.getLast(hospitalization.getAccomodation());
-                
-                if (accomodation != null && !accomodation.isEmpty()) {
-                    Location bed = ClientUtil.getResource(accomodation.getBed(), Location.class);
-                    
-                    if (bed != null) {
-                        text += " (" + bed.getName().getValue() + ")";
-                    }
+            for (Encounter.Location location : encounter.getLocation()) {
+                if (sb.length() > 0) {
+                    sb.append(", ");
                 }
+                
+                sb.append(location.getLocation().getDisplay().getValue());
             }
-            
-            lblLocation.setValue(text);
+            lblLocation.setValue(sb.toString());
             PeriodDt period = encounter.getPeriod();
-            Date date = period.isEmpty() ? null : period.getStart().getValue();
+            Date date = period.isEmpty() ? null : period.getStart();
             lblDate.setValue(DateUtil.formatDate(date));
             Participant participant = EncounterParticipantContext.getActiveParticipant();
             String name = participant == null ? null : FhirUtil.formatName(EncounterUtil.getName(participant));
             lblParticipant.setValue(name);
-            lblServiceCategory.setValue(encounter.getTypeFirstRep().getCodingFirstRep().getDisplay().getValue());
+            lblServiceCategory.setValue(encounter.getTypeFirstRep().getCodingFirstRep().getDisplay());
             imgLocked.setVisible(EncounterUtil.isLocked(encounter));
         }
         

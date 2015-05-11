@@ -17,11 +17,11 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import ca.uhn.fhir.model.api.ExtensionDt;
-import ca.uhn.fhir.model.dstu.resource.BaseResource;
-import ca.uhn.fhir.model.dstu.resource.Binary;
-import ca.uhn.fhir.model.dstu.resource.Condition;
-import ca.uhn.fhir.model.dstu.resource.DocumentReference;
-import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu2.resource.BaseResource;
+import ca.uhn.fhir.model.dstu2.resource.Binary;
+import ca.uhn.fhir.model.dstu2.resource.Condition;
+import ca.uhn.fhir.model.dstu2.resource.DocumentReference;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.primitive.UriDt;
 import ca.uhn.fhir.rest.client.IGenericClient;
 
@@ -34,7 +34,7 @@ import org.junit.Test;
 
 public class FhirTest extends CommonTest {
     
-    private static final String ROOT = "http://broker/DSTU1/";
+    private static final String ROOT = "http://broker/DSTU2/";
     
     private static final String[] PAT_IDS = { "1", "2" };
     
@@ -51,7 +51,7 @@ public class FhirTest extends CommonTest {
         assertEquals(2, patients.size());
         DocumentReference dr = factory.fetchObject(DocumentReference.class, "1");
         assertNotNull(dr);
-        UriDt uri = dr.getLocation();
+        UriDt uri = dr.getContentFirstRep().getUrlElement();
         IGenericClient client = ClientUtil.getFhirClient();
         Binary result = (Binary) client.read(uri);
         assertNotNull(result);

@@ -9,8 +9,8 @@
  */
 package org.carewebframework.vista.ui.encounter;
 
-import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Location;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Location;
 
 import org.carewebframework.cal.api.ClientUtil;
 import org.carewebframework.common.StrUtil;
@@ -33,7 +33,7 @@ public class EncounterRenderer extends AbstractListitemRenderer<Object, Object> 
         createCell(item, span);
         Location location = ClientUtil.getResource(encounter.getLocationFirstRep().getLocation(), Location.class);
         createCell(item, location == null ? null : location.getName());
-        createCell(item, encounter.getPeriod().getStart().getValue());
+        createCell(item, encounter.getPeriod().getStart());
         createCell(item, encounter.getTypeFirstRep().getCodingFirstRep().getDisplay());
     }
     

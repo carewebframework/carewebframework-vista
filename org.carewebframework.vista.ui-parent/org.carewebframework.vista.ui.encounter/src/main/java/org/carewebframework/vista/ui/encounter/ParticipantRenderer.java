@@ -10,8 +10,8 @@
 package org.carewebframework.vista.ui.encounter;
 
 import ca.uhn.fhir.model.api.IResource;
-import ca.uhn.fhir.model.dstu.composite.ResourceReferenceDt;
-import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
+import ca.uhn.fhir.model.dstu2.composite.ResourceReferenceDt;
+import ca.uhn.fhir.model.dstu2.resource.Encounter.Participant;
 
 import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;

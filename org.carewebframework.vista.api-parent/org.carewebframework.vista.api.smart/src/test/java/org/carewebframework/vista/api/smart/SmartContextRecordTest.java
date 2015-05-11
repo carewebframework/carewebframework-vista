@@ -9,7 +9,7 @@
  */
 package org.carewebframework.vista.api.smart;
 
-import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.fhir.common.FhirUtil;

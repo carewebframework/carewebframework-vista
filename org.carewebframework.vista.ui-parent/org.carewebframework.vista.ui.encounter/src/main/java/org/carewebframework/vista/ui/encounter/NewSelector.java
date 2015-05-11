@@ -12,10 +12,10 @@ package org.carewebframework.vista.ui.encounter;
 import java.util.Date;
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu.composite.CodeableConceptDt;
-import ca.uhn.fhir.model.dstu.composite.CodingDt;
-import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Location;
+import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
+import ca.uhn.fhir.model.dstu2.composite.CodingDt;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Location;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.cal.api.location.LocationContext;
@@ -59,9 +59,9 @@ public class NewSelector extends EncounterSelector {
         
         for (CodeableConceptDt cat : EncounterUtil.getServiceCategories()) {
             CodingDt coding = cat.getCodingFirstRep();
-            Comboitem item = cboServiceCategory.appendItem(coding.getDisplay().getValue());
-            item.setValue(coding.getCode().getValue());
-            item.setTooltiptext(cat.getText().getValue());
+            Comboitem item = cboServiceCategory.appendItem(coding.getDisplay());
+            item.setValue(coding.getCode());
+            item.setTooltiptext(cat.getText());
         }
         
         List<String> data = broker.callRPCList("RGCWENCX CLINLOC", null, "", 1, 9999);

@@ -9,7 +9,7 @@
  */
 package org.carewebframework.vista.api.encounter;
 
-import ca.uhn.fhir.model.dstu.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
 
 import org.apache.commons.lang.StringUtils;
 

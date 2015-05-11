@@ -11,11 +11,10 @@ package org.carewebframework.vista.api.encounter;
 
 import java.util.Date;
 
-import ca.uhn.fhir.model.dstu.resource.Encounter;
-import ca.uhn.fhir.model.dstu.resource.Encounter.Participant;
-import ca.uhn.fhir.model.dstu.resource.Location;
-import ca.uhn.fhir.model.dstu.resource.Patient;
-import ca.uhn.fhir.model.primitive.DateTimeDt;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Encounter.Participant;
+import ca.uhn.fhir.model.dstu2.resource.Location;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -88,10 +87,10 @@ public class EncounterUtil extends org.carewebframework.cal.api.encounter.Encoun
     public static String encode(Encounter encounter) {
         Location location = ClientUtil.getResource(encounter.getLocationFirstRep().getLocation(), Location.class);
         String locIEN = location.isEmpty() ? "" : location.getId().getIdPart();
-        DateTimeDt date = encounter.getPeriod().getStart();
+        Date date = encounter.getPeriod().getStart();
         String sc = getServiceCategory(encounter);
         String ien = encounter.getId().isEmpty() ? "" : encounter.getId().getIdPart();
-        return locIEN + VSTR_DELIM + new FMDate(date.getValue()).getFMDate() + VSTR_DELIM + sc + VSTR_DELIM + ien;
+        return locIEN + VSTR_DELIM + new FMDate(date).getFMDate() + VSTR_DELIM + sc + VSTR_DELIM + ien;
     }
     
     /**

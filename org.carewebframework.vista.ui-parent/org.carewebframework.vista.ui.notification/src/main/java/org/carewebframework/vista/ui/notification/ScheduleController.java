@@ -14,8 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ca.uhn.fhir.model.dstu.composite.IdentifierDt;
-import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu2.composite.IdentifierDt;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -134,8 +134,8 @@ public class ScheduleController extends FrameworkController {
                 pnlAssociate.setVisible(false);
             } else {
                 String name = FhirUtil.formatName(patient.getName());
-                IdentifierDt mrn = FhirUtil.getIdentifier(patient.getIdentifier(), "MRN");
-                lblPatient.setValue(name + " (" + (mrn == null ? "" : mrn.getValue().getValue()) + ")");
+                IdentifierDt mrn = FhirUtil.getMRN(patient);
+                lblPatient.setValue(name + " (" + (mrn == null ? "" : mrn.getValue()) + ")");
                 chkAssociate.setValue(patient.getId().getIdPart());
             }
         }

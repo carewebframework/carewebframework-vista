@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import ca.uhn.fhir.model.dstu.resource.Patient;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -147,14 +147,14 @@ public class DisplayController extends FrameworkController implements PatientCon
     
     private Date ageToDate(double age) {
         if (chkAge.isVisible() && chkAge.isChecked()) {
-            return DateUtil.addDays(patient.getBirthDate().getValue(), (int) (age * 365.25 / 12.0), true);
+            return DateUtil.addDays(patient.getBirthDate(), (int) (age * 365.25 / 12.0), true);
         } else {
             return new Date();
         }
     }
     
     private double dateToAge(Date date) {
-        double diff = date.getTime() - patient.getBirthDate().getValue().getTime();
+        double diff = date.getTime() - patient.getBirthDate().getTime();
         return diff / 2592000000.0;
     }
     

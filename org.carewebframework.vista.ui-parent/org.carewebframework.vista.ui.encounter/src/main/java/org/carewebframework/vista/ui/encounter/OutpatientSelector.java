@@ -11,7 +11,7 @@ package org.carewebframework.vista.ui.encounter;
 
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
 
 import org.carewebframework.ui.zk.DateRangePicker;
 

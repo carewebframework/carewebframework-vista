@@ -11,7 +11,7 @@ package org.carewebframework.vista.ui.location;
 
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu.resource.Location;
+import ca.uhn.fhir.model.dstu2.resource.Location;
 
 import org.carewebframework.cal.api.location.LocationContext;
 import org.carewebframework.ui.FrameworkController;
@@ -102,7 +102,7 @@ public class LocationSelection extends FrameworkController {
      * @return The added list item.
      */
     public static Listitem locationAdd(Location location, Listbox lstLocation) {
-        Listitem item = new Listitem(location.getName().getValue());
+        Listitem item = new Listitem(location.getName());
         item.setValue(location);
         //item.setTooltiptext(location.getDescription());
         item.addForward(Events.ON_DOUBLE_CLICK, "btnOK", Events.ON_CLICK);
