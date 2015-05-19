@@ -7,7 +7,7 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.ui.notification;
+package org.carewebframework.vista.api.notification;
 
 import static org.carewebframework.common.StrUtil.U;
 
@@ -95,7 +95,7 @@ public class Notification extends AbstractNotification {
      * Sets the priority of the notification.
      */
     @Override
-    protected void setPriority(Priority priority) {
+    public void setPriority(Priority priority) {
         this.priority = priority;
     }
     
@@ -111,7 +111,7 @@ public class Notification extends AbstractNotification {
      * Sets the DFN of the associated patient, if any.
      */
     @Override
-    protected void setDfn(String dfn) {
+    public void setDfn(String dfn) {
         this.dfn = VistAUtil.validateIEN(dfn) ? dfn : null;
     }
     

@@ -26,7 +26,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.vista.ui.core</artifactId>
+			<artifactId>org.carewebframework.vista.api.notification</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

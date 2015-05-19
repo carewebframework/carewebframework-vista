@@ -15,6 +15,8 @@ import org.carewebframework.ui.zk.AbstractListitemRenderer;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.ZKUtil;
+import org.carewebframework.vista.api.notification.NotificationService;
+import org.carewebframework.vista.api.notification.ScheduledNotification;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
@@ -40,7 +42,7 @@ public class SchedulingController extends FrameworkController {
         
         @Override
         protected void renderItem(Listitem item, ScheduledNotification notification) {
-            createCell(item, null).setImage(notification.getPriority().getImage());
+            createCell(item, null).setImage(PriorityRenderer.getImage(notification.getPriority()));
             createCell(item, notification.getDeliveryDate());
             createCell(item, notification.getPatientName());
             createCell(item, notification.getSubject());

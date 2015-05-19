@@ -7,7 +7,7 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.ui.notification;
+package org.carewebframework.vista.api.notification;
 
 import static org.carewebframework.common.StrUtil.U;
 
@@ -76,7 +76,7 @@ public class ScheduledNotification extends AbstractNotification {
      * Sets the priority of this notification.
      */
     @Override
-    protected void setPriority(Priority priority) {
+    public void setPriority(Priority priority) {
         setParam("PRI", priority.ordinal() + 1);
     }
     
@@ -93,7 +93,7 @@ public class ScheduledNotification extends AbstractNotification {
      * Sets the internal entry number of the associated patient. Use null if no associated patient.
      */
     @Override
-    protected void setDfn(String dfn) {
+    public void setDfn(String dfn) {
         setParam("DFN", dfn);
     }
     

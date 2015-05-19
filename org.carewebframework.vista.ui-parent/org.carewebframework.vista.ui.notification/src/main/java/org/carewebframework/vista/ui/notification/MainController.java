@@ -31,6 +31,10 @@ import org.carewebframework.ui.zk.MessageWindow.MessageInfo;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.RowComparator;
 import org.carewebframework.ui.zk.ZKUtil;
+import org.carewebframework.vista.api.notification.AbstractNotification.Priority;
+import org.carewebframework.vista.api.notification.Notification;
+import org.carewebframework.vista.api.notification.NotificationService;
+import org.carewebframework.vista.api.notification.Recipient;
 
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
@@ -73,7 +77,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         @Override
         protected void renderItem(Listitem item, Notification notification) {
             createCell(item, null);
-            createCell(item, null).setImage(notification.getPriority().getImage());
+            createCell(item, null).setImage(PriorityRenderer.getImage(notification.getPriority()));
             createCell(item, null).setImage(notification.isActionable() ? ICON_ACTIONABLE : ICON_INFO);
             createCell(item, notification.getPatientName());
             createCell(item, notification.getSubject());
@@ -191,9 +195,9 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         comp.setAttribute("iconPriority", ICON_PRIORITY);
         comp.setAttribute("iconType", ICON_TYPE);
         comp.setAttribute("iconIndicator", ICON_INDICATOR);
-        comp.setAttribute("iconPriorityHigh", Priority.HIGH.getImage());
-        comp.setAttribute("iconPriorityMedium", Priority.MEDIUM.getImage());
-        comp.setAttribute("iconPriorityLow", Priority.LOW.getImage());
+        comp.setAttribute("iconPriorityHigh", PriorityRenderer.getImage(Priority.HIGH));
+        comp.setAttribute("iconPriorityMedium", PriorityRenderer.getImage(Priority.MEDIUM));
+        comp.setAttribute("iconPriorityLow", PriorityRenderer.getImage(Priority.LOW));
     }
     
     /**
@@ -307,9 +311,9 @@ public class MainController extends CaptionedForm implements IPatientContextEven
         }
         
         if (alertThreshold != null && notification.getPriority().ordinal() <= alertThreshold.ordinal()) {
-            MessageInfo mi = new MessageInfo(notification.getDisplayText(), "New Notification", notification.getPriority()
-                    .getColor(), alertDuration * 1000, null, "cwf.fireLocalEvent('ALERT.INFO', '"
-                    + notification.getAlertId() + "');");
+            MessageInfo mi = new MessageInfo(notification.getDisplayText(), "New Notification",
+                    PriorityRenderer.getColor(notification.getPriority()), alertDuration * 1000, null,
+                    "cwf.fireLocalEvent('ALERT.INFO', '" + notification.getAlertId() + "');");
             getEventManager().fireLocalEvent(MessageWindow.EVENT_SHOW, mi);
         }
     }

@@ -29,6 +29,10 @@ import org.carewebframework.ui.zk.ListUtil;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.ZKUtil;
+import org.carewebframework.vista.api.notification.AbstractNotification.Priority;
+import org.carewebframework.vista.api.notification.NotificationService;
+import org.carewebframework.vista.api.notification.Recipient;
+import org.carewebframework.vista.api.notification.ScheduledNotification;
 import org.carewebframework.vista.mbroker.FMDate;
 
 import org.zkoss.util.resource.Labels;
@@ -95,7 +99,7 @@ public class ScheduleController extends FrameworkController {
         notification = (ScheduledNotification) arg.get("notification");
         
         for (Priority priority : Priority.values()) {
-            Comboitem item = new Comboitem(priority.toString(), priority.getImage());
+            Comboitem item = new Comboitem(PriorityRenderer.getDisplayName(priority), PriorityRenderer.getImage(priority));
             item.setValue(priority);
             cboPriority.appendChild(item);
         }

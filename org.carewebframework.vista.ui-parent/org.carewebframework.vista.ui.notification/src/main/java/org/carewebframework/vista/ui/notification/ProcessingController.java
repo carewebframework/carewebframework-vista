@@ -25,6 +25,8 @@ import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.ui.zk.ZKUtil;
+import org.carewebframework.vista.api.notification.Notification;
+import org.carewebframework.vista.api.notification.NotificationService;
 import org.carewebframework.vista.ui.notification.ViewerController.Action;
 import org.carewebframework.vista.ui.notification.ViewerController.ActionEvent;
 

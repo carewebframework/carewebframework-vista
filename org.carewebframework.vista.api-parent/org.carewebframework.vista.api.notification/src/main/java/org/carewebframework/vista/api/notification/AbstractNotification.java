@@ -7,24 +7,44 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.ui.notification;
+package org.carewebframework.vista.api.notification;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 
 import org.carewebframework.common.DateUtil;
+import org.carewebframework.common.NumUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.mbroker.FMDate;
-
-import org.springframework.util.StringUtils;
 
 /**
  * Base class for notifications.
  */
 public abstract class AbstractNotification implements Serializable {
+    
+    public enum Priority {
+        HIGH, MEDIUM, LOW;
+        
+        /**
+         * Returns the priority associated with the input value.
+         * 
+         * @param value The input value. May either be numeric, or the priority name.
+         * @return The corresponding priority.
+         */
+        public static Priority fromString(String value) {
+            if (StringUtils.isNumeric(value)) {
+                return Priority.values()[NumUtil.enforceRange(NumberUtils.toInt(value) - 1, 0, 2)];
+            } else {
+                return valueOf(value);
+            }
+        }
+        
+    };
     
     private static final long serialVersionUID = 1L;
     
@@ -66,7 +86,7 @@ public abstract class AbstractNotification implements Serializable {
      * 
      * @param priority Notification priority.
      */
-    protected abstract void setPriority(Priority priority);
+    public abstract void setPriority(Priority priority);
     
     /**
      * Returns the DFN of the associated patient.
@@ -80,7 +100,7 @@ public abstract class AbstractNotification implements Serializable {
      * 
      * @param dfn DFN of the associated patient (null if no patient association).
      */
-    protected abstract void setDfn(String dfn);
+    public abstract void setDfn(String dfn);
     
     /**
      * Returns the name of the associated patient.
@@ -96,7 +116,7 @@ public abstract class AbstractNotification implements Serializable {
      * 
      * @param patientName Name of the associated patient (null if no patient association).
      */
-    protected void setPatientName(String patientName) {
+    public void setPatientName(String patientName) {
         this.patientName = patientName;
     }
     
@@ -123,7 +143,7 @@ public abstract class AbstractNotification implements Serializable {
      * 
      * @param subject Subject line.
      */
-    protected void setSubject(String subject) {
+    public void setSubject(String subject) {
         this.subject = subject;
     }
     
@@ -141,7 +161,7 @@ public abstract class AbstractNotification implements Serializable {
      * 
      * @param deliveryDate Delivery date.
      */
-    protected void setDeliveryDate(FMDate deliveryDate) {
+    public void setDeliveryDate(FMDate deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
     
@@ -159,7 +179,7 @@ public abstract class AbstractNotification implements Serializable {
      * 
      * @param senderName Sender name.
      */
-    protected void setSenderName(String senderName) {
+    public void setSenderName(String senderName) {
         this.senderName = senderName;
     }
     
@@ -177,7 +197,7 @@ public abstract class AbstractNotification implements Serializable {
      * 
      * @param extraInfo Extra information.
      */
-    protected void setExtraInfo(String[] extraInfo) {
+    public void setExtraInfo(String[] extraInfo) {
         this.extraInfo = extraInfo;
     }
     
@@ -195,7 +215,7 @@ public abstract class AbstractNotification implements Serializable {
      * 
      * @param message The associated message. May be null.
      */
-    protected void setMessage(List<String> message) {
+    public void setMessage(List<String> message) {
         this.message = message;
     }
     
@@ -235,7 +255,7 @@ public abstract class AbstractNotification implements Serializable {
      * @param value Parameter value (null to remove).
      * @return Index of parameter in extra info.
      */
-    protected int setParam(String param, Object value) {
+    public int setParam(String param, Object value) {
         int i = findParam(param);
         
         if (value == null && i < 0) {

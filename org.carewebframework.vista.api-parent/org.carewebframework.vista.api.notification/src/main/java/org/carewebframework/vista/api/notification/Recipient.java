@@ -7,7 +7,7 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.ui.notification;
+package org.carewebframework.vista.api.notification;
 
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -29,7 +29,7 @@ public class Recipient {
      *
      * @param user A user.
      */
-    protected Recipient(IUser user) {
+    public Recipient(IUser user) {
         this.name = user.getFullName();
         this.ien = VistAUtil.parseIEN(user.getLogicalId());
     }
@@ -41,7 +41,7 @@ public class Recipient {
      * @param isGroup If true, the raw data represents a group. If false, the type of recipient is
      *            to be inferred from the raw data.
      */
-    protected Recipient(String data, boolean isGroup) {
+    public Recipient(String data, boolean isGroup) {
         String[] pcs = StrUtil.split(data, StrUtil.U, 2);
         long val = NumberUtils.toLong(pcs[0]);
         this.ien = isGroup && val > 0 ? -val : val;
@@ -53,7 +53,7 @@ public class Recipient {
      *
      * @param data Raw data.
      */
-    protected Recipient(String data) {
+    public Recipient(String data) {
         this(data, false);
     }
     

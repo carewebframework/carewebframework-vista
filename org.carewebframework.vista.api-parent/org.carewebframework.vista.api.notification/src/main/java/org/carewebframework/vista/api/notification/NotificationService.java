@@ -7,7 +7,7 @@
  * Disclaimer of Warranty and Limitation of Liability available at
  * http://www.carewebframework.org/licensing/disclaimer.
  */
-package org.carewebframework.vista.ui.notification;
+package org.carewebframework.vista.api.notification;
 
 import java.util.ArrayList;
 import java.util.Arrays;

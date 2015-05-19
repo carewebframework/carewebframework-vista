@@ -36,7 +36,7 @@
 					type="enum" 
 					description="You will be alerted of new notifications with priorities at or above this threshold.">
 					<cwp:config>
-						<cwp:entry key="class">org.carewebframework.vista.ui.notification.Priority</cwp:entry>
+						<cwp:entry key="class">org.carewebframework.vista.api.notification.AbstractNotification$Priority</cwp:entry>
 					</cwp:config>
 				</cwp:property>
 				<cwp:property id="showAll" name="Show All Notifications"
@@ -52,12 +52,6 @@
 	</beans>
 
 	<beans profile="desktop">
-
-		<bean id="vistaNotificationService" class="org.carewebframework.vista.ui.notification.NotificationService"
-			scope="prototype">
-			<constructor-arg ref="brokerSession" />
-			<constructor-arg value="${vistanotification.scheduled.prefix:RGCWXQ}" />
-		</bean>
 
 		<bean id="vistaNotificationMainController" class="org.carewebframework.vista.ui.notification.MainController"
 			scope="prototype">
