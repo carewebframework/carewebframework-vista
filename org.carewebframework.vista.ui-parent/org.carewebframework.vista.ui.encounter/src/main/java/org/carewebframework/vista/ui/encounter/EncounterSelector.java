@@ -256,7 +256,7 @@ public abstract class EncounterSelector extends FrameworkController {
     public void onClick$btnParticipantRemove() {
         Participant participant = getSelectedParticipant(lstEncounterParticipants);
         
-        if (encounterParticipantsModel.remove(participant)) {
+        if (participant != null && encounterParticipantsModel.remove(participant)) {
             participantsModified = true;
             
             if (participant == getPrimaryParticipant()) {
