@@ -12,16 +12,21 @@ package org.carewebframework.vista.ui.location;
 import java.util.List;
 
 import ca.uhn.fhir.model.dstu2.resource.Location;
+import ca.uhn.fhir.model.dstu2.valueset.LocationStatusEnum;
 
 import org.carewebframework.cal.api.location.LocationContext;
+import org.carewebframework.cal.api.location.LocationSearchCriteria;
+import org.carewebframework.cal.api.location.LocationUtil;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;
+import org.carewebframework.ui.zk.ZKUtil;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 
 /**
  * Location selection controller. Supports selecting a location from a list of known locations and
@@ -76,7 +81,10 @@ public class LocationSelection extends FrameworkController {
         if (!text.isEmpty()) {
             lstLocation.setDisabled(true);
             lstLocation.getItems().clear();
-            List<Location> locations = null;//LocationUtil.findLocations(text);
+            LocationSearchCriteria crt = new LocationSearchCriteria();
+            crt.setStatus(LocationStatusEnum.ACTIVE);
+            crt.setName(text);
+            List<Location> locations = LocationUtil.search(crt);
             boolean hasMatch = locations != null && locations.size() > 0;
             
             if (hasMatch) {
@@ -145,7 +153,7 @@ public class LocationSelection extends FrameworkController {
      * Close the main dialog.
      */
     private void close() {
-        root.detach();
+        ZKUtil.findAncestor(root, Window.class).detach();
     }
     
     /**
