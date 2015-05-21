@@ -14,10 +14,12 @@ import java.util.Date;
 import ca.uhn.fhir.model.dstu2.composite.PeriodDt;
 import ca.uhn.fhir.model.dstu2.resource.Encounter;
 import ca.uhn.fhir.model.dstu2.resource.Encounter.Participant;
+import ca.uhn.fhir.model.dstu2.resource.Location;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.carewebframework.cal.api.ClientUtil;
 import org.carewebframework.cal.api.encounter.EncounterContext;
 import org.carewebframework.cal.api.encounter.EncounterParticipantContext;
 import org.carewebframework.cal.api.patient.PatientContext;
@@ -121,7 +123,7 @@ public class EncounterHeader extends FrameworkController implements EncounterCon
                     sb.append(", ");
                 }
                 
-                sb.append(location.getLocation().getDisplay().getValue());
+                sb.append(ClientUtil.getResource(location.getLocation(), Location.class).getName());
             }
             lblLocation.setValue(sb.toString());
             PeriodDt period = encounter.getPeriod();
