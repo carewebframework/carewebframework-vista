@@ -12,7 +12,7 @@
 
 	<beans profile="desktop">
 
-		<bean id="vistaNotificationService" class="org.carewebframework.vista.ui.notification.NotificationService"
+		<bean id="vistaNotificationService" class="org.carewebframework.vista.api.notification.NotificationService"
 			scope="prototype">
 			<constructor-arg ref="brokerSession" />
 			<constructor-arg value="${vistanotification.scheduled.prefix:RGCWXQ}" />
