@@ -24,6 +24,11 @@
 			<artifactId>org.carewebframework.ui.sharedforms</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.carewebframework</groupId>
+			<artifactId>org.carewebframework.cal.ui.reporting</artifactId>
+			<version>${org.carewebframework.cal.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>

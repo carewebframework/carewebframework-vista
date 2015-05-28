@@ -14,15 +14,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.carewebframework.cal.api.query.AbstractServiceContext.DateMode;
-import org.carewebframework.cal.api.query.IDataFilter;
-import org.carewebframework.cal.api.query.IQueryResult;
+import org.carewebframework.api.query.AbstractQueryFilter;
+import org.carewebframework.api.query.IQueryContext;
 import org.carewebframework.cal.ui.reporting.controller.AbstractListController;
-import org.carewebframework.cal.ui.reporting.model.ServiceContext;
+import org.carewebframework.cal.ui.reporting.query.DateQueryFilter.DateType;
 import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.api.documents.Document;
 import org.carewebframework.vista.api.documents.DocumentCategory;
-import org.carewebframework.vista.api.documents.DocumentListDataService;
+import org.carewebframework.vista.api.documents.DocumentListQueryService;
 import org.carewebframework.vista.api.documents.DocumentService;
 
 import org.zkoss.util.resource.Labels;
@@ -45,7 +44,7 @@ public class DocumentListController extends AbstractListController<Document> {
     /**
      * Handles filtering by document category.
      */
-    private class DataFilter implements IDataFilter<Document> {
+    private class QueryFilter extends AbstractQueryFilter<Document> {
         
         @Override
         public boolean include(Document document) {
@@ -54,8 +53,9 @@ public class DocumentListController extends AbstractListController<Document> {
         }
         
         @Override
-        public boolean requiresFetch() {
-            return false;
+        public boolean updateContext(IQueryContext context) {
+            context.setParam("category", getCurrentFilter());
+            return true;
         }
         
     }
@@ -80,35 +80,27 @@ public class DocumentListController extends AbstractListController<Document> {
     
     private final List<DocumentCategory> allCategories;
     
-    public DocumentListController(final DocumentService service) {
-        super(new DocumentListDataService(service), "vistadocuments", "TIU", "documentsPrint.css");
+    public DocumentListController(DocumentService service) {
+        super(new DocumentListQueryService(service), "vistadocuments", "TIU", "documentsPrint.css");
         setPaging(false);
-        registerDataFilter(new DataFilter());
+        registerQueryFilter(new QueryFilter());
         allCategories = service.getCategories();
-        updateSelectCount(0);
     }
     
     @Override
     public void initializeController() {
         super.initializeController();
-        this.viewText = this.btnView.getLabel();
+        viewText = btnView.getLabel();
         getContainer().registerProperties(this, "fixedFilter");
-    }
-    
-    @Override
-    protected ServiceContext<Document> getServiceContext() {
-        ServiceContext<Document> ctx = super.getServiceContext();
-        ctx.setParam("category", getCurrentFilter());
-        return ctx;
+        updateSelectCount(0);
     }
     
     /**
      * This is a good place to update the filter list.
      */
     @Override
-    protected void processResult(IQueryResult<Document> queryResult) {
-        super.processResult(queryResult);
-        updateListFilter(queryResult.getResults());
+    protected void processResults(List<Document> results) {
+        updateListFilter(results);
     }
     
     /**
@@ -117,13 +109,13 @@ public class DocumentListController extends AbstractListController<Document> {
      * @param documents The unfiltered document list.
      */
     private void updateListFilter(List<Document> documents) {
-        if (this.fixedFilter != null) {
+        if (fixedFilter != null) {
             return;
         }
         
-        final DocumentCategory currentFilter = getCurrentFilter();
-        final List<Comboitem> items = this.cboFilter.getItems();
-        final List<DocumentCategory> categories = new ArrayList<DocumentCategory>();
+        DocumentCategory currentFilter = getCurrentFilter();
+        List<Comboitem> items = cboFilter.getItems();
+        List<DocumentCategory> categories = new ArrayList<DocumentCategory>();
         
         while (items.size() > 1) {
             items.remove(1);
@@ -134,7 +126,7 @@ public class DocumentListController extends AbstractListController<Document> {
         }
         
         if (documents != null) {
-            for (final Document doc : documents) {
+            for (Document doc : documents) {
                 DocumentCategory cat = doc.getCategory();
                 
                 if (cat != null) {
@@ -146,14 +138,14 @@ public class DocumentListController extends AbstractListController<Document> {
         }
         
         Collections.sort(categories);
-        this.cboFilter.setSelectedIndex(0);
+        cboFilter.setSelectedIndex(0);
         
-        for (final DocumentCategory cat : categories) {
-            final Comboitem item = this.cboFilter.appendItem(cat.getName());
+        for (DocumentCategory cat : categories) {
+            Comboitem item = cboFilter.appendItem(cat.getName());
             item.setValue(cat);
             
             if (cat.equals(currentFilter)) {
-                this.cboFilter.setSelectedItem(item);
+                cboFilter.setSelectedItem(item);
             }
         }
     }
@@ -164,16 +156,15 @@ public class DocumentListController extends AbstractListController<Document> {
      * @return The active category filter.
      */
     private DocumentCategory getCurrentFilter() {
-        return this.fixedFilter != null ? this.fixedFilter
-                : this.cboFilter.getSelectedIndex() > 0 ? (DocumentCategory) this.cboFilter.getSelectedItem().getValue()
-                        : null;
+        return fixedFilter != null ? fixedFilter : cboFilter.getSelectedIndex() > 0 ? (DocumentCategory) cboFilter
+                .getSelectedItem().getValue() : null;
     }
     
     /**
      * Handle change in category filter selection.
      */
     public void onSelect$cboFilter() {
-        filterChanged();
+        applyFilters();
     }
     
     /**
@@ -183,11 +174,11 @@ public class DocumentListController extends AbstractListController<Document> {
      */
     private void updateSelectCount(int selCount) {
         if (selCount == 0) {
-            this.btnView.setLabel(this.lblBtnViewSelectAll);
-            this.btnClear.setDisabled(true);
+            btnView.setLabel(lblBtnViewSelectAll);
+            btnClear.setDisabled(true);
         } else {
-            this.btnView.setLabel(this.viewText + " (" + selCount + ")");
-            this.btnClear.setDisabled(false);
+            btnView.setLabel(viewText + " (" + selCount + ")");
+            btnClear.setDisabled(false);
         }
         
         btnView.setDisabled(listBox.getItemCount() == 0);
@@ -268,9 +259,9 @@ public class DocumentListController extends AbstractListController<Document> {
      */
     public void setFixedFilter(String name) {
         fixedFilter = findCategory(name);
-        this.cboFilter.setVisible(fixedFilter == null);
-        this.lblFilter.setVisible(fixedFilter != null);
-        this.lblFilter.setValue(fixedFilter == null ? null : fixedFilter.getName());
+        cboFilter.setVisible(fixedFilter == null);
+        lblFilter.setVisible(fixedFilter != null);
+        lblFilter.setValue(fixedFilter == null ? null : fixedFilter.getName());
         refresh();
     }
     
@@ -287,16 +278,16 @@ public class DocumentListController extends AbstractListController<Document> {
     }
     
     @Override
-    protected Date getDate(Document result, DateMode dateMode) {
-        return result.getDateTime();
-    }
-    
-    @Override
     protected void setListModel(ListModel<Document> model) {
         super.setListModel(model);
         int docCount = model == null ? 0 : model.getSize();
         lblInfo.setValue(docCount + " document(s)");
         btnView.setDisabled(docCount == 0);
         updateSelectCount(((Selectable<?>) model).getSelection().size());
+    }
+    
+    @Override
+    public Date getDateByType(Document result, DateType dateMode) {
+        return result.getDateTime();
     }
 }

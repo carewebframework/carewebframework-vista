@@ -12,11 +12,11 @@ package org.carewebframework.vista.ui.documents;
 import java.util.Date;
 import java.util.List;
 
-import org.carewebframework.cal.api.query.AbstractServiceContext.DateMode;
+import org.carewebframework.api.query.IQueryContext;
 import org.carewebframework.cal.ui.reporting.controller.AbstractListController;
-import org.carewebframework.cal.ui.reporting.model.ServiceContext;
+import org.carewebframework.cal.ui.reporting.query.DateQueryFilter.DateType;
 import org.carewebframework.vista.api.documents.Document;
-import org.carewebframework.vista.api.documents.DocumentDisplayDataService;
+import org.carewebframework.vista.api.documents.DocumentDisplayQueryService;
 import org.carewebframework.vista.api.documents.DocumentService;
 
 import org.zkoss.zk.ui.event.Events;
@@ -42,8 +42,8 @@ public class DocumentDisplayController extends AbstractListController<Document> 
     
     private final ComboitemRenderer<Document> comboRenderer = new DocumentDisplayComboRenderer();
     
-    public DocumentDisplayController(final DocumentService service) {
-        super(new DocumentDisplayDataService(service), "vistadocuments", "TIU", "documentsPrint.css");
+    public DocumentDisplayController(DocumentService service) {
+        super(new DocumentDisplayQueryService(service), "vistadocuments", "TIU", "documentsPrint.css");
         setPaging(false);
     }
     
@@ -54,19 +54,17 @@ public class DocumentDisplayController extends AbstractListController<Document> 
     }
     
     @Override
-    protected ServiceContext<Document> getServiceContext() {
-        ServiceContext<Document> ctx = super.getServiceContext();
+    protected void prepareQueryContext(IQueryContext ctx) {
         ctx.setParam("documents", documents);
-        return ctx;
     }
     
     /**
      * This view should be closed when the patient context changes.
      */
     @Override
-    protected void patientChanged() {
+    protected void onPatientChanged() {
         closeView();
-        super.patientChanged();
+        super.onPatientChanged();
     }
     
     /**
@@ -111,7 +109,7 @@ public class DocumentDisplayController extends AbstractListController<Document> 
      * Not really needed.
      */
     @Override
-    protected Date getDate(Document result, DateMode dateMode) {
+    public Date getDateByType(Document result, DateType dateType) {
         return result.getDateTime();
     }
     
