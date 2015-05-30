@@ -12,6 +12,8 @@ package org.carewebframework.vista.ui.documents;
 import java.util.Date;
 import java.util.List;
 
+import ca.uhn.fhir.model.dstu2.resource.Patient;
+
 import org.carewebframework.api.query.IQueryContext;
 import org.carewebframework.cal.ui.reporting.controller.AbstractListController;
 import org.carewebframework.cal.ui.reporting.query.DateQueryFilter.DateType;
@@ -62,9 +64,9 @@ public class DocumentDisplayController extends AbstractListController<Document> 
      * This view should be closed when the patient context changes.
      */
     @Override
-    protected void onPatientChanged() {
+    protected void onPatientChanged(Patient patient) {
         closeView();
-        super.onPatientChanged();
+        super.onPatientChanged(patient);
     }
     
     /**
