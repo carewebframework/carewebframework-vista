@@ -35,10 +35,11 @@ public abstract class AbstractBrokerQueryService<T> extends AbstractQueryService
     /**
      * Implement to convert raw data returned by RPC to a query result.
      * 
+     * @param context The query context.
      * @param data Raw RPC data.
      * @return A list of results.
      */
-    protected abstract List<T> processData(String data);
+    protected abstract List<T> processData(IQueryContext context, String data);
     
     /**
      * Override to extract arguments from query context and place into argument list.
@@ -74,7 +75,7 @@ public abstract class AbstractBrokerQueryService<T> extends AbstractQueryService
      */
     @Override
     public IQueryResult<T> fetch(IQueryContext context) {
-        return QueryUtil.<T> packageResult(processData(service.callRPC(rpcName, getArguments(context))));
+        return QueryUtil.<T> packageResult(processData(context, service.callRPC(rpcName, getArguments(context))));
     }
     
     /**

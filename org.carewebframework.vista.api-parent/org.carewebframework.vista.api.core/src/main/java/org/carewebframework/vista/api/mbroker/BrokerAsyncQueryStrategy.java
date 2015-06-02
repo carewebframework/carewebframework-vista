@@ -26,10 +26,13 @@ public class BrokerAsyncQueryStrategy<T> implements IAsyncQueryStrategy<T> {
         
         private int asyncHandle;
         
+        private final IQueryContext context;
+        
         private final IQueryCallback<T> callback;
         
         public AsyncRequest(AbstractBrokerQueryService<T> service, IQueryContext context, IQueryCallback<T> callback) {
             this.service = service;
+            this.context = context;
             this.callback = callback;
             asyncHandle = service.getBroker().callRPCAsync(service.getRPCName(), this, service.getArguments(context));
         }
@@ -47,7 +50,7 @@ public class BrokerAsyncQueryStrategy<T> implements IAsyncQueryStrategy<T> {
         public void onRPCComplete(int handle, String data) {
             if (asyncHandle == handle) {
                 asyncHandle = 0;
-                callback.onQueryFinish(this, QueryUtil.<T> packageResult(service.processData(data)));
+                callback.onQueryFinish(this, QueryUtil.<T> packageResult(service.processData(context, data)));
             }
         }
         

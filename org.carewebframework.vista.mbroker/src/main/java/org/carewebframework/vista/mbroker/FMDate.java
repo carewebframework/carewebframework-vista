@@ -73,6 +73,24 @@ public class FMDate extends Date {
     }
     
     /**
+     * Returns a FM date with current date and time.
+     * 
+     * @return FM date representing current date and time.
+     */
+    public static FMDate now() {
+        return new FMDate();
+    }
+    
+    /**
+     * Returns a FM date with current date and no time.
+     * 
+     * @return FM date representing current date.
+     */
+    public static FMDate today() {
+        return new FMDate(DateUtil.today());
+    }
+    
+    /**
      * Creates a FM date corresponding to the specified FM string representation.
      *
      * @param value FM string.
