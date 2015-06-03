@@ -109,7 +109,7 @@ public class Response {
     }
     
     public byte getSequenceId() {
-        return sequenceId;
+        return sequenceId == null ? 0 : sequenceId;
     }
     
 }
