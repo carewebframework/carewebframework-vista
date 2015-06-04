@@ -15,9 +15,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.carewebframework.api.query.AbstractQueryFilter;
+import org.carewebframework.api.query.DateQueryFilter.DateType;
 import org.carewebframework.api.query.IQueryContext;
 import org.carewebframework.cal.ui.reporting.controller.AbstractListController;
-import org.carewebframework.cal.ui.reporting.query.DateQueryFilter.DateType;
 import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.api.documents.Document;
 import org.carewebframework.vista.api.documents.DocumentCategory;
