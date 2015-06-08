@@ -75,7 +75,11 @@ public abstract class AbstractBrokerQueryService<T> extends AbstractQueryService
      */
     @Override
     public IQueryResult<T> fetch(IQueryContext context) {
-        return QueryUtil.<T> packageResult(processData(context, service.callRPC(rpcName, getArguments(context))));
+        try {
+            return QueryUtil.packageResult(processData(context, service.callRPC(rpcName, getArguments(context))));
+        } catch (Exception e) {
+            return QueryUtil.errorResult(e);
+        }
     }
     
     /**
