@@ -202,7 +202,7 @@ public class ProcessingController extends FrameworkController implements IPatien
         }
         
         Notification notification = iterator.next();
-        caption.setLabel(ZKUtil.getLabel("vistanotification.processing.caption", ++currentIndex, total));
+        caption.setLabel(StrUtil.getLabel("vistanotification.processing.caption", ++currentIndex, total));
         caption.setTooltiptext(notification.getDisplayText());
         
         if (!iterator.hasNext()) {
@@ -245,7 +245,7 @@ public class ProcessingController extends FrameworkController implements IPatien
                 }
             } else {
                 viewer.process(notification,
-                    ZKUtil.getLabel("vistanotification.processing.nohandler", notification.getType()));
+                    StrUtil.getLabel("vistanotification.processing.nohandler", notification.getType()));
             }
         }
     }

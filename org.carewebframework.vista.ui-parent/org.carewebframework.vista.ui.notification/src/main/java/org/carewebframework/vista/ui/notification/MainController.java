@@ -386,7 +386,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
             
             if (notification.canDelete()) {
                 if (!silent) {
-                    String msg = ZKUtil.getLabel("vistanotification.main.delete.confirm.prompt", s);
+                    String msg = StrUtil.getLabel("vistanotification.main.delete.confirm.prompt", s);
                     
                     switch (getResponse(msg, Response.YES, Response.NO, Response.ALL, Response.CANCEL)) {
                         case NO:
@@ -402,7 +402,7 @@ public class MainController extends CaptionedForm implements IPatientContextEven
                 }
                 service.deleteNotification(notification);
             } else {
-                String msg = ZKUtil.getLabel("vistanotification.main.delete.unable.prompt", s);
+                String msg = StrUtil.getLabel("vistanotification.main.delete.unable.prompt", s);
                 
                 if (getResponse(msg, Response.YES, Response.CANCEL) != Response.YES) {
                     break;
