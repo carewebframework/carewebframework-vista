@@ -26,7 +26,7 @@ public class ESigItem implements Serializable {
     /**
      * Represents a default signature state for a signature item.
      */
-    public static enum SignState {
+    public  enum SignState {
         YES, // Item is marked for signature
         FORCED_YES, // Item is marked for signature and cannot be unmarked.
         NO, // Item is not marked for signature.
@@ -54,7 +54,7 @@ public class ESigItem implements Serializable {
     /**
      * Represents the severity level for an issue.
      */
-    public static enum ESigItemIssueSeverity {
+    public  enum ESigItemIssueSeverity {
         MINOR, // Minor - User need not explicitly acknowledge or justify override.
         MODERATE, // Moderate - Significant issue; user must explicitly acknowledge.
         MAJOR, // Major - Significant issue; user must explicitly acknowledge and justify override.
@@ -150,9 +150,9 @@ public class ESigItem implements Serializable {
     
     private boolean selected;
     
-    private List<ESigItemIssue> issues = null;
+    private List<ESigItemIssue> issues;
     
-    private boolean sortIssues = false;
+    private boolean sortIssues;
     
     /**
      * Creates an esig item with required fields.
