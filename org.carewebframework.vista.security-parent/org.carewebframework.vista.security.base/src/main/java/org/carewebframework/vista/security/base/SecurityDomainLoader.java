@@ -29,14 +29,21 @@ public class SecurityDomainLoader {
     public SecurityDomainLoader(BrokerSession brokerSession) {
         List<String> results = brokerSession.callRPCList("RGNETBRP DIVGET", null);
         String preLoginMessage = StringUtils.collectionToDelimitedString(brokerSession.getPreLoginMessage(), "\n");
+        String defaultDomain = null;
         
         for (String result : results) {
             String[] pcs = StrUtil.split(result, StrUtil.U, 4);
             
-            if (!pcs[2].isEmpty()) {
+            if (defaultDomain == null) {
+                defaultDomain = pcs[0];
+            } else {
                 SecurityDomain securityDomain = new SecurityDomain(pcs[1], pcs[0]);
                 securityDomain.setAttribute(Constants.PROP_LOGIN_INFO, preLoginMessage);
                 SecurityDomainRegistry.registerSecurityDomain(securityDomain);
+                
+                if (pcs[0].equals(defaultDomain)) {
+                    securityDomain.setAttribute("default", "true");
+                }
             }
         }
         
