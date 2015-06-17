@@ -29,7 +29,7 @@
 				</cell>
 			</hbox>
 			<label value="${labels.vistanotification.schedule.input.subject.label}" />
-			<textbox id="txtSubject" hflex="1" />
+			<textbox id="txtSubject" hflex="1" focus="true" />
 			<label value="${labels.vistanotification.schedule.input.recipients.label}" />
 			<hlayout>
 				<textbox id="txtRecipients" readonly="true" hflex="1" />
