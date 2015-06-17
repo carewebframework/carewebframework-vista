@@ -246,11 +246,17 @@ public abstract class EncounterSelector extends FrameworkController {
     public void onClick$btnParticipantAdd() {
         Participant participant = getSelectedParticipant(lstAllParticipants);
         
-        if (encounterParticipantsModel.add(participant)) {
-            participantsModified = true;
+        if (participant != null) {
+            if (encounterParticipantsModel.add(participant)) {
+                participantsModified = true;
+                
+                if (encounterParticipantsModel.size() == 1) {
+                    setPrimaryParticipant(participant);
+                }
+            }
+            
+            encounterParticipantsModel.setSelection(Collections.singleton(participant));
         }
-        
-        encounterParticipantsModel.setSelection(Collections.singleton(participant));
     }
     
     public void onClick$btnParticipantRemove() {
