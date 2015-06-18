@@ -70,9 +70,6 @@
 						<treepane label="Cardiac Risk">
 							<cardiac_ris2k_apps.smartplatforms.org />
 						</treepane>
-						<treepane label="Diabetes Monograph">
-							<diab_monograph2_apps.smartplatforms.org />
-						</treepane>
 						<treepane label="Disease Monograph">
 							<disease_monograph2_apps.smartplatforms.org />
 						</treepane>
@@ -83,10 +80,6 @@
 							<meducation2_apps.smartplatforms.org />
 						</treepane>
 					</treeview>
-				</tabpane>
-				<tabpane label="Settings">
-					<settingsEditor group="RGNETB SITE PARAMETERS"
-						provider="settingsProvider" />
 				</tabpane>
 			</tabview>
 		</splitterpane>
