@@ -1,5 +1,6 @@
 <layout title="CareWeb - VistA">
 	<_menubar>
+		<menuitem action="cwf.refresh" label="Refresh"/>
 		<menuitem action="chat.create.session" label="Chat..."/>
 	</_menubar>
 	<_toolbar>
@@ -59,6 +60,12 @@
 							<vistaAlerts allowPrint="false" caption="Alerts"
 								captionStyle="HIDDEN" deferUpdate="true" horizontal="true"
 								layout="50:0:true;0:100%" showDetailPane="false" />
+						</treepane>
+						<treepane label="Chief Complaint">
+							<rpmsChiefComplaint />
+						</treepane>
+						<treepane label="Patient Goals">
+							<vistaPatientGoals />
 						</treepane>
 					</treeview>
 				</tabpane>
