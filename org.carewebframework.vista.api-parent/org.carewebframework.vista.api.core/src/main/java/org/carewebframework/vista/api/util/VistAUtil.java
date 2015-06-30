@@ -97,18 +97,31 @@ public class VistAUtil {
      * @return Concatenated list.
      */
     public static String concatParams(Object... params) {
+        return concatParams(StrUtil.U, params);
+    }
+    
+    /**
+     * Converts a parameter list into a delimited string
+     * 
+     * @param delimiter Delimiter to use.
+     * @param params The parameter list.
+     * @return Concatenated list.
+     */
+    public static String concatParams(String delimiter, Object... params) {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
         
-        for (Object param : params) {
-            if (!first) {
-                sb.append(StrUtil.U);
-            } else {
-                first = false;
-            }
-            
-            if (param != null) {
-                sb.append(param);
+        if (params != null) {
+            for (Object param : params) {
+                if (!first) {
+                    sb.append(delimiter);
+                } else {
+                    first = false;
+                }
+                
+                if (param != null) {
+                    sb.append(param);
+                }
             }
         }
         
