@@ -12,8 +12,6 @@ package org.carewebframework.vista.ui.documents;
 import java.util.Date;
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-
 import org.carewebframework.api.query.DateQueryFilter.DateType;
 import org.carewebframework.api.query.IQueryContext;
 import org.carewebframework.cal.ui.reporting.controller.AbstractListController;
@@ -29,10 +27,12 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Listitem;
 
+import ca.uhn.fhir.model.dstu2.resource.Patient;
+
 /**
  * Controller for displaying the contents of selected documents.
  */
-public class DocumentDisplayController extends AbstractListController<Document> {
+public class DocumentDisplayController extends AbstractListController<Document, Document> {
     
     private static final long serialVersionUID = 1L;
     
@@ -144,6 +144,11 @@ public class DocumentDisplayController extends AbstractListController<Document> 
         super.setListModel(model);
         cboHeader.setModel(model);
         cboHeader.setText(null);
+    }
+    
+    @Override
+    protected List<Document> toModel(List<Document> results) {
+        return results;
     }
     
 }

@@ -39,7 +39,7 @@ import org.zkoss.zul.ext.Selectable;
 /**
  * Controller for the list-based display of clinical documents.
  */
-public class DocumentListController extends AbstractListController<Document> {
+public class DocumentListController extends AbstractListController<Document, Document> {
     
     /**
      * Handles filtering by document category.
@@ -99,8 +99,9 @@ public class DocumentListController extends AbstractListController<Document> {
      * This is a good place to update the filter list.
      */
     @Override
-    protected void processResults(List<Document> results) {
+    protected List<Document> toModel(List<Document> results) {
         updateListFilter(results);
+        return results;
     }
     
     /**
@@ -156,8 +157,8 @@ public class DocumentListController extends AbstractListController<Document> {
      * @return The active category filter.
      */
     private DocumentCategory getCurrentFilter() {
-        return fixedFilter != null ? fixedFilter : cboFilter.getSelectedIndex() > 0 ? (DocumentCategory) cboFilter
-                .getSelectedItem().getValue() : null;
+        return fixedFilter != null ? fixedFilter
+                : cboFilter.getSelectedIndex() > 0 ? (DocumentCategory) cboFilter.getSelectedItem().getValue() : null;
     }
     
     /**
