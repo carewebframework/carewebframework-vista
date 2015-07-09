@@ -9,23 +9,19 @@
  */
 package org.carewebframework.vista.ui.common;
 
-import org.carewebframework.ui.zk.AbstractListitemRenderer;
+import org.carewebframework.ui.zk.AbstractComboitemRenderer;
 import org.carewebframework.vista.api.util.FileEntry;
 
-import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Comboitem;
 
 /**
  * Renderer for a file entry.
  */
-public class FileEntryRenderer extends AbstractListitemRenderer<FileEntry, Object> {
-    
-    public FileEntryRenderer() {
-        super(null, null);
-    }
+public class FileEntryRenderer extends AbstractComboitemRenderer<FileEntry> {
     
     @Override
-    protected void renderItem(Listitem item, FileEntry entry) {
-        createCell(item, entry.getExternalValue());
+    protected void renderItem(Comboitem item, FileEntry entry) {
+        item.setLabel(entry.toString());
     }
     
 }

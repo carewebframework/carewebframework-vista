@@ -11,8 +11,6 @@ package org.carewebframework.vista.api.util;
 
 import java.util.Date;
 
-import ca.uhn.fhir.model.api.IResource;
-
 import org.apache.commons.lang.math.NumberUtils;
 
 import org.carewebframework.api.spring.SpringUtil;
@@ -21,6 +19,8 @@ import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
+
+import ca.uhn.fhir.model.api.IResource;
 
 /**
  * Static utility class for the VistA extensions.
@@ -97,7 +97,7 @@ public class VistAUtil {
      * @return Concatenated list.
      */
     public static String concatParams(Object... params) {
-        return concatParams(StrUtil.U, params);
+        return delimitParams(StrUtil.U, params);
     }
     
     /**
@@ -107,7 +107,7 @@ public class VistAUtil {
      * @param params The parameter list.
      * @return Concatenated list.
      */
-    public static String concatParams(String delimiter, Object... params) {
+    public static String delimitParams(String delimiter, Object... params) {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
         

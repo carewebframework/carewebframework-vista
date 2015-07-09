@@ -46,6 +46,18 @@ public class FileEntry {
         return entries;
     }
     
+    public static FileEntry find(List<FileEntry> entries, String value) {
+        if (value != null) {
+            for (FileEntry entry : entries) {
+                if (value.equals(entry.internal) || value.equals(entry.external)) {
+                    return entry;
+                }
+            }
+        }
+        
+        return null;
+    }
+    
     public FileEntry(String data) {
         this(data.split("\\^", 2));
     }
@@ -82,6 +94,11 @@ public class FileEntry {
     @Override
     public String toString() {
         return external;
+    }
+    
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof FileEntry && ((FileEntry) object).internal.equals(internal);
     }
     
 }
