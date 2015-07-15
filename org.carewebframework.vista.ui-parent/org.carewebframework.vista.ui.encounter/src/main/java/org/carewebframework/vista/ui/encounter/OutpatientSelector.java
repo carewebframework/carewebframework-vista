@@ -11,12 +11,12 @@ package org.carewebframework.vista.ui.encounter;
 
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
-
 import org.carewebframework.ui.zk.DateRangePicker;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Listbox;
+
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
 
 /**
  * Encounter selector for outpatient encounters.
@@ -49,7 +49,7 @@ public class OutpatientSelector extends EncounterSelector {
     
     private boolean loadEncounters() {
         List<String> data = broker.callRPCList("RGCWENCX VISITLST", null, mainController.patient.getId().getIdPart(),
-            rngDateRange.getStartDate(), rngDateRange.getEndDate());
+            rngDateRange.getStartDate(), rngDateRange.getEndDate(), null, "HX");
         return populateListbox(lstOutpatient, data);
     }
     

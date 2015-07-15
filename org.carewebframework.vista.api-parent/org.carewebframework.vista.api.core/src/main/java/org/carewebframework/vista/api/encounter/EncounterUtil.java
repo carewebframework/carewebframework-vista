@@ -11,11 +11,6 @@ package org.carewebframework.vista.api.encounter;
 
 import java.util.Date;
 
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
-import ca.uhn.fhir.model.dstu2.resource.Encounter.Participant;
-import ca.uhn.fhir.model.dstu2.resource.Location;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-
 import org.apache.commons.lang.math.NumberUtils;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
@@ -25,6 +20,12 @@ import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.FMDate;
+import org.carewebframework.vista.mbroker.RPCParameter;
+
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Encounter.Participant;
+import ca.uhn.fhir.model.dstu2.resource.Location;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 /**
  * Encounter-related utility functions.
@@ -49,7 +50,7 @@ public class EncounterUtil extends org.carewebframework.cal.api.encounter.Encoun
         }
         
         Participant participant = EncounterParticipantContext.getActiveParticipant();
-        String partId = participant == null ? null : participant.getElementSpecificId();
+        String partId = getParticipantId(participant);
         String s = VistAUtil.getBrokerSession().callRPC("RGCWENCX FETCH", patient.getId().getIdPart(), encode(encounter),
             partId, true);
         String id = StrUtil.piece(s, StrUtil.U, 6);
@@ -60,6 +61,31 @@ public class EncounterUtil extends org.carewebframework.cal.api.encounter.Encoun
         
         encounter.setId(id);
         return true;
+    }
+    
+    public static String getParticipantId(Participant participant) {
+        return participant == null ? null : participant.getIndividual().getReference().getIdPart();
+    }
+    
+    /**
+     * Updates the participants associated with an encounter.
+     * 
+     * @param encounter The encounter.
+     */
+    public static void updateParticipants(Encounter encounter) {
+        if (encounter == null || encounter.getParticipant().isEmpty()) {
+            return;
+        }
+        
+        RPCParameter params = new RPCParameter();
+        
+        for (Participant participant : encounter.getParticipant()) {
+            String partId = getParticipantId(participant);
+            params.put(partId, "+");
+        }
+        
+        String dfn = PatientContext.getActivePatient().getId().getIdPart();
+        VistAUtil.getBrokerSession().callRPC("RGCWENCX UPDPRV", dfn, encode(encounter), params, true);
     }
     
     /**
@@ -84,6 +110,12 @@ public class EncounterUtil extends org.carewebframework.cal.api.encounter.Encoun
         return create(PatientContext.getActivePatient(), date, location, pcs[2]);
     }
     
+    /**
+     * Encode an encounter to a visit string.
+     * 
+     * @param encounter The encounter.
+     * @return The encoded encounter (visit string).
+     */
     public static String encode(Encounter encounter) {
         Location location = ClientUtil.getResource(encounter.getLocationFirstRep().getLocation(), Location.class);
         String locIEN = location.isEmpty() ? "" : location.getId().getIdPart();

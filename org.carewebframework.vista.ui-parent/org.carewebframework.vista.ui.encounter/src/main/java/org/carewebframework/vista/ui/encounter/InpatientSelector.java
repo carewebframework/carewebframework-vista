@@ -11,12 +11,12 @@ package org.carewebframework.vista.ui.encounter;
 
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
-
 import org.carewebframework.cal.api.encounter.EncounterSearchCriteria;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Listbox;
+
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
 
 /**
  * Selector for inpatient encounters.
@@ -51,7 +51,7 @@ public class InpatientSelector extends EncounterSelector {
         super.init(mainController);
         EncounterSearchCriteria criteria = new EncounterSearchCriteria();
         criteria.setPatient(mainController.patient);
-        criteria.setType("I");
+        criteria.setType("H");
         List<Encounter> encounters = encounterSearch.search(criteria);
         return populateListbox(lstInpatient, encounters);
     }
