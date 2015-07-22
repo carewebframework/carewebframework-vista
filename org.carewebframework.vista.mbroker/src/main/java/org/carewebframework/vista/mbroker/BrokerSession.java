@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutorService;
 import org.apache.commons.lang.StringUtils;
 
 import org.carewebframework.common.JSONUtil;
+import org.carewebframework.common.MiscUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.mbroker.PollingThread.IHostEventHandler;
 import org.carewebframework.vista.mbroker.Request.Action;
@@ -90,7 +91,7 @@ public class BrokerSession {
     private final Map<Integer, IAsyncRPCEvent> callbacks = new HashMap<Integer, IAsyncRPCEvent>();
     
     public BrokerSession() {
-        
+    
     }
     
     public BrokerSession(ConnectionParams params) {
@@ -111,12 +112,13 @@ public class BrokerSession {
             Response response = netCall(request, connectionParams.getTimeout());
             serverCaps = new ServerCaps(response.getData());
             
-            if (!StringUtils.isEmpty(connectionParams.getUsername()) && !StringUtils.isEmpty(connectionParams.getPassword())) {
+            if (!StringUtils.isEmpty(connectionParams.getUsername())
+                    && !StringUtils.isEmpty(connectionParams.getPassword())) {
                 authResult = authenticate();
             }
             
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw MiscUtil.toUnchecked(e);
         }
         
         polling(true);
@@ -248,7 +250,7 @@ public class BrokerSession {
      *
      *            <pre>
      * &lt;remote procedure name&gt;[:&lt;remote procedure version&gt;][:&lt;calling context&gt;]
-     * </pre>
+     *            </pre>
      *            <p>
      *            where only the remote procedure name is required. If the server supports multiple
      *            versions of a remote procedure, an explicit version specifier may be added. If a
@@ -258,7 +260,8 @@ public class BrokerSession {
      *
      *            <pre>
      * GET LAB RESULTS:2.4:LR CONTEXT
-     * </pre>
+     *            </pre>
+     * 
      * @param async If true, the remote procedure call will be executed asynchronously. In this
      *            case, the value returned by the method will be the unique handle for the
      *            asynchronous request.
@@ -332,8 +335,8 @@ public class BrokerSession {
         params.get(0).setValue(eventName);
         
         RPCParameter param = params.get(1);
-        String data = eventData == null ? "" : eventData instanceof String ? eventData.toString() : Constants.JSON_PREFIX
-                + JSONUtil.serialize(eventData);
+        String data = eventData == null ? ""
+                : eventData instanceof String ? eventData.toString() : Constants.JSON_PREFIX + JSONUtil.serialize(eventData);
         int index = 0;
         
         for (int i = 0; i < data.length(); i += 255) {
@@ -531,7 +534,7 @@ public class BrokerSession {
             }
         } catch (Exception e) {
             netFlush();
-            throw new RuntimeException(e);
+            throw MiscUtil.toUnchecked(e);
         }
         
         if (response.getResponseType() == ResponseType.ERROR) {

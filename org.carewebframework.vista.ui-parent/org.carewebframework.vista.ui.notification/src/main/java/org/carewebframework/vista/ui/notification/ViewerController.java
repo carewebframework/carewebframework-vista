@@ -9,6 +9,7 @@
  */
 package org.carewebframework.vista.ui.notification;
 
+import org.carewebframework.common.MiscUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;
@@ -138,8 +139,8 @@ public class ViewerController extends FrameworkController {
      * Delete the notification.
      */
     public void onClick$btnDelete() {
-        if (PromptDialog.confirm(StrUtil.formatMessage("@vistanotification.viewer.delete.confirm.prompt",
-            notification.getSubject()))) {
+        if (PromptDialog.confirm(
+            StrUtil.formatMessage("@vistanotification.viewer.delete.confirm.prompt", notification.getSubject()))) {
             onAction(Action.DELETE);
         }
     }
@@ -193,7 +194,7 @@ public class ViewerController extends FrameworkController {
             try {
                 actionListener.onEvent(new ActionEvent(notification, action));
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw MiscUtil.toUnchecked(e);
             }
         }
     }

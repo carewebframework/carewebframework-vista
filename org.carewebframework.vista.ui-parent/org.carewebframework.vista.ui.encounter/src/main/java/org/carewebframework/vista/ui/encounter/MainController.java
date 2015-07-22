@@ -12,12 +12,10 @@ package org.carewebframework.vista.ui.encounter;
 import java.util.EnumSet;
 import java.util.Set;
 
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-
 import org.carewebframework.api.FrameworkUtil;
 import org.carewebframework.cal.api.encounter.EncounterContext;
 import org.carewebframework.cal.api.patient.PatientContext;
+import org.carewebframework.common.MiscUtil;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.PromptDialog;
@@ -28,6 +26,9 @@ import org.zkoss.zul.Button;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Window;
+
+import ca.uhn.fhir.model.dstu2.resource.Encounter;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
 
 /**
  * Main encounter selection controller.
@@ -76,7 +77,7 @@ public class MainController extends FrameworkController implements PatientContex
             dlg.doModal();
         } catch (Exception e) {
             FrameworkUtil.setAttribute(SELECTION_DIALOG, null);
-            throw new RuntimeException(e);
+            throw MiscUtil.toUnchecked(e);
         }
     }
     

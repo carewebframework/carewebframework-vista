@@ -19,6 +19,7 @@ import org.carewebframework.api.alias.AliasTypeRegistry;
 import org.carewebframework.api.domain.DomainFactoryRegistry;
 import org.carewebframework.api.property.IPropertyService;
 import org.carewebframework.api.security.SecurityUtil;
+import org.carewebframework.common.MiscUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 
@@ -78,11 +79,11 @@ public class PropertyService implements IPropertyService, IPropertyDAO {
     @Override
     public void saveValue(Property property, String entity) {
         if (property.isDefined()) {
-            Object value = property.isEmpty() ? "@" : "W".equals(property.getDataType()) ? property.getValues() : property
-                    .getValue();
+            Object value = property.isEmpty() ? "@"
+                    : "W".equals(property.getDataType()) ? property.getValues() : property.getValue();
             String result = broker.callRPC("RGCWFPAR SETPAR", property.getName(), value, entity == null ? "USR" : entity,
                 getInstanceId(property));
-            
+                
             if (result.contains(StrUtil.U)) {
                 throw new RuntimeException(result);
             }
@@ -104,7 +105,7 @@ public class PropertyService implements IPropertyService, IPropertyDAO {
         try {
             return DomainFactoryRegistry.fetchObject(PropertyDefinition.class, Long.toString(id));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw MiscUtil.toUnchecked(e);
         }
     }
     
@@ -113,7 +114,7 @@ public class PropertyService implements IPropertyService, IPropertyDAO {
         try {
             return DomainFactoryRegistry.fetchObject(PropertyDefinition.class, "@" + toAlias(propertyName));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw MiscUtil.toUnchecked(e);
         }
     }
     

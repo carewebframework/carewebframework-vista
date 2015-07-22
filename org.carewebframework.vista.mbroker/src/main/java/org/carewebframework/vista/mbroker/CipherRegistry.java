@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import org.carewebframework.common.AbstractRegistry;
+import org.carewebframework.common.MiscUtil;
 import org.carewebframework.common.RegistryMap.DuplicateAction;
 
 /**
@@ -113,7 +114,7 @@ public class CipherRegistry extends AbstractRegistry<String, String[]> {
             }
             
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw MiscUtil.toUnchecked(e);
         } finally {
             IOUtils.closeQuietly(source);
         }

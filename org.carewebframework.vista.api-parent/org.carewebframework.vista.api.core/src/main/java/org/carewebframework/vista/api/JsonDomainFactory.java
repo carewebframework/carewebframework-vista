@@ -15,6 +15,7 @@ import java.util.List;
 import org.carewebframework.api.domain.IDomainFactory;
 import org.carewebframework.api.domain.User;
 import org.carewebframework.common.JSONUtil;
+import org.carewebframework.common.MiscUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 
 import org.springframework.util.StringUtils;
@@ -37,7 +38,7 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
     }
     
     private JsonDomainFactory() {
-        
+    
     }
     
     @Override
@@ -45,7 +46,7 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
         try {
             return clazz.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw MiscUtil.toUnchecked(e);
         }
     }
     
@@ -97,7 +98,7 @@ public class JsonDomainFactory implements IDomainFactory<Object> {
             try {
                 Class.forName(clazz.getName());
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                throw MiscUtil.toUnchecked(e);
             }
             alias = JSONUtil.getAlias(clazz);
         }
