@@ -1,25 +1,26 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.carewebframework</groupId>
 		<artifactId>org.carewebframework-parent</artifactId>
 		<version>4.0.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<groupId>org.carewebframework</groupId>
 	<artifactId>org.carewebframework.vista-parent</artifactId>
 	<version>1.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>VistA Parent POM</name>
-	
+
 	<scm>
 		<connection>${scm.scm}:${scm.base}</connection>
 		<developerConnection>${scm.scm}:${scm.base}</developerConnection>
 		<url>${scm.base}</url>
-	  <tag>HEAD</tag>
-  </scm>
-	
+		<tag>HEAD</tag>
+	</scm>
+
 	<licenses>
 		<license>
 			<name>MPL 2.0</name>
@@ -40,7 +41,7 @@
 			</comments>
 		</license>
 	</licenses>
-	
+
 	<properties>
 		<scm.parent>carewebframework-vista</scm.parent>
 		<org.carewebframework.vista.version>1.1.0-SNAPSHOT</org.carewebframework.vista.version>
@@ -48,7 +49,7 @@
 		<org.carewebframework.highcharts.version>4.0.0-SNAPSHOT</org.carewebframework.highcharts.version>
 		<org.carewebframework.smart.version>4.0.0-SNAPSHOT</org.carewebframework.smart.version>
 	</properties>
-	
+
 	<modules>
 		<module>org.carewebframework.vista.mbroker</module>
 		<module>org.carewebframework.vista.api-parent</module>
@@ -56,7 +57,37 @@
 		<module>org.carewebframework.vista.ui-parent</module>
 		<module>org.carewebframework.vista.webapp-parent</module>
 	</modules>
-	
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.carewebframework</groupId>
+					<artifactId>org.carewebframework.mvn.plugin.helpconverter</artifactId>
+					<version>${org.carewebframework.core.version}</version>
+					<configuration>
+						<archiveLoaders>
+							<param>org.carewebframework.help.chm.maven.ChmSourceLoader</param>
+						</archiveLoaders>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.carewebframework</groupId>
+							<artifactId>org.carewebframework.help.chm.maven</artifactId>
+							<version>4.0.0-SNAPSHOT</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.carewebframework</groupId>
+				<artifactId>org.carewebframework.mvn.plugin.helpconverter</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -84,6 +115,12 @@
 				<artifactId>org.carewebframework.vista.mbroker</artifactId>
 				<version>${org.carewebframework.vista.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.carewebframework</groupId>
+				<artifactId>org.carewebframework.help.chm.adapter</artifactId>
+				<version>4.0.0-SNAPSHOT</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
 </project>

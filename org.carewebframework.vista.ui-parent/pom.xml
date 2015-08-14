@@ -11,6 +11,13 @@
 	<packaging>pom</packaging>
 	<name>VistA UI POM Aggregator</name>
 	
+	<dependencies>
+		<dependency>
+			<groupId>org.carewebframework</groupId>
+			<artifactId>org.carewebframework.help.chm.adapter</artifactId>
+		</dependency>
+	</dependencies>
+	
 	<modules>
 		<module>org.carewebframework.vista.ui.core</module>
 		<module>org.carewebframework.vista.ui.encounter</module>
