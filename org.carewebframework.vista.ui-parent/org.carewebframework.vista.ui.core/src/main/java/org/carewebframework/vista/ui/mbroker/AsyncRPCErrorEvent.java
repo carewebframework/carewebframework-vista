@@ -22,8 +22,8 @@ public class AsyncRPCErrorEvent extends AsyncRPCBaseEvent {
     
     private final int errorCode;
     
-    public AsyncRPCErrorEvent(String rpcName, Component target, int errorCode, String errorText) {
-        super(ON_ASYNC_RPC_ERROR, target, errorText, rpcName);
+    public AsyncRPCErrorEvent(String rpcName, Component target, int errorCode, String errorText, int handle) {
+        super(ON_ASYNC_RPC_ERROR, target, errorText, rpcName, handle);
         this.errorCode = errorCode;
     }
     

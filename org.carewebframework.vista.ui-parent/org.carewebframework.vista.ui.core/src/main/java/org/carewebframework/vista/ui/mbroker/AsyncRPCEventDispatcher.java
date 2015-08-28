@@ -45,11 +45,13 @@ public class AsyncRPCEventDispatcher implements IAsyncRPCEvent {
      * 
      * @param rpcName The RPC name.
      * @param args The RPC arguments.
+     * @return The async handle.
      */
-    public void callRPCAsync(String rpcName, Object... args) {
+    public int callRPCAsync(String rpcName, Object... args) {
         abort();
         this.rpcName = rpcName;
         asyncHandle = broker.callRPCAsync(rpcName, this, args);
+        return asyncHandle;
     }
     
     /**
@@ -60,7 +62,7 @@ public class AsyncRPCEventDispatcher implements IAsyncRPCEvent {
             int handle = asyncHandle;
             asyncHandle = 0;
             broker.callRPCAbort(handle);
-            ZKUtil.fireEvent(new AsyncRPCAbortEvent(rpcName, target));
+            ZKUtil.fireEvent(new AsyncRPCAbortEvent(rpcName, target, handle));
             rpcName = null;
         }
     }
@@ -72,7 +74,7 @@ public class AsyncRPCEventDispatcher implements IAsyncRPCEvent {
     public void onRPCComplete(int handle, String data) {
         if (handle == asyncHandle) {
             asyncHandle = 0;
-            ZKUtil.fireEvent(new AsyncRPCCompleteEvent(rpcName, target, data));
+            ZKUtil.fireEvent(new AsyncRPCCompleteEvent(rpcName, target, data, handle));
             rpcName = null;
         }
     }
@@ -84,7 +86,7 @@ public class AsyncRPCEventDispatcher implements IAsyncRPCEvent {
     public void onRPCError(int handle, int code, String text) {
         if (handle == asyncHandle) {
             asyncHandle = 0;
-            ZKUtil.fireEvent(new AsyncRPCErrorEvent(rpcName, target, code, text));
+            ZKUtil.fireEvent(new AsyncRPCErrorEvent(rpcName, target, code, text, handle));
             rpcName = null;
         }
     }

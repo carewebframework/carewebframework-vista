@@ -20,7 +20,7 @@ public class AsyncRPCAbortEvent extends AsyncRPCBaseEvent {
     
     public static final String ON_ASYNC_RPC_ABORT = "onAsyncRPCAbort";
     
-    public AsyncRPCAbortEvent(String rpcName, Component target) {
-        super(ON_ASYNC_RPC_ABORT, target, null, rpcName);
+    public AsyncRPCAbortEvent(String rpcName, Component target, int handle) {
+        super(ON_ASYNC_RPC_ABORT, target, null, rpcName, handle);
     }
 }

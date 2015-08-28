@@ -23,9 +23,12 @@ public abstract class AsyncRPCBaseEvent extends Event {
     
     private final String rpcName;
     
-    protected AsyncRPCBaseEvent(String eventName, Component target, String eventData, String rpcName) {
+    private final int asyncHandle;
+    
+    protected AsyncRPCBaseEvent(String eventName, Component target, String eventData, String rpcName, int handle) {
         super(eventName, target, eventData);
         this.rpcName = rpcName;
+        this.asyncHandle = handle;
     }
     
     /**
@@ -35,6 +38,15 @@ public abstract class AsyncRPCBaseEvent extends Event {
      */
     public String getRPCName() {
         return rpcName;
+    }
+    
+    /**
+     * Returns the async handle associated with the async request.
+     * 
+     * @return The async handle.
+     */
+    public int getHandle() {
+        return asyncHandle;
     }
     
     @Override

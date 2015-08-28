@@ -20,7 +20,7 @@ public class AsyncRPCCompleteEvent extends AsyncRPCBaseEvent {
     
     public static final String ON_ASYNC_RPC_COMPLETE = "onAsyncRPCComplete";
     
-    public AsyncRPCCompleteEvent(String rpcName, Component target, String data) {
-        super(ON_ASYNC_RPC_COMPLETE, target, data, rpcName);
+    public AsyncRPCCompleteEvent(String rpcName, Component target, String data, int handle) {
+        super(ON_ASYNC_RPC_COMPLETE, target, data, rpcName, handle);
     }
 }
