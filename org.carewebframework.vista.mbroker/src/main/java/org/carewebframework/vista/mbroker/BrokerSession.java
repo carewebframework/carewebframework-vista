@@ -521,6 +521,11 @@ public class BrokerSession {
      */
     protected synchronized Response netCall(Request request, int timeout) {
         Response response = null;
+        
+        if (serverCaps != null && serverCaps.isDebugMode()) {
+            timeout = 0;
+        }
+        
         try {
             socket.setSoTimeout(timeout);
             DataOutputStream requestPacket = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
