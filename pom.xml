@@ -44,10 +44,9 @@
 
 	<properties>
 		<scm.parent>carewebframework-vista</scm.parent>
-		<org.carewebframework.vista.version>1.1.0-SNAPSHOT</org.carewebframework.vista.version>
-		<org.carewebframework.cal.version>4.0.0-SNAPSHOT</org.carewebframework.cal.version>
+		<org.carewebframework.cal.version>4.0.0</org.carewebframework.cal.version>
 		<org.carewebframework.highcharts.version>4.1.9</org.carewebframework.highcharts.version>
-		<org.carewebframework.smart.version>4.0.0-SNAPSHOT</org.carewebframework.smart.version>
+		<org.carewebframework.smart.version>4.0.0</org.carewebframework.smart.version>
 	</properties>
 
 	<modules>
@@ -103,17 +102,17 @@
 			<dependency>
 				<groupId>org.carewebframework</groupId>
 				<artifactId>org.carewebframework.vista.api.core</artifactId>
-				<version>${org.carewebframework.vista.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.carewebframework</groupId>
 				<artifactId>org.carewebframework.vista.ui.core</artifactId>
-				<version>${org.carewebframework.vista.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.carewebframework</groupId>
 				<artifactId>org.carewebframework.vista.mbroker</artifactId>
-				<version>${org.carewebframework.vista.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.carewebframework</groupId>

@@ -16,7 +16,7 @@
 			<dependency>
 				<groupId>org.carewebframework</groupId>
 				<artifactId>org.carewebframework.vista.security.base</artifactId>
-				<version>${org.carewebframework.vista.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
