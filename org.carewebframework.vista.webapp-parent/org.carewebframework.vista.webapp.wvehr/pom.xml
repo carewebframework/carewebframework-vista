@@ -125,8 +125,7 @@
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.themes</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
-			<classifier>theme</classifier>
+			<version>4.0.0</version>
 		</dependency>
 		<!-- VistA Plugins -->
 		<dependency>
