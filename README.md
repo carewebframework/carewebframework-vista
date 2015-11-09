@@ -1,7 +1,7 @@
 # VistA Adapter for CareWeb Framework
 This project allows the CareWeb Framework to run on top of the Veterans Health Administration's [VistA EMR](http://www.ehealth.va.gov/VistA.asp).  It is pre-configured to run on the  [WorldVistA WVEHR database](http://worldvista.org/Software_Download)  (not provided), but can be run on other VistA distros as well.
 
-The project includes a Java port of the Medsphere RPC broker and integrates broker-based security with
+The project includes the NETSERV RPC broker and integrates broker-based security with
 the Spring Security framework.
 
 The project also includes several clinical plugins, some fully functional while others are in the early
@@ -10,7 +10,7 @@ stages of development.
 Installation:
 
 1. Using KIDS, install the provided build <b>kids/cwf-vista-1.0.kid</b>.
-2. At the M command line, execute <b>D STARTALL^CIANBLIS</b> to start the broker on port 9300.
+2. At the M command line, execute <b>D STARTALL^RGNETTCP</b> to start the broker on port 9300.
 3. If TaskMan is not running, it may be started from the M command line by entering <b>D ^ZTMB</b>.
 
 Running:
