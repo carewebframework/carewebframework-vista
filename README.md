@@ -15,10 +15,9 @@ Installation:
 
 Running:
 
-1. Using Maven, build and install the separate <b>carewebframework-core</b> and <b>carewebframework-icons</b> projects.
-2. In the <b>carewebframework-vista</b> project under the <b>org.carewebframework.vista.web.impl.wvehr</b> artifact, edit the <b>cwf.properties</b> file to reflect your broker and user authentication settings.
-3. Using Maven, build the <b>carewebframework-vista</b> project.  A war file will be created under the <b>target</b> folder of the <b>org.carewebframework.vista.web.impl.wvehr</b> artifact.
-4. Deploy and run the created war file using Tomcat or other servlet container.
+1. In the <b>carewebframework-vista</b> project under the <b>org.carewebframework.vista.webapp.wvehr</b> artifact, edit the <b>cwf.properties</b> file to reflect your broker and user authentication settings.
+2. Using Maven, build the <b>carewebframework-vista</b> project.  A war file will be created under the <b>target</b> folder of the <b>org.carewebframework.vista.webapp.wvehr</b> artifact.
+3. Deploy and run the created war file using Tomcat or other servlet container.
 
 Additional configuration:
 
