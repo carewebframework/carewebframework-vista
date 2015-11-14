@@ -14,7 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.help.chm.adapter</artifactId>
+			<artifactId>org.carewebframework.help.chm</artifactId>
 		</dependency>
 	</dependencies>
 	
