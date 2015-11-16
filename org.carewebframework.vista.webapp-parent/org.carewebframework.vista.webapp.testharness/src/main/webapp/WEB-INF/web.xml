@@ -122,6 +122,5 @@
 	</session-config>
 	<welcome-file-list>
 		<welcome-file>index.zul</welcome-file>
-		<welcome-file>careWeb.zul</welcome-file>
 	</welcome-file-list>
 </web-app>
