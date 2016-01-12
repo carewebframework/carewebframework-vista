@@ -76,9 +76,13 @@ public class SecurityDomain implements ISecurityDomain {
         BrokerSession broker = VistAUtil.getBrokerSession();
         AuthResult authResult = broker.authenticate(username, password, getLogicalId());
         User user = getAuthenticatedUser(broker);
-        user.setLoginName(username);
-        user.setPassword(password);
-        user.setSecurityDomain(this);
+        
+        if (user != null) {
+            user.setLoginName(username);
+            user.setPassword(password);
+            user.setSecurityDomain(this);
+        }
+        
         checkAuthResult(authResult, user);
         return user;
     }
@@ -94,8 +98,8 @@ public class SecurityDomain implements ISecurityDomain {
     }
     
     private User getAuthenticatedUser(BrokerSession broker) {
-        return broker.isAuthenticated() ? DomainFactoryRegistry
-                .fetchObject(User.class, Integer.toString(broker.getUserId())) : null;
+        return broker.isAuthenticated() ? DomainFactoryRegistry.fetchObject(User.class, Integer.toString(broker.getUserId()))
+                : null;
     }
     
     private void checkAuthResult(AuthResult result, IUser user) throws AuthenticationException {
@@ -104,22 +108,22 @@ public class SecurityDomain implements ISecurityDomain {
                 return;
                 
             case CANCELED:
-                throw new AuthenticationCancelledException(StringUtils.defaultIfEmpty(result.reason,
-                    "Authentication attempt was cancelled."));
-                
+                throw new AuthenticationCancelledException(
+                        StringUtils.defaultIfEmpty(result.reason, "Authentication attempt was cancelled."));
+                        
             case EXPIRED:
                 Sessions.getCurrent().setAttribute(org.carewebframework.security.spring.Constants.SAVED_USER, user);
                 throw new CredentialsExpiredException(
                         StringUtils.defaultIfEmpty(result.reason, "Your password has expired."));
-                
+                        
             case FAILURE:
-                throw new BadCredentialsException(StringUtils.defaultIfEmpty(result.reason,
-                    "Your username or password was not recognized."));
-                
+                throw new BadCredentialsException(
+                        StringUtils.defaultIfEmpty(result.reason, "Your username or password was not recognized."));
+                        
             case LOCKED:
                 throw new LockedException(StringUtils.defaultIfEmpty(result.reason,
                     "Your user account has been locked and cannot be accessed."));
-                
+                    
             case NOLOGINS:
                 throw new DisabledException(StringUtils.defaultIfEmpty(result.reason, "Logins are currently disabled."));
         }
