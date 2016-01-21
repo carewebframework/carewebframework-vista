@@ -16,6 +16,13 @@ import static org.junit.Assert.fail;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.carewebframework.api.domain.IDomainFactory;
+import org.carewebframework.api.test.CommonTest;
+import org.carewebframework.cal.api.ClientUtil;
+import org.carewebframework.cal.api.DomainFactory;
+
+import org.junit.Test;
+
 import ca.uhn.fhir.model.api.ExtensionDt;
 import ca.uhn.fhir.model.dstu2.resource.BaseResource;
 import ca.uhn.fhir.model.dstu2.resource.Binary;
@@ -24,13 +31,6 @@ import ca.uhn.fhir.model.dstu2.resource.DocumentReference;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.primitive.UriDt;
 import ca.uhn.fhir.rest.client.IGenericClient;
-
-import org.carewebframework.api.domain.IDomainFactory;
-import org.carewebframework.api.test.CommonTest;
-import org.carewebframework.cal.api.ClientUtil;
-import org.carewebframework.cal.api.DomainFactory;
-
-import org.junit.Test;
 
 public class FhirTest extends CommonTest {
     
@@ -51,7 +51,7 @@ public class FhirTest extends CommonTest {
         assertEquals(2, patients.size());
         DocumentReference dr = factory.fetchObject(DocumentReference.class, "1");
         assertNotNull(dr);
-        UriDt uri = dr.getContentFirstRep().getUrlElement();
+        UriDt uri = dr.getContentFirstRep().getAttachment().getUrlElement();
         IGenericClient client = ClientUtil.getFhirClient();
         Binary result = (Binary) client.read(uri);
         assertNotNull(result);
@@ -68,7 +68,7 @@ public class FhirTest extends CommonTest {
             client.read(_url);
             fail("Expected exception not thrown.");
         } catch (Exception e) {
-            
+        
         }
     }
     
