@@ -191,11 +191,6 @@
 			<artifactId>org.carewebframework.vista.api.patientlist</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.vista.api.smart</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		<!-- Security -->
 		<dependency>
 			<groupId>org.carewebframework</groupId>

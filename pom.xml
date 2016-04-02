@@ -45,7 +45,7 @@
 		<scm.parent>carewebframework-vista</scm.parent>
 		<org.carewebframework.cal.version>5.0.0-SNAPSHOT</org.carewebframework.cal.version>
 		<org.carewebframework.highcharts.version>4.1.9</org.carewebframework.highcharts.version>
-		<org.carewebframework.smart.version>4.0.0</org.carewebframework.smart.version>
+		<org.carewebframework.smart.version>5.0.0-SNAPSHOT</org.carewebframework.smart.version>
 	</properties>
 
 	<modules>
