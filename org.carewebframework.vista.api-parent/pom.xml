@@ -13,7 +13,6 @@
 	
 	<modules>
 		<module>org.carewebframework.vista.api.core</module>
-		<module>org.carewebframework.vista.api.smart</module>
 		<module>org.carewebframework.vista.api.patientlist</module>
 		<module>org.carewebframework.vista.api.documents</module>
 		<module>org.carewebframework.vista.api.notification</module>
