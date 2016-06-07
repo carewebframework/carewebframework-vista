@@ -59,18 +59,15 @@
 		<!-- Domain factories  -->
 		<bean class="org.carewebframework.vista.api.JsonDomainFactory" />
 
-	</beans>
-
-	<beans profile="desktop">
-
-		<!-- globalEventDispatcher: Mediates communications between the local and 
-			the global event manager. -->
-		<bean id="globalEventDispatcher" init-method="init"
-			destroy-method="destroy" cwf:override="always"
-			class="org.carewebframework.vista.api.event.GlobalEventDispatcher">
-			<property name="brokerSession" ref="brokerSession" />
-			<property name="localEventDispatcher" ref="eventManager" />
+		<!-- Messaging support -->
+		
+		<bean class="org.carewebframework.vista.api.messaging.MessageConsumer">
+			<constructor-arg ref="brokerSession" />
 		</bean>
-
+		
+		<bean class="org.carewebframework.vista.api.messaging.MessageProducer">
+			<constructor-arg ref="brokerSession" />
+		</bean>
 	</beans>
+
 </beans>
