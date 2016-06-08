@@ -15,8 +15,6 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.carewebframework.common.JSONUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.mbroker.Request.Action;
 
@@ -24,14 +22,14 @@ import org.carewebframework.vista.mbroker.Request.Action;
  * Background thread for polling host.
  */
 public class PollingThread extends Thread {
-
+    
     private static final Log log = LogFactory.getLog(PollingThread.class);
-
+    
     /**
      * Callback interface for handling background polling events.
      */
     public interface IHostEventHandler {
-
+        
         /**
          * Called when the server signals an event to the client.
          *
@@ -39,23 +37,23 @@ public class PollingThread extends Thread {
          * @param data Data associated with the event.
          */
         void onHostEvent(String name, Object data);
-
+        
     }
-
+    
     private boolean enabled;
-
+    
     private boolean terminated;
-
+    
     private int pollingInterval = 3000;
-
+    
     private final WeakReference<BrokerSession> sessionRef;
-
+    
     private final Object monitor = new Object();
-
+    
     private Request query;
-
+    
     private Request ping;
-
+    
     /**
      * Creates and starts a polling thread for the specified session. If an executor service has
      * been configured, thread execution will be delegated to that service. Otherwise, it will be
@@ -66,16 +64,16 @@ public class PollingThread extends Thread {
     public PollingThread(BrokerSession session) {
         super();
         setName("MBrokerPollingDaemon-" + getId());
-        this.sessionRef = new WeakReference<BrokerSession>(session);
+        sessionRef = new WeakReference<BrokerSession>(session);
         ExecutorService executor = session.getExecutorService();
-
+        
         if (executor != null) {
             executor.execute(this);
         } else {
             start();
         }
     }
-
+    
     /**
      * Requests the background thread to terminate.
      */
@@ -84,7 +82,7 @@ public class PollingThread extends Thread {
         terminated = true;
         wakeup();
     }
-
+    
     /**
      * Returns the enabled state of the background thread.
      *
@@ -94,7 +92,7 @@ public class PollingThread extends Thread {
     public boolean isEnabled() {
         return enabled;
     }
-
+    
     /**
      * Sets the enabled state of the background thread.
      *
@@ -104,7 +102,7 @@ public class PollingThread extends Thread {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
+    
     /**
      * Creates a request packet for the specified action.
      *
@@ -119,21 +117,21 @@ public class PollingThread extends Thread {
                     query = new Request(action);
                     query.addParameter("UID", session.getId());
                 }
-
+                
                 return query;
-
+            
             case PING:
                 if (ping == null) {
                     ping = new Request(action);
                 }
-
+                
                 return ping;
-
+            
             default:
                 return null;
         }
     }
-
+    
     /**
      * Polls the host at the specified interval for asynchronous activity.
      *
@@ -141,32 +139,32 @@ public class PollingThread extends Thread {
      */
     private void pollHost(BrokerSession session) {
         Request request = !enabled ? null : getRequest(session.pollingAction(), session);
-
+        
         if (request == null) {
             return;
         }
-
+        
         try {
             Response response = session.netCall(request, 1000);
             String results[] = response.getData().split(Constants.LINE_SEPARATOR, 2);
             String params[] = StrUtil.split(results[0], StrUtil.U, 2);
-
+            
             switch (response.getResponseType()) {
                 case ACK: // A simple server acknowledgement
                     int i = StrUtil.toInt(params[0]);
-
+                    
                     if (i > 0) {
                         pollingInterval = i * 1000;
                     }
-
+                    
                     FMDate hostTime = new FMDate(params[1]);
                     session.setHostTime(hostTime);
                     break;
-
+                
                 case ASYNC: // Completed asynchronous RPC
                     int asyncHandle = StrUtil.toInt(params[0]);
                     int asyncError = StrUtil.toInt(params[1]);
-
+                    
                     if (asyncHandle > 0) {
                         if (asyncError != 0) {
                             session.onRPCError(asyncHandle, asyncError, results[1]);
@@ -175,22 +173,15 @@ public class PollingThread extends Thread {
                         }
                     }
                     break;
-
+                
                 case EVENT: // Global event for delivery
                     List<IHostEventHandler> hostEventHandlers = session.getHostEventHandlers();
-
+                    
                     if (hostEventHandlers != null) {
                         try {
                             String eventName = results[0];
-                            String result = results[1];
-                            Object eventData = null;
-
-                            if (result.startsWith(Constants.JSON_PREFIX)) {
-                                eventData = JSONUtil.deserialize(result.substring(Constants.JSON_PREFIX.length()));
-                            } else {
-                                eventData = result;
-                            }
-
+                            Object eventData = sessionRef.get().deserialize(results[1]);
+                            
                             for (IHostEventHandler hostEventHandler : hostEventHandlers) {
                                 try {
                                     hostEventHandler.onHostEvent(eventName, eventData);
@@ -209,7 +200,7 @@ public class PollingThread extends Thread {
             terminate();
         }
     }
-
+    
     /**
      * Wakes up the background thread.
      *
@@ -225,7 +216,7 @@ public class PollingThread extends Thread {
             return false;
         }
     }
-
+    
     /**
      * Main polling loop.
      */
@@ -235,7 +226,7 @@ public class PollingThread extends Thread {
             while (!terminated) {
                 try {
                     BrokerSession session = this.sessionRef.get();
-
+                    
                     if (session == null) {
                         break;
                     } else {
@@ -246,7 +237,7 @@ public class PollingThread extends Thread {
                 } catch (InterruptedException e) {}
             }
         }
-
+        
         log.debug(getName() + " has exited.");
     }
 }

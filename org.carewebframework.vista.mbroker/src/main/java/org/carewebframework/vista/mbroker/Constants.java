@@ -21,8 +21,6 @@ public class Constants {
     
     public static final Charset UTF8 = Charset.forName("UTF-8");
     
-    public static final String JSON_PREFIX = "@json@";
-    
     public static final String LINE_SEPARATOR = "\r";
     
     /**

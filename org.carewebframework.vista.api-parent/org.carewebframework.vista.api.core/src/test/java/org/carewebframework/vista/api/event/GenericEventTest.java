@@ -12,8 +12,7 @@ package org.carewebframework.vista.api.event;
 public class GenericEventTest extends org.carewebframework.api.test.GenericEventTest {
     
     public GenericEventTest() {
-        super();
+        super(true, null);
         pollingInterval = 1000;
-        this.remote = true;
     }
 }

@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.carewebframework.vista.mbroker.BrokerSession.IAsyncRPCEvent;
+import org.carewebframework.vista.mbroker.BrokerSession.SerializationMethod;
 import org.carewebframework.vista.mbroker.PollingThread.IHostEventHandler;
 import org.carewebframework.vista.mbroker.Security.AuthResult;
 import org.carewebframework.vista.mbroker.Security.AuthStatus;
-
 import org.junit.Test;
 
 public class BrokerTest implements IHostEventHandler, IAsyncRPCEvent {
@@ -61,7 +61,9 @@ public class BrokerTest implements IHostEventHandler, IAsyncRPCEvent {
     
     private int asyncHandle;
     
-    private boolean eventReceived;
+    private int eventsSent = 2;
+    
+    private final TestBean testBean = new TestBean(123, "test");
     
     @Test
     public void testConnection() throws Exception {
@@ -83,17 +85,20 @@ public class BrokerTest implements IHostEventHandler, IAsyncRPCEvent {
         results.remove(0);
         assertList(results);
         session.eventSubscribe("test", true);
-        session.fireRemoteEvent("test", new TestBean(123, "test"), (String) null);
+        session.setSerializationMethod(SerializationMethod.JSON);
+        session.fireRemoteEvent("test", testBean, (String) null);
+        session.setSerializationMethod(SerializationMethod.JAVA);
+        session.fireRemoteEvent("test", testBean, (String) null);
         asyncHandle = session.callRPCAsync("XWB EGCHO LIST", this);
         print("Async RPC Handle: " + asyncHandle);
         int tries = 30;
         
-        while (tries-- > 0 && (asyncHandle != 0 || !eventReceived)) {
+        while (tries-- > 0 && (asyncHandle != 0 || eventsSent > 0)) {
             Thread.sleep(1000);
         }
         
+        assertTrue("Host event failed - is TaskMan running?", eventsSent == 0);
         assertTrue("Async RPC failed - is TaskMan running?", asyncHandle == 0);
-        assertTrue("Host event failed - is TaskMan running?", eventReceived);
         session.disconnect();
     }
     
@@ -130,11 +135,11 @@ public class BrokerTest implements IHostEventHandler, IAsyncRPCEvent {
         assertEquals("test", name);
         assertTrue(data instanceof TestBean);
         TestBean bean = (TestBean) data;
-        assertEquals(123, bean.intValue);
-        assertEquals("test", bean.strValue);
+        assertEquals(testBean.intValue, bean.intValue);
+        assertEquals(testBean.strValue, bean.strValue);
         print("Host Event Name: " + name);
         print("Host Event Data: " + data);
-        eventReceived = true;
+        eventsSent--;
     }
     
     private void print(Object object) {

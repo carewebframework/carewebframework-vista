@@ -11,9 +11,13 @@ package org.carewebframework.vista.mbroker;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -23,8 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
+import org.apache.commons.codec.binary.Base64InputStream;
+import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.lang.StringUtils;
-
 import org.carewebframework.common.JSONUtil;
 import org.carewebframework.common.MiscUtil;
 import org.carewebframework.common.StrUtil;
@@ -66,11 +71,42 @@ public class BrokerSession {
         Normal, Cache, NT
     }
     
+    /**
+     * Serialization method to use.
+     */
+    public enum SerializationMethod {
+        JAVA("@java.io.Serializable@"), JSON("@json@");
+        
+        private final String prefix;
+        
+        SerializationMethod(String prefix) {
+            this.prefix = prefix;
+        }
+        
+        public String getPrefix() {
+            return prefix;
+        }
+        
+        public static SerializationMethod detect(String data) {
+            if (data != null) {
+                for (SerializationMethod method : SerializationMethod.values()) {
+                    if (data.startsWith(method.prefix)) {
+                        return method;
+                    }
+                }
+            }
+            
+            return null;
+        }
+    }
+    
     private ConnectionParams connectionParams;
     
     private ServerCaps serverCaps;
     
     private ExecutorService executorService;
+    
+    private SerializationMethod serializationMethod = SerializationMethod.JSON;
     
     private Date hostTime;
     
@@ -82,16 +118,16 @@ public class BrokerSession {
     
     private volatile Socket socket;
     
-    private final List<IHostEventHandler> hostEventHandlers = new ArrayList<IHostEventHandler>();
+    private final List<IHostEventHandler> hostEventHandlers = new ArrayList<>();
     
     private PollingThread pollingThread;
     
-    private final List<String> postLoginMessage = new ArrayList<String>();
+    private final List<String> postLoginMessage = new ArrayList<>();
     
-    private final Map<Integer, IAsyncRPCEvent> callbacks = new HashMap<Integer, IAsyncRPCEvent>();
+    private final Map<Integer, IAsyncRPCEvent> callbacks = new HashMap<>();
     
     public BrokerSession() {
-    
+        
     }
     
     public BrokerSession(ConnectionParams params) {
@@ -335,8 +371,7 @@ public class BrokerSession {
         params.get(0).setValue(eventName);
         
         RPCParameter param = params.get(1);
-        String data = eventData == null ? ""
-                : eventData instanceof String ? eventData.toString() : Constants.JSON_PREFIX + JSONUtil.serialize(eventData);
+        String data = eventData == null ? "" : eventData instanceof String ? eventData.toString() : serialize(eventData);
         int index = 0;
         
         for (int i = 0; i < data.length(); i += 255) {
@@ -352,6 +387,58 @@ public class BrokerSession {
         }
         
         callRPC("RGNETBEV BCAST", params);
+    }
+    
+    /**
+     * Serialize an object according to the current serialization setting.
+     * 
+     * @param object Object to serialize.
+     * @return The serialized object.
+     */
+    protected String serialize(Serializable object) {
+        switch (serializationMethod) {
+            case JSON:
+                return serializationMethod.prefix + JSONUtil.serialize(object);
+            
+            case JAVA:
+                try (ByteArrayOutputStream bary = new ByteArrayOutputStream();
+                        Base64OutputStream b64 = new Base64OutputStream(bary);
+                        ObjectOutputStream oos = new ObjectOutputStream(b64)) {
+                    oos.writeObject(object);
+                    return serializationMethod.prefix + bary.toString("UTF-8");
+                } catch (Exception e) {
+                    throw MiscUtil.toUnchecked(e);
+                }
+                
+            default:
+                throw new RuntimeException("Unrecognized serialization method.");
+        }
+    }
+    
+    /**
+     * Deserialize data if necessary.
+     * 
+     * @param data The raw data.
+     * @return The deserialized data, or the original data if not serialized.
+     */
+    protected Object deserialize(String data) {
+        switch (SerializationMethod.detect(data)) {
+            case JSON:
+                return JSONUtil.deserialize(data.substring(SerializationMethod.JSON.prefix.length()));
+            
+            case JAVA:
+                byte[] bytes = data.substring(SerializationMethod.JAVA.prefix.length()).getBytes();
+                
+                try (ByteArrayInputStream bary = new ByteArrayInputStream(bytes);
+                        Base64InputStream b64 = new Base64InputStream(bary);
+                        ObjectInputStream ois = new ObjectInputStream(b64);) {
+                    return ois.readObject();
+                } catch (Exception e) {
+                    throw MiscUtil.toUnchecked(e);
+                }
+            default:
+                return data;
+        }
     }
     
     private boolean processRecipient(RPCParameter param, String prefix, String subscript, String recipient) {
@@ -715,6 +802,24 @@ public class BrokerSession {
      */
     public void setExecutorService(ExecutorService executorService) {
         this.executorService = executorService;
+    }
+    
+    /**
+     * Returns the serialization method to be used when sending objects.
+     * 
+     * @return The serialization method.
+     */
+    public SerializationMethod getSerializationMethod() {
+        return serializationMethod;
+    }
+    
+    /**
+     * Sets the serialization method to be used when sending objects.
+     * 
+     * @param serializationMethod The serialization method.
+     */
+    public void setSerializationMethod(SerializationMethod serializationMethod) {
+        this.serializationMethod = serializationMethod == null ? SerializationMethod.JSON : serializationMethod;
     }
     
 }
