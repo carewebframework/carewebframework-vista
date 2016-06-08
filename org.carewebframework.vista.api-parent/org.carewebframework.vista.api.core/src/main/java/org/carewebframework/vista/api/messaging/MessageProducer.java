@@ -9,9 +9,12 @@
  */
 package org.carewebframework.vista.api.messaging;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.carewebframework.api.messaging.IMessageProducer;
 import org.carewebframework.api.messaging.Message;
-import org.carewebframework.common.StrUtil;
+import org.carewebframework.api.messaging.Recipient;
 import org.carewebframework.vista.mbroker.BrokerSession;
 
 /**
@@ -28,31 +31,31 @@ public class MessageProducer implements IMessageProducer {
         this.brokerSession = brokerSession;
     }
     
-    public String[] formatRecipients(String recipients) {
+    public String[] formatRecipients(Recipient[] recipients) {
         if (recipients == null) {
             return null;
         }
         
-        String[] recips = StrUtil.split(recipients, ",");
+        List<String> result = new ArrayList<>();
         
-        for (int i = 0; i < recips.length; i++) {
-            String recip = recips[i];
-            
-            if (recip.startsWith("u-")) {
-                recip = recip.substring(2);
-            } else {
-                recip = "#" + recip;
+        for (Recipient recipient : recipients) {
+            switch (recipient.getType()) {
+                case USER:
+                    result.add(recipient.getValue());
+                    break;
+                
+                case SESSION:
+                    result.add("#" + recipient.getValue());
             }
-            
-            recips[i] = recip;
         }
         
-        return recips;
+        return result.isEmpty() ? null : (String[]) result.toArray();
     }
     
     @Override
     public boolean publish(String channel, Message message) {
-        brokerSession.fireRemoteEvent(channel, message, formatRecipients((String) message.getMetadata("recipients")));
+        brokerSession.fireRemoteEvent(channel, message,
+            formatRecipients((Recipient[]) message.getMetadata("cwf.pub.recipients")));
         return true;
     }
 }
