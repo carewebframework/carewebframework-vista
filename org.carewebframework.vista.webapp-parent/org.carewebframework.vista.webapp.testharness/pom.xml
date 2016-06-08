@@ -78,7 +78,7 @@
 			<artifactId>org.carewebframework.ui.userheader</artifactId>
 			<version>${org.carewebframework.core.version}</version>
 		</dependency>
-		<!-- VistA Plugins -->
+		<!-- VistA Support -->
 		<dependency>
 			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.vista.ui.core</artifactId>

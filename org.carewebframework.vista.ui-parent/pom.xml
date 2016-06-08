@@ -11,27 +11,8 @@
 	<packaging>pom</packaging>
 	<name>VistA UI POM Aggregator</name>
 	
-	<dependencies>
-		<dependency>
-			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.help.chm</artifactId>
-		</dependency>
-	</dependencies>
-	
 	<modules>
 		<module>org.carewebframework.vista.ui.core</module>
-		<module>org.carewebframework.vista.ui.encounter</module>
-		<module>org.carewebframework.vista.ui.location</module>
-		<module>org.carewebframework.vista.ui.alerts</module>
-		<module>org.carewebframework.vista.ui.allergies</module>
-		<module>org.carewebframework.vista.ui.consultorders</module>
-		<module>org.carewebframework.vista.ui.crises</module>
-		<module>org.carewebframework.vista.ui.documents</module>
-		<module>org.carewebframework.vista.ui.laborders</module>
 		<module>org.carewebframework.vista.ui.settings</module>
-		<module>org.carewebframework.vista.ui.notification</module>
-		<module>org.carewebframework.vista.ui.esig</module>
-		<module>org.carewebframework.vista.ui.cwad</module>
-		<module>org.carewebframework.vista.ui.vitals</module>
 	</modules>
 </project>

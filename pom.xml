@@ -53,6 +53,7 @@
 		<module>org.carewebframework.vista.api-parent</module>
 		<module>org.carewebframework.vista.security-parent</module>
 		<module>org.carewebframework.vista.ui-parent</module>
+		<module>org.carewebframework.vista.plugin-parent</module>
 		<module>org.carewebframework.vista.webapp-parent</module>
 	</modules>
 

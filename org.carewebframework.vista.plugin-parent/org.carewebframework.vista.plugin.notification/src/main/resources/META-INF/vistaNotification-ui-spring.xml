@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:cwp="http://www.carewebframework.org/schema/plugin" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		 http://www.springframework.org/schema/beans/spring-beans.xsd
+		 http://www.carewebframework.org/schema/plugin
+		 http://www.carewebframework.org/schema/plugin/plugin-extensions.xsd">
+
+	<beans profile="root">
+
+		<cwp:plugin url="~./org/carewebframework/vista/plugin/notification/main.zul"
+			id="vistaNotification" name="Notification">
+			<cwp:serialization>
+				<cwp:property id="caption" name="Title Caption" type="text"
+					description="Text for the title caption." />
+				<cwp:property id="color1" name="Caption Color 1" type="color"
+					description="Starting color for caption gradient." />
+				<cwp:property id="color2" name="Caption Color 2" type="color"
+					description="Ending color for caption gradient." />
+				<cwp:property id="captionStyle" name="Caption Style"
+					type="enum" description="Style of caption.">
+					<cwp:config>
+						<cwp:entry key="class">org.carewebframework.ui.sharedforms.CaptionedForm$CaptionStyle</cwp:entry>
+					</cwp:config>
+				</cwp:property>
+				<cwp:property id="color" name="Background Color" type="color"
+					description="Background color." />
+				<cwp:property id="alertDuration" name="Alert Duration" type="integer"
+					description="How long (in seconds) a notification alert will persist.">
+					<cwp:config>
+						<cwp:entry key="min">1</cwp:entry>
+						<cwp:entry key="max">99999</cwp:entry>
+					</cwp:config>
+				</cwp:property>
+				<cwp:property id="alertThreshold" name="Alert Threshold"
+					type="enum" 
+					description="You will be alerted of new notifications with priorities at or above this threshold.">
+					<cwp:config>
+						<cwp:entry key="class">org.carewebframework.vista.api.notification.AbstractNotification$Priority</cwp:entry>
+					</cwp:config>
+				</cwp:property>
+				<cwp:property id="showAll" name="Show All Notifications"
+					type="boolean"
+					description="If true, all notifications are shown.  If false, only those associated with the current patient are shown" />
+			</cwp:serialization>
+			<cwp:resource>
+				<cwp:help-resource module="vistaNotificationHelp" />
+				<cwp:css-resource url="~./org/carewebframework/vista/plugin/notification/notifications.css" />
+			</cwp:resource>
+		</cwp:plugin>
+
+	</beans>
+
+	<beans profile="desktop">
+
+		<bean id="vistaNotificationMainController" class="org.carewebframework.vista.plugin.notification.MainController"
+			scope="prototype">
+			<property name="notificationService" ref="vistaNotificationService" />
+		</bean>
+
+		<bean id="vistaNotificationSchedulingController" class="org.carewebframework.vista.plugin.notification.SchedulingController"
+			scope="prototype">
+			<property name="notificationService" ref="vistaNotificationService" />
+		</bean>
+
+		<bean id="vistaNotificationScheduleController" class="org.carewebframework.vista.plugin.notification.ScheduleController"
+			scope="prototype">
+			<property name="notificationService" ref="vistaNotificationService" />
+		</bean>
+
+		<bean id="vistaNotificationViewerController" class="org.carewebframework.vista.plugin.notification.ViewerController"
+			scope="prototype">
+			<property name="notificationService" ref="vistaNotificationService" />
+		</bean>
+
+		<bean id="vistaNotificationRecipientsController" class="org.carewebframework.vista.plugin.notification.RecipientsController"
+			scope="prototype">
+			<property name="notificationService" ref="vistaNotificationService" />
+		</bean>
+
+		<bean id="vistaNotificationProcessingController" class="org.carewebframework.vista.plugin.notification.ProcessingController"
+			scope="prototype">
+			<property name="notificationService" ref="vistaNotificationService" />
+		</bean>
+
+	</beans>
+
+</beans>
