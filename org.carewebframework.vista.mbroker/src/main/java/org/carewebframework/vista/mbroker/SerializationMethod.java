@@ -14,9 +14,13 @@ import org.carewebframework.common.MiscUtil;
  * Serialization methods.
  */
 public enum SerializationMethod {
-    RAW("@raw@"), NULL("@null@"), JAVA("@java.io.Serializable@"), JSON("@json@");
+    RAW, NULL, JAVA, JSON;
     
     private final String magic;
+    
+    private SerializationMethod() {
+        magic = "@" + name() + "@";
+    }
     
     /**
      * Detect serialization method from data.
@@ -25,11 +29,13 @@ public enum SerializationMethod {
      * @return The serialization method used, or null if not serialized.
      */
     public static SerializationMethod detect(String data) {
-        if (data != null) {
-            for (SerializationMethod method : values()) {
-                if (data.startsWith(method.magic)) {
-                    return method;
-                }
+        if (data == null) {
+            return null;
+        }
+        
+        for (SerializationMethod method : values()) {
+            if (data.startsWith(method.magic)) {
+                return method;
             }
         }
         
@@ -45,10 +51,6 @@ public enum SerializationMethod {
     public static Object deserialize(String data) {
         SerializationMethod method = detect(data);
         return method == null ? data : method.doDeserialize(data);
-    }
-    
-    private SerializationMethod(String magic) {
-        this.magic = magic;
     }
     
     /**
