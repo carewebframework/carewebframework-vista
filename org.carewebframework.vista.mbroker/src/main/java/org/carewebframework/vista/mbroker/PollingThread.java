@@ -180,7 +180,7 @@ public class PollingThread extends Thread {
                     if (hostEventHandlers != null) {
                         try {
                             String eventName = results[0];
-                            Object eventData = sessionRef.get().deserialize(results[1]);
+                            Object eventData = SerializationMethod.deserialize(results[1]);
                             
                             for (IHostEventHandler hostEventHandler : hostEventHandlers) {
                                 try {

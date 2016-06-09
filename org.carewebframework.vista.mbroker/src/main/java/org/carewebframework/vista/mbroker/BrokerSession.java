@@ -11,14 +11,9 @@ package org.carewebframework.vista.mbroker;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,10 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
-import org.apache.commons.codec.binary.Base64InputStream;
-import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.lang.StringUtils;
-import org.carewebframework.common.JSONUtil;
 import org.carewebframework.common.MiscUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.mbroker.PollingThread.IHostEventHandler;
@@ -69,35 +61,6 @@ public class BrokerSession {
      */
     public static enum AuthMethod {
         Normal, Cache, NT
-    }
-    
-    /**
-     * Serialization method to use.
-     */
-    public enum SerializationMethod {
-        JAVA("@java.io.Serializable@"), JSON("@json@");
-        
-        private final String prefix;
-        
-        SerializationMethod(String prefix) {
-            this.prefix = prefix;
-        }
-        
-        public String getPrefix() {
-            return prefix;
-        }
-        
-        public static SerializationMethod detect(String data) {
-            if (data != null) {
-                for (SerializationMethod method : SerializationMethod.values()) {
-                    if (data.startsWith(method.prefix)) {
-                        return method;
-                    }
-                }
-            }
-            
-            return null;
-        }
     }
     
     private ConnectionParams connectionParams;
@@ -362,16 +325,17 @@ public class BrokerSession {
         return StrUtil.toBoolean(netCall(request).getData());
     }
     
-    public void fireRemoteEvent(String eventName, Serializable eventData, String recipients) {
+    public void fireRemoteEvent(String eventName, Object eventData, String recipients) {
         fireRemoteEvent(eventName, eventData, StrUtil.split(recipients, ","));
     }
     
-    public void fireRemoteEvent(String eventName, Serializable eventData, String[] recipients) {
+    public void fireRemoteEvent(String eventName, Object eventData, String[] recipients) {
         RPCParameters params = new RPCParameters();
         params.get(0).setValue(eventName);
         
         RPCParameter param = params.get(1);
-        String data = eventData == null ? "" : eventData instanceof String ? eventData.toString() : serialize(eventData);
+        SerializationMethod method = eventData instanceof String ? SerializationMethod.RAW : serializationMethod;
+        String data = method.serialize(eventData);
         int index = 0;
         
         for (int i = 0; i < data.length(); i += 255) {
@@ -387,59 +351,6 @@ public class BrokerSession {
         }
         
         callRPC("RGNETBEV BCAST", params);
-    }
-    
-    /**
-     * Serialize an object according to the current serialization setting.
-     * 
-     * @param object Object to serialize.
-     * @return The serialized object.
-     */
-    protected String serialize(Serializable object) {
-        switch (serializationMethod) {
-            case JSON:
-                return serializationMethod.prefix + JSONUtil.serialize(object);
-            
-            case JAVA:
-                try (ByteArrayOutputStream bary = new ByteArrayOutputStream();
-                        Base64OutputStream b64 = new Base64OutputStream(bary);
-                        ObjectOutputStream oos = new ObjectOutputStream(b64)) {
-                    oos.writeObject(object);
-                    return serializationMethod.prefix + bary.toString("UTF-8");
-                } catch (Exception e) {
-                    throw MiscUtil.toUnchecked(e);
-                }
-                
-            default:
-                throw new RuntimeException("Unrecognized serialization method.");
-        }
-    }
-    
-    /**
-     * Deserialize data if necessary.
-     * 
-     * @param data The raw data.
-     * @return The deserialized data, or the original data if not serialized.
-     */
-    protected Object deserialize(String data) {
-        switch (SerializationMethod.detect(data)) {
-            case JSON:
-                return JSONUtil.deserialize(data.substring(SerializationMethod.JSON.prefix.length()));
-            
-            case JAVA:
-                byte[] bytes = data.substring(SerializationMethod.JAVA.prefix.length()).getBytes();
-                
-                try (ByteArrayInputStream bary = new ByteArrayInputStream(bytes);
-                        Base64InputStream b64 = new Base64InputStream(bary);
-                        ObjectInputStream ois = new ObjectInputStream(b64);) {
-                    return ois.readObject();
-                } catch (Exception e) {
-                    throw MiscUtil.toUnchecked(e);
-                }
-                
-            default:
-                return data;
-        }
     }
     
     private boolean processRecipient(RPCParameter param, String prefix, String subscript, String recipient) {
@@ -820,6 +731,10 @@ public class BrokerSession {
      * @param serializationMethod The serialization method.
      */
     public void setSerializationMethod(SerializationMethod serializationMethod) {
+        if (serializationMethod == SerializationMethod.NULL) {
+            throw new IllegalArgumentException("Invalid serialization method.");
+        }
+        
         this.serializationMethod = serializationMethod == null ? SerializationMethod.JSON : serializationMethod;
     }
     
