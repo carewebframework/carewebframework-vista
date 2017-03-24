@@ -94,11 +94,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.plugin.chat</artifactId>
-			<version>${org.carewebframework.core.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.carewebframework</groupId>
 			<artifactId>org.carewebframework.cal.ui.patientselection.v1</artifactId>
 			<version>${org.carewebframework.cal.version}</version>
 		</dependency>

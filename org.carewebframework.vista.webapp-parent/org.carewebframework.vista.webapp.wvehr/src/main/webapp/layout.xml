@@ -1,7 +1,6 @@
 <layout title="CareWeb - VistA">
 	<_menubar>
 		<menuitem action="cwf.refresh" label="Refresh"/>
-		<menuitem action="chat.create.session" label="Chat..."/>
 	</_menubar>
 	<_toolbar>
 		<vistaCWAD allowPrint="true" popupFlags="true" />
@@ -66,25 +65,6 @@
 						</treepane>
 						<treepane label="Patient Goals">
 							<vistaPatientGoals />
-						</treepane>
-					</treeview>
-				</tabpane>
-				<tabpane label="SMART Apps">
-					<treeview open="true">
-						<treepane label="BP Percentiles">
-							<bp_centile2s_apps.smartplatforms.org />
-						</treepane>
-						<treepane label="Cardiac Risk">
-							<cardiac_ris2k_apps.smartplatforms.org />
-						</treepane>
-						<treepane label="Disease Monograph">
-							<disease_monograph2_apps.smartplatforms.org />
-						</treepane>
-						<treepane label="Growth Charts">
-							<growth_charts2_apps.smartplatforms.org />
-						</treepane>
-						<treepane label="Meducation">
-							<meducation2_apps.smartplatforms.org />
 						</treepane>
 					</treeview>
 				</tabpane>
