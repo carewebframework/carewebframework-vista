@@ -16,12 +16,11 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.carewebframework.cal.api.patientlist.AbstractPatientListFilter;
-import org.carewebframework.cal.api.patientlist.AbstractPatientListFilterManager;
-import org.carewebframework.cal.api.patientlist.PatientListUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
+import org.hspconsortium.cwf.api.patientlist.AbstractPatientListFilter;
+import org.hspconsortium.cwf.api.patientlist.AbstractPatientListFilterManager;
+import org.hspconsortium.cwf.api.patientlist.PatientListUtil;
 
 /**
  * Filter manager for appointment-based lists.
@@ -38,15 +37,15 @@ public class PatientListFilterManager extends AbstractPatientListFilterManager {
     @Override
     protected List<AbstractPatientListFilter> initFilters() {
         if (filters == null) {
-            filters = new ArrayList<AbstractPatientListFilter>();
+            filters = new ArrayList<>();
             
             PatientList patientList = (PatientList) getPatientList();
             int id = patientList.getListId();
             boolean sortList = patientList.getSortList();
             boolean useMixedCase = patientList.getUseMixedCase();
             String range = patientList.formatDateRange();
-            List<String> tempList = VistAUtil.getBrokerSession()
-                    .callRPCList("RGCWPTPL LISTSEL", null, id, "", 1, 999, range);
+            List<String> tempList = VistAUtil.getBrokerSession().callRPCList("RGCWPTPL LISTSEL", null, id, "", 1, 999,
+                range);
             
             for (String item : tempList) {
                 if (useMixedCase) {

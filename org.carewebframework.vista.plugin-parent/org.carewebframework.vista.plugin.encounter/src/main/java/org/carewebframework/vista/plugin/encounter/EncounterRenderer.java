@@ -9,20 +9,18 @@
  */
 package org.carewebframework.vista.plugin.encounter;
 
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
-import ca.uhn.fhir.model.dstu2.resource.Location;
-
-import org.carewebframework.cal.api.ClientUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
 import org.carewebframework.vista.api.encounter.EncounterUtil;
-
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hspconsortium.cwf.api.ClientUtil;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Span;
 
 public class EncounterRenderer extends AbstractListitemRenderer<Object, Object> {
-    
+
     @Override
     public void renderItem(Listitem item, Object data) {
         Encounter encounter = data instanceof Encounter ? (Encounter) data : parse((String) data);
@@ -36,7 +34,7 @@ public class EncounterRenderer extends AbstractListitemRenderer<Object, Object> 
         createCell(item, encounter.getPeriod().getStart());
         createCell(item, encounter.getTypeFirstRep().getCodingFirstRep().getDisplay());
     }
-    
+
     private Encounter parse(String value) {
         return EncounterUtil.decode(StrUtil.piece(value, StrUtil.U));
     }

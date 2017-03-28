@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.carewebframework</groupId>
 		<artifactId>org.carewebframework.vista.plugin-parent</artifactId>
-		<version>1.1.1-SNAPSHOT</version>
+		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>org.carewebframework.vista.plugin.documents</artifactId>
@@ -17,9 +17,9 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.cal.ui.reporting</artifactId>
-			<version>${org.carewebframework.cal.version}</version>
+			<groupId>org.hspconsortium.carewebframework</groupId>
+			<artifactId>cwf-ui-reporting</artifactId>
+			<version>${org.hspconsortium.carewebframework.version}</version>
 		</dependency>
 	</dependencies>
 </project>

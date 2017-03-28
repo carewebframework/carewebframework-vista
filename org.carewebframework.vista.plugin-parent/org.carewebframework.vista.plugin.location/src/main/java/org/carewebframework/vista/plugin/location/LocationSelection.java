@@ -11,16 +11,14 @@ package org.carewebframework.vista.plugin.location;
 
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu2.resource.Location;
-import ca.uhn.fhir.model.dstu2.valueset.LocationStatusEnum;
-
-import org.carewebframework.cal.api.location.LocationContext;
-import org.carewebframework.cal.api.location.LocationSearchCriteria;
-import org.carewebframework.cal.api.location.LocationUtil;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.ZKUtil;
-
+import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Location.LocationStatus;
+import org.hspconsortium.cwf.api.location.LocationContext;
+import org.hspconsortium.cwf.api.location.LocationSearchCriteria;
+import org.hspconsortium.cwf.api.location.LocationUtil;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listbox;
@@ -49,7 +47,7 @@ public class LocationSelection extends FrameworkController {
     
     /**
      * Wire variables and events.
-     * 
+     *
      * @throws Exception Unspecified exception.
      */
     @Override
@@ -60,7 +58,7 @@ public class LocationSelection extends FrameworkController {
     
     /**
      * Lookup a location and populate listbox with results.
-     * 
+     *
      * @throws Exception Unspecified exception.
      */
     public void onClick$btnLocation() throws Exception {
@@ -69,7 +67,7 @@ public class LocationSelection extends FrameworkController {
     
     /**
      * Performs a location lookup and populates the specified listbox with the results.
-     * 
+     *
      * @param text Partial location name for lookup.
      * @param lstLocation Listbox to populate with results.
      * @param deflt Default location to select.
@@ -82,7 +80,7 @@ public class LocationSelection extends FrameworkController {
             lstLocation.setDisabled(true);
             lstLocation.getItems().clear();
             LocationSearchCriteria crt = new LocationSearchCriteria();
-            crt.setStatus(LocationStatusEnum.ACTIVE);
+            crt.setStatus(LocationStatus.ACTIVE);
             crt.setName(text);
             List<Location> locations = LocationUtil.search(crt);
             boolean hasMatch = locations != null && locations.size() > 0;
@@ -104,7 +102,7 @@ public class LocationSelection extends FrameworkController {
     
     /**
      * Adds the service location to the specified listbox.
-     * 
+     *
      * @param location Service location to add.
      * @param lstLocation Listbox to receive the location.
      * @return The added list item.
@@ -121,7 +119,7 @@ public class LocationSelection extends FrameworkController {
     
     /**
      * Initializes the listbox with the current location context, if one is set.
-     * 
+     *
      * @param lstLocation The list box.
      */
     public static void locationInit(Listbox lstLocation) {

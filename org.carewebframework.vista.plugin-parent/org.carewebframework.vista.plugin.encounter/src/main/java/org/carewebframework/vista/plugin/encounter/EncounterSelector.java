@@ -14,18 +14,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
-import ca.uhn.fhir.model.dstu2.resource.Encounter.Participant;
-
 import org.apache.commons.lang.ObjectUtils;
-
 import org.carewebframework.api.context.UserContext;
-import org.carewebframework.cal.api.encounter.EncounterContext;
-import org.carewebframework.cal.api.encounter.EncounterParticipantContext;
-import org.carewebframework.cal.api.encounter.EncounterSearch;
-import org.carewebframework.cal.api.practitioner.PractitionerSearch;
-import org.carewebframework.cal.api.practitioner.PractitionerSearchCriteria;
-import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.ListUtil;
 import org.carewebframework.ui.zk.PromptDialog;
@@ -33,7 +23,14 @@ import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.api.encounter.EncounterUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
-
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
+import org.hspconsortium.cwf.api.encounter.EncounterContext;
+import org.hspconsortium.cwf.api.encounter.EncounterParticipantContext;
+import org.hspconsortium.cwf.api.encounter.EncounterSearch;
+import org.hspconsortium.cwf.api.practitioner.PractitionerSearch;
+import org.hspconsortium.cwf.api.practitioner.PractitionerSearchCriteria;
+import org.hspconsortium.cwf.fhir.common.FhirUtil;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
@@ -47,10 +44,10 @@ public abstract class EncounterSelector extends FrameworkController {
     /**
      * Used to prevent duplicates in participant model set and to sort alphabetically.
      */
-    private static final Comparator<Participant> participantComparator = new Comparator<Participant>() {
+    private static final Comparator<EncounterParticipantComponent> participantComparator = new Comparator<EncounterParticipantComponent>() {
         
         @Override
-        public int compare(Participant p1, Participant p2) {
+        public int compare(EncounterParticipantComponent p1, EncounterParticipantComponent p2) {
             if (p1.getIndividual().getReference().equals(p2.getIndividual().getReference())) {
                 return 0;
             }
@@ -79,12 +76,12 @@ public abstract class EncounterSelector extends FrameworkController {
     
     private final ParticipantRenderer encounterParticipantRenderer = new ParticipantRenderer();
     
-    private final ListModelSet<Object> allParticipantsModel = new ListModelSet<Object>();
+    private final ListModelSet<Object> allParticipantsModel = new ListModelSet<>();
     
-    private final ListModelSet<Participant> encounterParticipantsModel = new ListModelSet<Participant>(
-            new TreeSet<Participant>(participantComparator), true);
+    private final ListModelSet<EncounterParticipantComponent> encounterParticipantsModel = new ListModelSet<>(
+            new TreeSet<>(participantComparator), true);
     
-    private Participant currentParticipant;
+    private EncounterParticipantComponent currentParticipant;
     
     protected BrokerSession broker;
     
@@ -127,13 +124,13 @@ public abstract class EncounterSelector extends FrameworkController {
         
         if (encounter != null) {
             if (participantsModified) {
-                List<Participant> participants = encounter.getParticipant();
+                List<EncounterParticipantComponent> participants = encounter.getParticipant();
                 participants.clear();
                 participants.addAll(encounterParticipantsModel);
             }
             
             if (primaryModified) {
-                Participant participant = EncounterUtil.getPrimaryParticipant(encounter);
+                EncounterParticipantComponent participant = EncounterUtil.getPrimaryParticipant(encounter);
                 
                 if (participant != null) {
                     EncounterUtil.removeType(participant, EncounterUtil.primaryType);
@@ -161,16 +158,16 @@ public abstract class EncounterSelector extends FrameworkController {
         return item == null ? null : (Encounter) item.getValue();
     }
     
-    private Participant getSelectedParticipant(Listbox lb) {
+    private EncounterParticipantComponent getSelectedParticipant(Listbox lb) {
         Listitem item = lb.getSelectedItem();
-        return item == null ? null : (Participant) item.getValue();
+        return item == null ? null : (EncounterParticipantComponent) item.getValue();
     }
     
-    public Participant getPrimaryParticipant() {
+    public EncounterParticipantComponent getPrimaryParticipant() {
         return encounterParticipantRenderer.getPrimaryParticipant();
     }
     
-    private void setPrimaryParticipant(Participant participant) {
+    private void setPrimaryParticipant(EncounterParticipantComponent participant) {
         if (!ObjectUtils.equals(participant, getPrimaryParticipant())) {
             encounterParticipantRenderer.setPrimaryParticipant(participant);
             primaryModified = true;
@@ -236,7 +233,7 @@ public abstract class EncounterSelector extends FrameworkController {
     }
     
     public void onClick$btnPrimary() {
-        Participant participant = getSelectedParticipant(lstEncounterParticipants);
+        EncounterParticipantComponent participant = getSelectedParticipant(lstEncounterParticipants);
         
         if (participant != null) {
             setPrimaryParticipant(participant);
@@ -244,7 +241,7 @@ public abstract class EncounterSelector extends FrameworkController {
     }
     
     public void onClick$btnParticipantAdd() {
-        Participant participant = getSelectedParticipant(lstAllParticipants);
+        EncounterParticipantComponent participant = getSelectedParticipant(lstAllParticipants);
         
         if (participant != null) {
             if (encounterParticipantsModel.add(participant)) {
@@ -260,7 +257,7 @@ public abstract class EncounterSelector extends FrameworkController {
     }
     
     public void onClick$btnParticipantRemove() {
-        Participant participant = getSelectedParticipant(lstEncounterParticipants);
+        EncounterParticipantComponent participant = getSelectedParticipant(lstEncounterParticipants);
         
         if (participant != null && encounterParticipantsModel.remove(participant)) {
             participantsModified = true;

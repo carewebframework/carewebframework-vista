@@ -14,11 +14,11 @@ import java.util.List;
 
 import org.carewebframework.api.query.DateQueryFilter.DateType;
 import org.carewebframework.api.query.IQueryContext;
-import org.carewebframework.cal.ui.reporting.controller.AbstractListController;
 import org.carewebframework.vista.api.documents.Document;
 import org.carewebframework.vista.api.documents.DocumentDisplayQueryService;
 import org.carewebframework.vista.api.documents.DocumentService;
-
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hspconsortium.cwf.ui.reporting.controller.AbstractListController;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Combobox;
@@ -27,39 +27,37 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Listitem;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-
 /**
  * Controller for displaying the contents of selected documents.
  */
 public class DocumentDisplayController extends AbstractListController<Document, Document> {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private List<Document> documents;
-    
+
     private Label lblInfo;
-    
+
     private Combobox cboHeader;
-    
+
     private final ComboitemRenderer<Document> comboRenderer = new DocumentDisplayComboRenderer();
-    
+
     public DocumentDisplayController(DocumentService service) {
         super(new DocumentDisplayQueryService(service), "vistadocuments", "TIU", "documentsPrint.css");
         setPaging(false);
     }
-    
+
     @Override
     protected void initializeController() {
         super.initializeController();
         cboHeader.setItemRenderer(comboRenderer);
     }
-    
+
     @Override
     protected void prepareQueryContext(IQueryContext ctx) {
         ctx.setParam("documents", documents);
     }
-    
+
     /**
      * This view should be closed when the patient context changes.
      */
@@ -68,7 +66,7 @@ public class DocumentDisplayController extends AbstractListController<Document, 
         closeView();
         super.onPatientChanged(patient);
     }
-    
+
     /**
      * Suppress data fetch if there are no documents in the view.
      */
@@ -78,35 +76,35 @@ public class DocumentDisplayController extends AbstractListController<Document, 
             super.fetchData();
         }
     }
-    
+
     /**
      * Scroll to document with same header.
      */
     public void onSelect$cboHeader() {
         Document doc = cboHeader.getSelectedItem().getValue();
-        
+
         for (Listitem item : listBox.getItems()) {
             Document doc2 = (Document) item.getValue();
-            
+
             if (doc2 == null) {
                 listBox.renderItem(item);
                 doc2 = (Document) item.getValue();
             }
-            
+
             if (doc == doc2) {
                 Clients.scrollIntoView(item);
                 break;
             }
         }
     }
-    
+
     /**
      * Clears any displayed documents and reverts to document selection mode.
      */
     public void onClick$btnReturn() {
         closeView();
     }
-    
+
     /**
      * Not really needed.
      */
@@ -114,7 +112,7 @@ public class DocumentDisplayController extends AbstractListController<Document, 
     public Date getDateByType(Document result, DateType dateType) {
         return result.getDateTime();
     }
-    
+
     /**
      * Clears any displayed documents and reverts to document selection mode.
      */
@@ -123,7 +121,7 @@ public class DocumentDisplayController extends AbstractListController<Document, 
         setListModel(null);
         Events.postEvent("onViewOpen", root, false);
     }
-    
+
     /**
      * Sets the documents to be displayed and updates the displayed count.
      *
@@ -135,7 +133,7 @@ public class DocumentDisplayController extends AbstractListController<Document, 
         lblInfo.setValue(docCount + " document(s)");
         refresh();
     }
-    
+
     /**
      * Updates the header selector when the model changes.
      */
@@ -145,10 +143,10 @@ public class DocumentDisplayController extends AbstractListController<Document, 
         cboHeader.setModel(model);
         cboHeader.setText(null);
     }
-    
+
     @Override
     protected List<Document> toModel(List<Document> results) {
         return results;
     }
-    
+
 }

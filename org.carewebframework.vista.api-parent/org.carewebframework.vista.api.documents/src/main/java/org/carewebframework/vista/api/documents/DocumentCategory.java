@@ -9,32 +9,32 @@
  */
 package org.carewebframework.vista.api.documents;
 
-import org.carewebframework.cal.api.DomainObject;
+import org.hspconsortium.cwf.api.DomainObject;
 
 /**
  * Model object wrapping a clinical document.
  */
 public class DocumentCategory extends DomainObject implements Comparable<DocumentCategory> {
-    
+
     private String name;
-    
+
     public DocumentCategory(String logicalId) {
         super(logicalId);
     }
-    
+
     @Override
     public int compareTo(DocumentCategory cat) {
         return name.compareToIgnoreCase(cat.name);
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     @Override
     public String toString() {
         return name;

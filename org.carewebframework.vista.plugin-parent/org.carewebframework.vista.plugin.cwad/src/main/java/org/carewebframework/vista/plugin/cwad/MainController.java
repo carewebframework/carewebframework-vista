@@ -11,16 +11,14 @@ package org.carewebframework.vista.plugin.cwad;
 
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-
 import org.carewebframework.api.event.IGenericEvent;
-import org.carewebframework.cal.api.patient.PatientContext;
-import org.carewebframework.cal.api.patient.PatientContext.IPatientContextEvent;
 import org.carewebframework.shell.plugins.PluginContainer;
 import org.carewebframework.shell.plugins.PluginController;
 import org.carewebframework.ui.zk.ReportBox;
 import org.carewebframework.vista.mbroker.BrokerSession;
-
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hspconsortium.cwf.api.patient.PatientContext;
+import org.hspconsortium.cwf.api.patient.PatientContext.IPatientContextEvent;
 import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
 
@@ -28,119 +26,119 @@ import org.zkoss.zul.Window;
  * Controller for CWAD display.
  */
 public class MainController extends PluginController implements IPatientContextEvent {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private boolean popupFlags;
-    
+
     private boolean allowPrint;
-    
+
     private String eventId;
-    
+
     private Window dlgFlags;
-    
+
     private Toolbarbutton btnPostings;
-    
+
     private Toolbarbutton btnCWAD;
-    
+
     private BrokerSession broker;
-    
+
     private final IGenericEvent<Object> gmraListener = new IGenericEvent<Object>() {
-        
+
         @Override
         public void eventCallback(String eventName, Object eventData) {
             doUpdate(true);
         }
-        
+
     };
-    
+
     private void doUpdate(boolean noPopup) {
         if (dlgFlags != null) {
             dlgFlags.detach();
             dlgFlags = null;
         }
-        
+
         Patient patient = PatientContext.getActivePatient();
-        String cwad = patient == null ? "" : broker.callRPC("RGCWCACV CWAD", patient.getId().getIdPart());
+        String cwad = patient == null ? "" : broker.callRPC("RGCWCACV CWAD", patient.getIdElement().getIdPart());
         boolean noPostings = cwad.isEmpty();
         btnCWAD.setLabel(cwad);
         btnCWAD.setDisabled(noPostings);
         btnPostings.setLabel(noPostings ? "No Postings" : "Postings");
         btnPostings.setDisabled(noPostings);
-        
+
         if (!noPopup && popupFlags && cwad.contains("F")) {
-            List<String> lst = broker.callRPCList("RGCWCACV PRF", null, patient.getId().getIdPart());
-            
+            List<String> lst = broker.callRPCList("RGCWCACV PRF", null, patient.getIdElement().getIdPart());
+
             if (!lst.isEmpty()) {
                 dlgFlags = ReportBox.amodal(lst, "Record Flags", allowPrint);
             }
         }
-        
+
         if (eventId != null) {
             getEventManager().unsubscribe(eventId, gmraListener);
             eventId = null;
         }
-        
+
         if (patient != null) {
-            eventId = "GMRA." + patient.getId().getIdPart();
+            eventId = "GMRA." + patient.getIdElement().getIdPart();
             getEventManager().subscribe(eventId, gmraListener);
         }
     }
-    
+
     @Override
     public String pending(boolean silent) {
         return null;
     }
-    
+
     @Override
     public void committed() {
         doUpdate(false);
     }
-    
+
     @Override
     public void canceled() {
     }
-    
+
     public boolean getPopupFlags() {
         return popupFlags;
     }
-    
+
     public void setPopupFlags(boolean popupFlags) {
         this.popupFlags = popupFlags;
-        
+
         if (popupFlags && dlgFlags == null) {
             doUpdate(false);
         }
     }
-    
+
     public boolean getAllowPrint() {
         return allowPrint;
     }
-    
+
     public void setAllowPrint(boolean allowPrint) {
         this.allowPrint = allowPrint;
     }
-    
+
     public void setBrokerSession(BrokerSession broker) {
         this.broker = broker;
     }
-    
+
     @Override
     public void onLoad(PluginContainer container) {
         super.onLoad(container);
         container.registerProperties(this, "allowPrint", "popupFlags");
         doUpdate(false);
     }
-    
+
     @Override
     public void refresh() {
         doUpdate(true);
     }
-    
+
     public void onClick() {
         if (PatientContext.getActivePatient() != null) {
             DetailsController.show(allowPrint);
         }
     }
-    
+
 }

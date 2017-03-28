@@ -12,23 +12,21 @@ package org.carewebframework.vista.plugin.encounter;
 import java.util.List;
 
 import org.carewebframework.ui.zk.DateRangePicker;
-
+import org.hl7.fhir.dstu3.model.Encounter;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Listbox;
-
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
 
 /**
  * Encounter selector for outpatient encounters.
  */
 public class OutpatientSelector extends EncounterSelector {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private Listbox lstOutpatient;
-    
+
     private DateRangePicker rngDateRange;
-    
+
     @Override
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
@@ -36,28 +34,28 @@ public class OutpatientSelector extends EncounterSelector {
         rngDateRange.getItemAtIndex(0).setLabel("Default Date Range");
         rngDateRange.setSelectedIndex(0);
     }
-    
+
     public void onSelect$lstOutpatient() {
         loadEncounterParticipants(getSelectedEncounter(lstOutpatient));
         statusChanged();
     }
-    
+
     public void onSelectRange$rngDateRange() {
         loadEncounters();
         statusChanged();
     }
-    
+
     private boolean loadEncounters() {
-        List<String> data = broker.callRPCList("RGCWENCX VISITLST", null, mainController.patient.getId().getIdPart(),
+        List<String> data = broker.callRPCList("RGCWENCX VISITLST", null, mainController.patient.getIdElement().getIdPart(),
             rngDateRange.getStartDate(), rngDateRange.getEndDate(), null, "HX");
         return populateListbox(lstOutpatient, data);
     }
-    
+
     @Override
     protected Encounter getEncounterInternal() {
         return getSelectedEncounter(lstOutpatient);
     }
-    
+
     /**
      * Initialize the dialog. Performs a query to return all existing encounters with the set time
      * window and populates the outpatient list from this.
@@ -68,15 +66,15 @@ public class OutpatientSelector extends EncounterSelector {
         rngDateRange.setParent(mainController.toolbar);
         return loadEncounters();
     }
-    
+
     @Override
     protected void activate(boolean activate) {
         rngDateRange.setVisible(activate);
     }
-    
+
     @Override
     protected boolean isComplete() {
         return getEncounterInternal() != null;
     }
-    
+
 }

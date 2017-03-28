@@ -16,16 +16,15 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.carewebframework.cal.api.patientlist.AbstractPatientList;
-import org.carewebframework.cal.api.patientlist.AbstractPatientListFilter;
-import org.carewebframework.cal.api.patientlist.IPatientListFilterManager.FilterCapability;
-import org.carewebframework.cal.api.patientlist.PatientListItem;
-import org.carewebframework.cal.api.patientlist.PatientListUtil;
 import org.carewebframework.common.DateRange;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
+import org.hspconsortium.cwf.api.patientlist.AbstractPatientList;
+import org.hspconsortium.cwf.api.patientlist.AbstractPatientListFilter;
+import org.hspconsortium.cwf.api.patientlist.IPatientListFilterManager.FilterCapability;
+import org.hspconsortium.cwf.api.patientlist.PatientListItem;
+import org.hspconsortium.cwf.api.patientlist.PatientListUtil;
 
 /**
  * Supports table-driven (CAREWEB PATIENT LIST) patient lists.
@@ -99,7 +98,7 @@ public class PatientList extends AbstractPatientList {
     
     /**
      * Returns the patient list.
-     * 
+     *
      * @return Patient list.
      */
     @Override
@@ -108,7 +107,7 @@ public class PatientList extends AbstractPatientList {
             return patients;
         }
         
-        patients = new ArrayList<PatientListItem>();
+        patients = new ArrayList<>();
         AbstractPatientListFilter filter = isFiltered() ? getActiveFilter() : null;
         PatientListFilterEntity entity = filter == null ? null : (PatientListFilterEntity) filter.getEntity();
         List<String> tempList = VistAUtil.getBrokerSession().callRPCList("RGCWPTPL LISTPTS", null, listId,

@@ -23,18 +23,18 @@ import org.carewebframework.vista.ui.common.CoverSheetBase;
  * Controller for crisis alert cover sheet. Displays summary and detail views of crisis alerts.
  */
 public class MainController extends CoverSheetBase<String> {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Override
     protected void init() {
         setup("Crisis Alerts", "Crisis Detail", "RGCWCACV LIST", null, 1, "Crisis Alert", "Date");
         super.init();
     }
-    
+
     /**
      * Logic to return detail information for specified item.
-     * 
+     *
      * @param data The item data.
      * @return The detail information.
      */
@@ -42,35 +42,35 @@ public class MainController extends CoverSheetBase<String> {
     protected String getDetail(String data) {
         String pcs[] = split(data, U, 2);
         char type = pcs[1].isEmpty() ? 0 : pcs[1].charAt(0);
-        List<String> result = new ArrayList<String>();
-        
+        List<String> result = new ArrayList<>();
+
         switch (type) {
             case 'A':
-                getBroker().callRPCList("RGCWCACV DETAIL", result, patient.getId().getIdPart());
+                getBroker().callRPCList("RGCWCACV DETAIL", result, patient.getIdElement().getIdPart());
                 break;
-            
+
             case 'F':
-                getBroker().callRPCList("RGCWCACV PRF", result, patient.getId().getIdPart(), pcs[0]);
+                getBroker().callRPCList("RGCWCACV PRF", result, patient.getIdElement().getIdPart(), pcs[0]);
                 break;
-            
+
             default:
                 getBroker().callRPCList("TIU GET RECORD TEXT", result, pcs[0]);
                 break;
         }
-        
+
         return result.isEmpty() ? null : fromList(result);
     }
-    
+
     @Override
     protected String getError(List<String> list) {
         return null;
     }
-    
+
     @Override
     protected void render(String dao, List<Object> columns) {
         String pcs[] = split(dao, U, 5);
         columns.add(pcs[2]);
         columns.add(VistAUtil.normalizeDate(pcs[4]));
     }
-    
+
 }

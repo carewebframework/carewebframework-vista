@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.carewebframework</groupId>
 		<artifactId>org.carewebframework.vista.webapp-parent</artifactId>
-		<version>1.1.1-SNAPSHOT</version>
+		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>org.carewebframework.vista.webapp.testharness</artifactId>
@@ -64,18 +64,23 @@
 			<artifactId>org.carewebframework.testharness</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.cal.ui.patientselection.v1</artifactId>
-			<version>${org.carewebframework.cal.version}</version>
+			<groupId>org.hspconsortium.carewebframework</groupId>
+			<artifactId>cwf-ui-patientselection-v1</artifactId>
+			<version>${org.hspconsortium.carewebframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hspconsortium.carewebframework</groupId>
+			<artifactId>cwf-ui-patientheader</artifactId>
+			<version>${org.hspconsortium.carewebframework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.cal.ui.patientheader</artifactId>
-			<version>${org.carewebframework.cal.version}</version>
+			<artifactId>org.carewebframework.plugin.userheader</artifactId>
+			<version>${org.carewebframework.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.carewebframework</groupId>
-			<artifactId>org.carewebframework.ui.userheader</artifactId>
+			<artifactId>org.carewebframework.plugin.statuspanel</artifactId>
 			<version>${org.carewebframework.core.version}</version>
 		</dependency>
 		<!-- VistA Support -->

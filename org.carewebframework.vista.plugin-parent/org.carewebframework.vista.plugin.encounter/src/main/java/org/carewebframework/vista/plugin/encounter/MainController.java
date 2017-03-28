@@ -13,46 +13,44 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import org.carewebframework.api.FrameworkUtil;
-import org.carewebframework.cal.api.encounter.EncounterContext;
-import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.common.MiscUtil;
 import org.carewebframework.ui.FrameworkController;
 import org.carewebframework.ui.zk.PopupDialog;
 import org.carewebframework.ui.zk.PromptDialog;
 import org.carewebframework.vista.api.encounter.EncounterFlag;
-
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hspconsortium.cwf.api.encounter.EncounterContext;
+import org.hspconsortium.cwf.api.patient.PatientContext;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Window;
 
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-
 /**
  * Main encounter selection controller.
  */
 public class MainController extends FrameworkController implements PatientContext.IPatientContextEvent {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private static final String SELECTION_DIALOG = Constants.RESOURCE_PREFIX + "encounterSelection.zul";
-    
+
     private Tabbox tabbox;
-    
+
     protected Button btnOK;
-    
+
     protected Component toolbar;
-    
+
     protected Patient patient;
-    
+
     protected Set<EncounterFlag> flags = EnumSet.noneOf(EncounterFlag.class);
-    
+
     private EncounterSelector selector;
-    
+
     private boolean needsInit = true;
-    
+
     /**
      * Displays the encounter selection dialog.
      *
@@ -61,39 +59,39 @@ public class MainController extends FrameworkController implements PatientContex
     public static void execute(EncounterFlag... flags) {
         try {
             Window dlg = (Window) FrameworkUtil.getAttribute(SELECTION_DIALOG);
-            
+
             if (dlg == null || dlg.getPage() == null) {
                 dlg = PopupDialog.popup(SELECTION_DIALOG, true, true, false);
                 FrameworkUtil.setAttribute(SELECTION_DIALOG, dlg);
             }
-            
+
             MainController sel = (MainController) getController(dlg);
             sel.setEncounterFlags(EncounterFlag.flags(flags));
-            
+
             if (sel.needsInit) {
                 sel.init();
             }
-            
+
             dlg.doModal();
         } catch (Exception e) {
             FrameworkUtil.setAttribute(SELECTION_DIALOG, null);
             throw MiscUtil.toUnchecked(e);
         }
     }
-    
+
     /**
      * Returns the encounter selector associated with the specified tab panel.
-     * 
+     *
      * @param panel A tab panel.
      * @return The associated encounter selector.
      */
     private EncounterSelector getSelector(Tabpanel panel) {
         return panel == null ? null : (EncounterSelector) EncounterSelector.getController(panel);
     }
-    
+
     /**
      * Set the flags that affect encounter selection.
-     * 
+     *
      * @param flags Encounter flags.
      */
     private void setEncounterFlags(Set<EncounterFlag> flags) {
@@ -102,21 +100,21 @@ public class MainController extends FrameworkController implements PatientContex
             needsInit = true;
         }
     }
-    
+
     /**
      * Update state when tab selection changes.
      */
     public void onSelect$tabbox() {
         selectionChanged();
     }
-    
+
     /**
      * Hide the dialog when cancelled.
      */
     public void onClick$btnCancel() {
         close();
     }
-    
+
     /**
      * Updated the active encounter selector when the tab selection has changed. Sends an activation
      * signal to the previous and new selector.
@@ -126,24 +124,24 @@ public class MainController extends FrameworkController implements PatientContex
             selector.activate(false);
             btnOK.setDisabled(true);
         }
-        
+
         selector = getSelector(tabbox.getSelectedPanel());
-        
+
         if (selector != null) {
             selector.activate(true);
             btnOK.setDisabled(!selector.isComplete());
         }
     }
-    
+
     /**
      * Change the encounter context to the selected encounter and close the dialog.
      */
     public void onClick$btnOK() {
         Encounter encounter = selector.getEncounter();
-        
+
         if (encounter != null) {
             String s = EncounterUtil.validEncounter(encounter, flags);
-            
+
             if (s != null) {
                 PromptDialog.showWarning(s);
                 return;
@@ -152,14 +150,14 @@ public class MainController extends FrameworkController implements PatientContex
             close();
         }
     }
-    
+
     /**
      * Close the main dialog.
      */
     private void close() {
         root.setVisible(false);
     }
-    
+
     /**
      * Initialize the selector controllers and determines which tab is selected by default.
      */
@@ -167,31 +165,31 @@ public class MainController extends FrameworkController implements PatientContex
         needsInit = false;
         patient = PatientContext.getActivePatient();
         boolean selected = false;
-        
+
         for (Component child : tabbox.getTabpanels().getChildren()) {
             Tabpanel panel = (Tabpanel) child;
-            
+
             if (getSelector(panel).init(this) && !selected) {
                 selected = true;
                 panel.getLinkedTab().setSelected(true);
             }
         }
-        
+
         selectionChanged();
     }
-    
+
     @Override
     public void canceled() {
     }
-    
+
     @Override
     public void committed() {
         needsInit = true;
     }
-    
+
     @Override
     public String pending(boolean silent) {
         return null;
     }
-    
+
 }

@@ -224,7 +224,7 @@ public class BrokerSession {
     }
     
     public List<String> callRPCList(String name, List<String> list, Object... args) {
-        List<String> result = list == null ? new ArrayList<String>() : list;
+        List<String> result = list == null ? new ArrayList<>() : list;
         StrUtil.toList(callRPC(name, args), result, Constants.LINE_SEPARATOR);
         return result;
     }
@@ -260,7 +260,7 @@ public class BrokerSession {
      *            <pre>
      * GET LAB RESULTS:2.4:LR CONTEXT
      *            </pre>
-     * 
+     *
      * @param async If true, the remote procedure call will be executed asynchronously. In this
      *            case, the value returned by the method will be the unique handle for the
      *            asynchronous request.
@@ -400,7 +400,7 @@ public class BrokerSession {
     
     /**
      * Request authentication using default settings.
-     * 
+     *
      * @return Result of authentication.
      */
     public AuthResult authenticate() {
@@ -448,7 +448,7 @@ public class BrokerSession {
      * @return Supported polling action.
      */
     public Action pollingAction() {
-        return !isConnected() ? null : !isAuthenticated() || hostEventHandlers.isEmpty() ? Action.PING : Action.QUERY;
+        return !isConnected() ? null : isAuthenticated() ? Action.QUERY : Action.PING;
     }
     
     /**
@@ -550,7 +550,7 @@ public class BrokerSession {
     
     /**
      * Returns the next valid sequence #.
-     * 
+     *
      * @return Sequence #.
      */
     private byte nextSequenceId() {
@@ -607,7 +607,7 @@ public class BrokerSession {
      */
     protected List<IHostEventHandler> getHostEventHandlers() {
         synchronized (hostEventHandlers) {
-            return hostEventHandlers.isEmpty() ? null : new ArrayList<IHostEventHandler>(hostEventHandlers);
+            return hostEventHandlers.isEmpty() ? null : new ArrayList<>(hostEventHandlers);
         }
     }
     
@@ -718,7 +718,7 @@ public class BrokerSession {
     
     /**
      * Returns the serialization method to be used when sending objects.
-     * 
+     *
      * @return The serialization method.
      */
     public SerializationMethod getSerializationMethod() {
@@ -727,7 +727,7 @@ public class BrokerSession {
     
     /**
      * Sets the serialization method to be used when sending objects.
-     * 
+     *
      * @param serializationMethod The serialization method.
      */
     public void setSerializationMethod(SerializationMethod serializationMethod) {

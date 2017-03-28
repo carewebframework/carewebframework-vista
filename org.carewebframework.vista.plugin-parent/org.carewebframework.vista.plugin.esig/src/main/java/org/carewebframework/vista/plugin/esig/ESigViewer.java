@@ -17,10 +17,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.carewebframework.api.FrameworkUtil;
 import org.carewebframework.api.security.SecurityUtil;
-import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.ui.zk.SelectionGrid;
 import org.carewebframework.ui.zk.ZKUtil;
 import org.carewebframework.vista.esig.ESigFilter;
@@ -28,7 +26,7 @@ import org.carewebframework.vista.esig.ESigItem;
 import org.carewebframework.vista.esig.ESigItem.SignState;
 import org.carewebframework.vista.esig.IESigService;
 import org.carewebframework.vista.esig.IESigType;
-
+import org.hspconsortium.cwf.api.patient.PatientContext;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Events;
@@ -43,29 +41,29 @@ import org.zkoss.zul.Window;
  * Controller for the signature review dialog.
  */
 public class ESigViewer extends Window implements PatientContext.IPatientContextEvent {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private boolean canceled = true;
-    
+
     @SuppressWarnings("unused")
     private IESigService esigService;
-    
-    private final Set<IESigType> esigTypes = new HashSet<IESigType>();
-    
+
+    private final Set<IESigType> esigTypes = new HashSet<>();
+
     private SelectionGrid grid;
-    
+
     private Textbox txtPassword;
-    
+
     private Label lblError;
-    
+
     private Label lblSelectionCount;
-    
+
     private Button btnOK;
-    
+
     /**
      * Displays the signature review dialog.
-     * 
+     *
      * @param esigService Reference to the esignature service.
      * @param filter Optional filter to control which items are displayed.
      * @return True unless the dialog was canceled.
@@ -73,43 +71,43 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
      */
     public static boolean execute(IESigService esigService, ESigFilter filter) throws Exception {
         Iterable<ESigItem> items = esigService.getItems(filter);
-        
+
         if (items == null || !items.iterator().hasNext()) {
             return true;
         }
-        
+
         ESigViewer dlg = (ESigViewer) ZKUtil.loadZulPage(Constants.RESOURCE_PREFIX + "esigViewer.zul", null);
         dlg.init(esigService, items);
         dlg.doModal();
         return !dlg.canceled;
     }
-    
+
     /**
      * Initialize the dialog, adding the signature items to the list.
-     * 
+     *
      * @param esigService The electronic signature service.
      * @param items List of items to add.
      */
     private void init(IESigService esigService, Iterable<ESigItem> items) {
         this.esigService = esigService;
         ZKUtil.wireController(this, this);
-        
+
         for (ESigItem item : items) {
             addItem(item);
         }
-        
+
         updateControls();
-        
+
         if (grid.getRowCount() > 20) {
             grid.setHeight("600px");
         }
-        
+
         FrameworkUtil.getAppFramework().registerObject(this);
     }
-    
+
     /**
      * Add an esignature item to the list.
-     * 
+     *
      * @param item The item to add.
      */
     private void addItem(ESigItem item) {
@@ -126,35 +124,35 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
         grid.setSelected(row, !ss.isYes());
         grid.setDisabled(row, ss.isForced());
     }
-    
+
     /**
      * Locates or creates the group for the specified esig item.
-     * 
+     *
      * @param item The signature item.
      * @return The associated group.
      */
     private Group findGroup(ESigItem item) {
         String label = item.getESigType().getESigTypeGroupHeader();
-        
+
         if (!StringUtils.isEmpty(item.getSubGroupName())) {
             label += " - " + item.getSubGroupName();
         }
-        
+
         Group group = null;
-        
+
         while ((group = nextGroup(group)) != null) {
             String lbl = (String) group.getValue();
             int i = label.compareToIgnoreCase(lbl);
-            
+
             if (i == 0) {
                 return group;
             }
-            
+
             if (i < 0) {
                 break;
             }
         }
-        
+
         Row insertBefore = group;
         group = new Group();
         grid.addRow(group, insertBefore);
@@ -163,73 +161,73 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
         group.appendChild(new Label(label));
         return group;
     }
-    
+
     /**
      * Returns the group that follows the specified group, or null if there is none.
-     * 
+     *
      * @param group The returned group is the first one following this group. If this value is null,
      *            returns the first group encountered.
      * @return The next group.
      */
     private Group nextGroup(Group group) {
         Component cmpt = group == null ? grid.getRows().getFirstChild() : group.getNextSibling();
-        
+
         while (cmpt != null && !(cmpt instanceof Group)) {
             cmpt = cmpt.getNextSibling();
         }
-        
+
         return (Group) cmpt;
     }
-    
+
     /**
      * Update controls to reflect the current state.
      */
     private void updateControls() {
         int count = 0;
         int total = 0;
-        
+
         for (Row row : grid.getAllRows()) {
             if (!(row instanceof Group)) {
                 total++;
                 boolean isSelected = grid.isSelected(row);
-                
+
                 if (isSelected) {
                     count++;
                 }
             }
         }
-        
+
         lblSelectionCount.setValue(" (" + count + "/" + total + ")");
         btnOK.setDisabled(count == 0);
         txtPassword.setDisabled(count == 0);
-        
+
         if (!txtPassword.isDisabled()) {
             txtPassword.setFocus(true);
         }
     }
-    
+
     /**
      * Returns a list of all selected items of the specified esignature type.
-     * 
+     *
      * @param esigType The esignature type.
      * @return List of items.
      */
     private List<ESigItem> getSelectedItems(IESigType esigType) {
-        List<ESigItem> list = new ArrayList<ESigItem>();
-        
+        List<ESigItem> list = new ArrayList<>();
+
         for (Row row : grid.getAllRows()) {
             if (!(row instanceof Group) && grid.isSelected(row)) {
                 ESigItem item = (ESigItem) row.getValue();
-                
+
                 if (esigType == null || esigType.equals(item.getESigType())) {
                     list.add(item);
                 }
             }
         }
-        
+
         return list;
     }
-    
+
     /**
      * Apply esignature to all selected items.
      */
@@ -237,49 +235,49 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
         if (btnOK.isDisabled()) {
             return;
         }
-        
+
         setError(null);
         String pwd = txtPassword.getValue();
         txtPassword.setValue(null);
-        
+
         try {
             if (SecurityUtil.getSecurityService().validatePassword(pwd)) {
-                Map<IESigType, List<ESigItem>> items = new HashMap<IESigType, List<ESigItem>>();
-                
+                Map<IESigType, List<ESigItem>> items = new HashMap<>();
+
                 for (IESigType esigType : esigTypes) {
                     List<ESigItem> selItems = getSelectedItems(esigType);
-                    
+
                     if (selItems.size() > 0) {
                         items.put(esigType, selItems);
                     }
                 }
-                
-                List<ESigItem> issues = new ArrayList<ESigItem>();
-                
+
+                List<ESigItem> issues = new ArrayList<>();
+
                 for (IESigType esigType : items.keySet()) {
                     doValidate(esigType, items.get(esigType), issues);
                 }
-                
+
                 if (issues.size() > 0 && !IssueViewer.execute(issues)) {
                     return;
                 }
-                
+
                 for (IESigType esigType : items.keySet()) {
                     List<ESigItem> selItems = items.get(esigType);
                     selItems.removeAll(issues);
                     doSign(esigType, selItems, pwd);
                 }
-                
+
                 close(false);
             }
         } catch (Exception e) {}
-        
+
         setError("Electronic signature code not valid.");
     }
-    
+
     /**
      * Performs validation of specified esignature items.
-     * 
+     *
      * @param esigType Type of the esignature items (all will be of this type).
      * @param items Esignature items of the specified type that are to be validated.
      * @param issues List of items that had reported issues.
@@ -287,7 +285,7 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
     private void doValidate(IESigType esigType, List<ESigItem> items, List<ESigItem> issues) {
         if (items.size() > 0) {
             esigType.validateESigItems(items);
-            
+
             for (ESigItem item : items) {
                 if (item.getIssues() != null) {
                     issues.add(item);
@@ -295,10 +293,10 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
             }
         }
     }
-    
+
     /**
      * Applies electronic signature to the specified items.
-     * 
+     *
      * @param esigType Type of the esignature items (all will be of this type).
      * @param items Esignature items of the specified type that are to be signed.
      * @param password Validated esignature password to be applied.
@@ -308,54 +306,54 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
             esigType.signESigItems(items, password);
         }
     }
-    
+
     /**
      * Display the error message.
-     * 
+     *
      * @param message The error message.
      */
     private void setError(String message) {
         lblError.setValue(message == null ? " " : message);
     }
-    
+
     /**
      * Force focus to the password text box.
      */
     public void onBlur$txtPassword() {
         Events.postEvent(Events.ON_FOCUS, this, null);
     }
-    
+
     /**
      * Clear error message upon re-entering password.
      */
     public void onChanging$txtPassword() {
         setError(null);
     }
-    
+
     /**
      * Update controls to reflect changes in item selection.
      */
     public void onSelect$grid() {
         updateControls();
     }
-    
+
     /**
      * Dialog focus always goes to the password text box.
      */
     public void onFocus() {
         txtPassword.setFocus(true);
     }
-    
+
     /**
      * Close the dialog with a cancel status.
      */
     public void onCancel() {
         close(true);
     }
-    
+
     /**
      * Close the dialog with the specified cancel status.
-     * 
+     *
      * @param canceled The cancel status.
      */
     private void close(boolean canceled) {
@@ -363,18 +361,18 @@ public class ESigViewer extends Window implements PatientContext.IPatientContext
         FrameworkUtil.getAppFramework().unregisterObject(this);
         detach();
     }
-    
+
     @Override
     public void canceled() {
     }
-    
+
     @Override
     public void committed() {
     }
-    
+
     @Override
     public String pending(boolean silent) {
         return null;
     }
-    
+
 }

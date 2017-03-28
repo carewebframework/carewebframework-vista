@@ -15,15 +15,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.shell.plugins.IPluginEvent;
@@ -39,7 +35,8 @@ import org.carewebframework.ui.zk.DateRangePicker;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
-
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hspconsortium.cwf.api.patient.PatientContext;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Checkbox;
@@ -102,7 +99,7 @@ public class DisplayController extends FrameworkController implements PatientCon
     
     private final Date today = new Date();
     
-    private final Map<String, String> percentiles = new HashMap<String, String>();
+    private final Map<String, String> percentiles = new HashMap<>();
     
     private List<String> tests;
     
@@ -316,7 +313,7 @@ public class DisplayController extends FrameworkController implements PatientCon
             String pctileRPC = percentiles.get(testid);
             
             if (pctileRPC != null && chkPercentiles.isChecked()) {
-                List<String> pctiles = broker.callRPCList(pctileRPC, null, testid, patient.getId().getIdPart(),
+                List<String> pctiles = broker.callRPCList(pctileRPC, null, testid, patient.getIdElement().getIdPart(),
                     DateUtils.addDays(dateLow, -3000), DateUtils.addDays(dateHigh, 3000), getDefaultUnits());
                 
                 for (String pctile : pctiles) {
@@ -339,19 +336,19 @@ public class DisplayController extends FrameworkController implements PatientCon
      * counts: test count^date count^result count
      * tests: control ien^test ien^test name^test abbrv^units^low norm^hi norm^percentile RPC
      * dates: date id^FM date results: date id^row #^value^result ien
-     * 
+     *
      * For example:
-     * 
+     *
      * 8^2^7
-     * 
+     *
      * 3^3^TEMPERATURE^TMP^F^^^ 5^5^PULSE^PU^/min^60^100^
      * 15^15^RESPIRATIONS^RS^/min^^^ 4^4^BLOOD PRESSURE^BP^mmHg^90^150^
      * 1^1^HEIGHT^HT^in^^^CIAOCVVM PCTILE 2^2^WEIGHT^WT^lb^^^CIAOCVVM PCTILE
      * 21^21^PAIN^PA^^^^ 6^6^HEAD CIRCUMFERENCE^HC^in^^^CIAOCVVM PCTILE
-     * 
+     *
      * 2^3041018.1446
      * 1^3041022.1446
-     * 
+     *
      * 1^2^77^^2445227 1^4^101/65^^2445224 1^5^27^^2445222 2^5^26.5^^2445220
      * 1^6^16.5^^2445223 2^6^16^^2445218 1^8^17.5^^2445225
      * </pre>
@@ -390,7 +387,7 @@ public class DisplayController extends FrameworkController implements PatientCon
             }
         }
         // Populate date headers
-        Map<String, Listheader> headers = new HashMap<String, Listheader>();
+        Map<String, Listheader> headers = new HashMap<>();
         
         for (int c = 1; c <= datecnt; c++) {
             pcs = StrUtil.split(data.next(), StrUtil.U, 2);
@@ -482,7 +479,8 @@ public class DisplayController extends FrameworkController implements PatientCon
     
     private List<String> doRPC(String rpcName, Date date1, Date date2, List<String> tests) {
         // TODO: need to use encounter location
-        return broker.callRPCList(rpcName, null, patient.getId().getIdPart(), date1, date2, 0, tests, 0, getDefaultUnits());
+        return broker.callRPCList(rpcName, null, patient.getIdElement().getIdPart(), date1, date2, 0, tests, 0,
+            getDefaultUnits());
     }
     
     private void updatePaging() {

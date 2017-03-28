@@ -13,12 +13,16 @@ import java.util.Date;
 import java.util.List;
 
 import org.carewebframework.api.domain.DomainFactoryRegistry;
-import org.carewebframework.cal.api.location.LocationContext;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.ui.zk.DateTimebox;
 import org.carewebframework.vista.api.encounter.EncounterFlag;
 import org.carewebframework.vista.api.encounter.EncounterUtil;
 import org.carewebframework.vista.plugin.location.LocationSelection;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hspconsortium.cwf.api.location.LocationContext;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
@@ -27,56 +31,51 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Textbox;
 
-import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
-import ca.uhn.fhir.model.dstu2.composite.CodingDt;
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
-import ca.uhn.fhir.model.dstu2.resource.Location;
-
 /**
  * Encounter selector for creating ad hoc encounters.
  */
 public class NewSelector extends EncounterSelector {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private Listbox lstLocation;
-    
+
     private Textbox txtLocation;
-    
+
     private Combobox cboServiceCategory;
-    
+
     private DateTimebox datEncounter;
-    
+
     private Checkbox chkForceCreate;
-    
+
     /**
      * Wire variables and events.
      */
     @Override
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
-        
-        for (CodeableConceptDt cat : EncounterUtil.getServiceCategories()) {
-            CodingDt coding = cat.getCodingFirstRep();
+
+        for (CodeableConcept cat : EncounterUtil.getServiceCategories()) {
+            Coding coding = cat.getCodingFirstRep();
             Comboitem item = cboServiceCategory.appendItem(coding.getDisplay());
             item.setValue(coding.getCode());
             item.setTooltiptext(cat.getText());
         }
-        
+
         List<String> data = broker.callRPCList("RGCWENCX CLINLOC", null, "", 1, 9999);
-        
+
         for (String itm : data) {
             String[] pcs = StrUtil.split(itm, StrUtil.U, 3);
             Listitem item = lstLocation.appendItem(pcs[1], pcs[0]);
             item.setAttribute("sc", pcs[2]);
         }
-        
+
     }
-    
+
     public void onSelect$lstLocation() {
         Listitem item = lstLocation.getSelectedItem();
         String sc = (String) item.getAttribute("sc");
-        
+
         if (sc.isEmpty()) {
             cboServiceCategory.setSelectedItem(null);
         } else {
@@ -87,28 +86,28 @@ public class NewSelector extends EncounterSelector {
                 }
             }
         }
-        
+
         statusChanged();
     }
-    
+
     public void onSelect$cboServiceCategory() {
         statusChanged();
     }
-    
+
     public void onChange$datEncounter() {
         statusChanged();
     }
-    
+
     public void onClick$btnLocation() throws Exception {
         LocationSelection.locationLookup(txtLocation.getValue(), lstLocation, LocationContext.getActiveLocation());
     }
-    
+
     @Override
     protected Encounter getEncounterInternal() {
         if (!isComplete()) {
             return null;
         }
-        
+
         Listitem item = lstLocation.getSelectedItem();
         String locid = item == null ? null : (String) item.getValue();
         Location location = locid != null ? DomainFactoryRegistry.fetchObject(Location.class, locid) : null;
@@ -116,16 +115,16 @@ public class NewSelector extends EncounterSelector {
         String sc = cboitem == null ? null : (String) cboitem.getValue();
         Date date = datEncounter.getDate();
         Encounter encounter = EncounterUtil.create(mainController.patient, date, location, sc);
-        
+
         if (chkForceCreate.isChecked()) {
             mainController.flags.add(EncounterFlag.FORCE);
         } else {
             mainController.flags.remove(EncounterFlag.FORCE);
         }
-        
+
         return encounter;
     }
-    
+
     @Override
     protected boolean init(MainController mainController) {
         super.init(mainController);
@@ -138,11 +137,11 @@ public class NewSelector extends EncounterSelector {
         chkForceCreate.setDisabled(forceVisit);
         return true;
     }
-    
+
     @Override
     protected boolean isComplete() {
         return lstLocation.getSelectedItem() != null && cboServiceCategory.getSelectedItem() != null
                 && datEncounter.getDate() != null;
     }
-    
+
 }

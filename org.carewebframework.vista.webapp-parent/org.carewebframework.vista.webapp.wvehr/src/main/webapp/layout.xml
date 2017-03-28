@@ -9,16 +9,16 @@
 		<splitterpane relative="false" size="47.0">
 			<splitterview orientation="horizontal">
 				<splitterpane relative="false" size="40">
-					<patientPhoto />
+					<cwfPatientPhoto />
 				</splitterpane>
 				<splitterpane relative="true" size="33">
-					<patientHeader color="lightyellow" />
+					<cwfPatientHeader color="lightyellow" showUser="false" />
 				</splitterpane>
 				<splitterpane relative="true" size="33">
-					<encounterHeader color="lightgreen" />
+					<vistaEncounterHeader color="lightgreen" />
 				</splitterpane>
 				<splitterpane relative="true" size="33">
-					<userHeader color="lightblue" />
+					<cwfUserHeader color="lightblue" />
 				</splitterpane>
 			</splitterview>
 		</splitterpane>
@@ -45,7 +45,7 @@
 								layout="50:0:true;0:100%" showDetailPane="false" />
 						</treepane>
 						<treepane label="Documents (FHIR)">
-							<calDocuments />
+							<cwfDocuments />
 						</treepane>
 						<treepane label="Lab Orders">
 							<vistaLabOrders allowPrint="false" caption="Lab Orders"
@@ -59,12 +59,6 @@
 							<vistaAlerts allowPrint="false" caption="Alerts"
 								captionStyle="HIDDEN" deferUpdate="true" horizontal="true"
 								layout="50:0:true;0:100%" showDetailPane="false" />
-						</treepane>
-						<treepane label="Chief Complaint">
-							<rpmsChiefComplaint />
-						</treepane>
-						<treepane label="Patient Goals">
-							<vistaPatientGoals />
 						</treepane>
 					</treeview>
 				</tabpane>

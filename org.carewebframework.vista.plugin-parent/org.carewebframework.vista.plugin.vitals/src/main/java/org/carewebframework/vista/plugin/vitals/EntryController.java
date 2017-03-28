@@ -16,17 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-import ca.uhn.fhir.model.dstu2.valueset.EncounterStateEnum;
-
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
-
 import org.carewebframework.api.security.SecurityUtil;
-import org.carewebframework.cal.api.encounter.EncounterContext;
-import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.common.DateUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.shell.plugins.IPluginEvent;
@@ -39,7 +32,11 @@ import org.carewebframework.vista.api.encounter.EncounterUtil;
 import org.carewebframework.vista.api.util.VistAUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
-
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Encounter.EncounterStatus;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hspconsortium.cwf.api.encounter.EncounterContext;
+import org.hspconsortium.cwf.api.patient.PatientContext;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
@@ -104,7 +101,7 @@ public class EntryController extends FrameworkController implements PatientConte
     
     private Date lastDateTime;
     
-    private final List<String> template = new ArrayList<String>();
+    private final List<String> template = new ArrayList<>();
     
     private boolean warned;
     
@@ -165,7 +162,7 @@ public class EntryController extends FrameworkController implements PatientConte
         if (enabled && !fetched && patient != null && encounter != null) {
             template.clear();
             fetched = true;
-            VistAUtil.getBrokerSession().callRPCList("RGCWVM TEMPLATE", template, patient.getId().getIdPart(),
+            VistAUtil.getBrokerSession().callRPCList("RGCWVM TEMPLATE", template, patient.getIdElement().getIdPart(),
                 EncounterUtil.encode(encounter), defaultUnits.ordinal() - 1);
         }
         
@@ -182,13 +179,12 @@ public class EntryController extends FrameworkController implements PatientConte
             return;
         }
         
-        imgLocked.setVisible(encounter != null
-                && encounter.getStatusElement().getValueAsEnum() == EncounterStateEnum.FINISHED);
+        imgLocked.setVisible(encounter != null && encounter.getStatusElement().getValue() == EncounterStatus.FINISHED);
         btnNew.setDisabled(!imgLocked.isVisible());
         btnCancel.setDisabled(btnNew.isDisabled());
         btnOK.setDisabled(false);
-        lastDateTime = lastDateTime != null ? lastDateTime : useEncounterDate ? encounter.getPeriod().getStart()
-                : new FMDate();
+        lastDateTime = lastDateTime != null ? lastDateTime
+                : useEncounterDate ? encounter.getPeriod().getStart() : new FMDate();
         loadGrid();
         val = getValue(colIndex, rowIndex);
         moveTo(rangeCol - 1, 1);
@@ -266,17 +262,17 @@ public class EntryController extends FrameworkController implements PatientConte
     /**
      * Load the string grid with data. Calls the grid RPC to retrieve data for the grid. Data is
      * returned in the following format:
-     * 
+     *
      * <pre>
-     * 
+     *
      * counts: test count^date count^result count
      * tests: control ien^test ien^test name^test abbrv^units^low norm^hi norm^percentile RPC
      * dates: date id^FM date results: date id^row #^value^result ien
-     * 
+     *
      * For example:
-     * 
+     *
      * 8^2^7
-     * 
+     *
      * 3^3^TEMPERATURE^TMP^F^^^
      * 5^5^PULSE^PU^/min^60^100^
      * 15^15^RESPIRATIONS^RS^/min^^^
@@ -285,10 +281,10 @@ public class EntryController extends FrameworkController implements PatientConte
      * 2^2^WEIGHT^WT^lb^^^CIAOCVVM PCTILE
      * 21^21^PAIN^PA^^^^
      * 6^6^HEAD CIRCUMFERENCE^HC^in^^^CIAOCVVM PCTILE
-     * 
+     *
      * 2^3041018.1446
      * 1^3041022.1446
-     * 
+     *
      * 1^2^77^^2445227
      * 1^4^101/65^^2445224
      * 1^5^27^^2445222
@@ -326,7 +322,7 @@ public class EntryController extends FrameworkController implements PatientConte
             setValue(datecnt + 1, r, range + pcs[4], pcs[4]);
         }
         // Populate date headers
-        Map<String, Integer> headers = new HashMap<String, Integer>();
+        Map<String, Integer> headers = new HashMap<>();
         
         for (int c = 1; c <= datecnt; c++) {
             pcs = StrUtil.split(data.next(), StrUtil.U, 2);
@@ -397,8 +393,8 @@ public class EntryController extends FrameworkController implements PatientConte
             }
             
             String v = getValue(colIndex, rowIndex);
-            String s = StringUtils.isEmpty(v) ? "" : broker.callRPC("RGCWVM VALIDATE", getObject(0, rowIndex),
-                getDefaultUnits(), v);
+            String s = StringUtils.isEmpty(v) ? ""
+                    : broker.callRPC("RGCWVM VALIDATE", getObject(0, rowIndex), getDefaultUnits(), v);
             
             if (s.indexOf(StrUtil.U) == -1) {
                 setValue(colIndex, rowIndex, v);
@@ -483,7 +479,7 @@ public class EntryController extends FrameworkController implements PatientConte
     
     /**
      * Called when a patient context change has been requested.
-     * 
+     *
      * @param silent = If true, user interaction is not permitted.
      */
     @Override
@@ -515,7 +511,7 @@ public class EntryController extends FrameworkController implements PatientConte
     
     /**
      * The CareWeb framework will call this method whenever the component is initially loaded.
-     * 
+     *
      * @param container = Reference to the plugin's container.
      */
     @Override

@@ -9,18 +9,16 @@
  */
 package org.carewebframework.vista.plugin.documents;
 
-import org.carewebframework.cal.api.patient.PatientContext;
-import org.carewebframework.cal.api.patient.PatientContext.IPatientContextEvent;
 import org.carewebframework.shell.plugins.PluginStatus;
 import org.carewebframework.vista.api.documents.DocumentService;
+import org.hspconsortium.cwf.api.patient.PatientContext;
+import org.hspconsortium.cwf.api.patient.PatientContext.IPatientContextEvent;
 
 /**
  * Updates the enabled status of the plugin.
- *
- * @author dmartin
  */
 public class ActionStatus extends PluginStatus implements IPatientContextEvent {
-    
+
     /**
      * Returns true if there is no current patient or the current patient has no documents.
      */
@@ -28,14 +26,14 @@ public class ActionStatus extends PluginStatus implements IPatientContextEvent {
     public boolean checkDisabled() {
         return !DocumentService.getInstance().hasDocuments(PatientContext.getActivePatient());
     }
-    
+
     /**
      * @see org.carewebframework.api.context.IContextEvent#canceled()
      */
     @Override
     public void canceled() {
     }
-    
+
     /**
      * Update the plugin enabled status when the patient selection changes.
      */
@@ -43,7 +41,7 @@ public class ActionStatus extends PluginStatus implements IPatientContextEvent {
     public void committed() {
         updateDisabled();
     }
-    
+
     /**
      * @see org.carewebframework.api.context.IContextEvent#pending(boolean)
      */
@@ -51,5 +49,5 @@ public class ActionStatus extends PluginStatus implements IPatientContextEvent {
     public String pending(boolean silent) {
         return null;
     }
-    
+
 }

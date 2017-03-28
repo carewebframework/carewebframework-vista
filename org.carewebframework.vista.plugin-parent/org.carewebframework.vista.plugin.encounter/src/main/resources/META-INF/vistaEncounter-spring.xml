@@ -10,7 +10,7 @@
 	<beans profile="root">
 
 		<cwp:plugin url="~./org/carewebframework/vista/plugin/encounter/encounterHeader.zul"
-			id="encounterHeader" name="Current Encounter Header">
+			id="vistaEncounterHeader" name="Current Encounter Header">
 			<cwp:serialization>
 				<cwp:property name="Background Color" id="color" type="color"
 					description="Sets the background color." />

@@ -24,9 +24,9 @@ import org.carewebframework.vista.ui.common.CoverSheetBase;
  * sheet.
  */
 public class MainController extends CoverSheetBase<String> {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * RPC: BEHOLRCV LIST
      * <p>
@@ -42,20 +42,20 @@ public class MainController extends CoverSheetBase<String> {
         setup("Lab Orders", "Lab Order Detail", "RGCWLRCV LIST", "RGCWLRCV DETAIL", 1, "Lab Order", "Status", "Date");
         super.init();
     }
-    
+
     /**
      * Logic to return detail information for specified item.
-     * 
+     *
      * @param data The item data.
      * @return The detail information.
      */
     @Override
     protected String getDetail(String data) {
         data = piece(data, U);
-        return data.isEmpty() ? null : fromList(getBroker().callRPCList(detailRPC, null, patient.getId().getIdPart(), data,
-            data));
+        return data.isEmpty() ? null
+                : fromList(getBroker().callRPCList(detailRPC, null, patient.getIdElement().getIdPart(), data, data));
     }
-    
+
     @Override
     protected void render(String dao, List<Object> columns) {
         String pcs[] = split(dao, U, 4);
@@ -63,5 +63,5 @@ public class MainController extends CoverSheetBase<String> {
         columns.add(pcs[3]);
         columns.add(VistAUtil.normalizeDate(pcs[2]));
     }
-    
+
 }

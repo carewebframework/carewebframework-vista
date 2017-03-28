@@ -7,9 +7,8 @@
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.carewebframework</groupId>
 	<artifactId>org.carewebframework.vista-parent</artifactId>
-	<version>1.1.1-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>VistA Parent POM</name>
 
@@ -22,12 +21,12 @@
 
 	<licenses>
 		<license>
-			<name>MPL 2.0</name>
-			<url>http://mozilla.org/MPL/2.0/</url>
+			<name>Apache Software License 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<comments>
-				This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
-				If a copy of the MPL was not distributed with this file, You can obtain one at 
-				http://mozilla.org/MPL/2.0/.
+				This Source Code Form is subject to the terms of the Apache License, v. 2.0. 
+				If a copy of the license was not distributed with this file, You can obtain one at 
+				http://www.apache.org/licenses/LICENSE-2.0.
 			</comments>
 		</license>
 		<license>
@@ -43,7 +42,7 @@
 
 	<properties>
 		<scm.parent>carewebframework-vista</scm.parent>
-		<org.carewebframework.cal.version>5.0.0-SNAPSHOT</org.carewebframework.cal.version>
+		<org.hspconsortium.carewebframework.version>1.0.0-SNAPSHOT</org.hspconsortium.carewebframework.version>
 		<org.carewebframework.highcharts.version>4.1.9</org.carewebframework.highcharts.version>
 		<org.carewebframework.smart.version>5.0.0-SNAPSHOT</org.carewebframework.smart.version>
 	</properties>
@@ -69,34 +68,24 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.carewebframework</groupId>
-				<artifactId>org.carewebframework.cal.api.core</artifactId>
-				<version>${org.carewebframework.cal.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.carewebframework</groupId>
-				<artifactId>org.carewebframework.cal.api.patientlist</artifactId>
-				<version>${org.carewebframework.cal.version}</version>
+				<groupId>org.hspconsortium.carewebframework</groupId>
+				<artifactId>cwf-api-core</artifactId>
+				<version>${org.hspconsortium.carewebframework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.carewebframework</groupId>
 				<artifactId>org.carewebframework.vista.api.core</artifactId>
-				<version>1.1.1-SNAPSHOT</version>
+				<version>1.2.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.carewebframework</groupId>
 				<artifactId>org.carewebframework.vista.ui.core</artifactId>
-				<version>1.1.1-SNAPSHOT</version>
+				<version>1.2.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.carewebframework</groupId>
 				<artifactId>org.carewebframework.vista.mbroker</artifactId>
-				<version>1.1.1-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.carewebframework</groupId>
-				<artifactId>org.carewebframework.help.chm</artifactId>
-				<version>5.0.0-SNAPSHOT</version>
+				<version>1.2.0-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

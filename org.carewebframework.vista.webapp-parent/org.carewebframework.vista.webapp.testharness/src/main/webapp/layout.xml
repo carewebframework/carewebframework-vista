@@ -5,10 +5,10 @@
 		<splitterpane size="47" relative="false">
 			<splitterview orientation="horizontal">
 				<splitterpane size="50" relative="true">
-					<patientHeader />
+					<cwfPatientHeader />
 				</splitterpane>
 				<splitterpane size="50" relative="true">
-					<userHeader />
+					<cwfUserHeader />
 				</splitterpane>
 			</splitterview>
 		</splitterpane>
@@ -21,7 +21,7 @@
 			</tabview>
 		</splitterpane>
 		<splitterpane size="17" relative="false">
-			<statusPanel />
+			<cwfStatusPanel />
 		</splitterpane>
 	</splitterview>
 </layout>

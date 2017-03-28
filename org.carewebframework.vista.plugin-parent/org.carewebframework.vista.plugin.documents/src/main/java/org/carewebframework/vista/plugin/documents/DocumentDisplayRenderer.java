@@ -9,10 +9,9 @@
  */
 package org.carewebframework.vista.plugin.documents;
 
-import org.carewebframework.cal.ui.reporting.Constants;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
 import org.carewebframework.vista.api.documents.Document;
-
+import org.hspconsortium.cwf.ui.reporting.Constants;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
@@ -23,11 +22,11 @@ import org.zkoss.zul.Listitem;
  * Renderer for the document display.
  */
 public class DocumentDisplayRenderer extends AbstractListitemRenderer<Document, Object> {
-    
+
     public DocumentDisplayRenderer() {
         super("", null);
     }
-    
+
     /**
      * Render the list item for the specified document.
      *
@@ -54,5 +53,5 @@ public class DocumentDisplayRenderer extends AbstractListitemRenderer<Document, 
         body.setPre(true);
         cell.appendChild(body);
     }
-    
+
 }

@@ -11,25 +11,25 @@ package org.carewebframework.vista.esig;
 
 import java.util.List;
 
-import org.carewebframework.cal.api.patient.PatientContext;
 import org.carewebframework.vista.esig.ESigItem.ESigItemIssueSeverity;
+import org.hspconsortium.cwf.api.patient.PatientContext;
 
 public abstract class TestType extends ESigType {
-    
+
     private int id = 0;
-    
+
     private int severityIndex = -1;
-    
+
     private final int severityMax = ESigItemIssueSeverity.values().length;
-    
+
     protected TestType(String id, String groupHeader) {
         super(id, groupHeader);
     }
-    
+
     private String uniqueId() {
         return getESigTypeId() + "-" + ++id;
     }
-    
+
     public ESigItem newItem() {
         String text = getText();
         ESigItem item = new ESigItem(this, uniqueId());
@@ -37,15 +37,15 @@ public abstract class TestType extends ESigType {
         item.setText(text);
         return item;
     }
-    
+
     private ESigItem newItem(List<ESigItem> items) {
         ESigItem item = newItem();
         items.add(item);
         return item;
     }
-    
+
     abstract protected String getText();
-    
+
     @Override
     public void loadESigItems(List<ESigItem> items) {
         if (PatientContext.getActivePatient() != null) {
@@ -54,11 +54,11 @@ public abstract class TestType extends ESigType {
             }
         }
     }
-    
+
     @Override
     public void validateESigItems(List<ESigItem> items) {
         super.validateESigItems(items);
-        
+
         for (ESigItem item : items) {
             if (++severityIndex >= severityMax) {
                 severityIndex = -1;
@@ -68,10 +68,10 @@ public abstract class TestType extends ESigType {
             }
         }
     }
-    
+
     @Override
     public void signESigItems(List<ESigItem> items, String esig) {
         super.signESigItems(items, esig);
     }
-    
+
 }

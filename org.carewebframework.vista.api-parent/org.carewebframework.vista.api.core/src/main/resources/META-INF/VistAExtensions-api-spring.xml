@@ -38,7 +38,7 @@
 			
 		<!-- Register a broker-based HTTP client -->
 		<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-			<property name="targetClass" value="org.carewebframework.cal.api.ClientUtil" />
+			<property name="targetClass" value="org.hspconsortium.cwf.api.ClientUtil" />
 			<property name="targetMethod" value="registerHttpClient" />
 			<property name="arguments">
 				<list>
@@ -61,7 +61,8 @@
 
 		<!-- Messaging support -->
 		
-		<bean class="org.carewebframework.vista.api.messaging.MessageConsumer">
+		<bean class="org.carewebframework.vista.api.messaging.MessageConsumer"
+			init-method="init" destroy-method="destroy">
 			<constructor-arg ref="brokerSession" />
 		</bean>
 		

@@ -11,24 +11,23 @@ package org.carewebframework.vista.api.documents;
 
 import java.util.Date;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-
 import org.carewebframework.api.query.AbstractQueryServiceEx;
 import org.carewebframework.api.query.IQueryContext;
 import org.carewebframework.api.query.IQueryResult;
 import org.carewebframework.api.query.QueryUtil;
 import org.carewebframework.common.DateRange;
 import org.carewebframework.common.DateUtil;
+import org.hl7.fhir.dstu3.model.Patient;
 
 /**
  * Data service wrapper for documents service.
  */
 public class DocumentListQueryService extends AbstractQueryServiceEx<DocumentService, Document> {
-    
+
     public DocumentListQueryService(DocumentService service) {
         super(service);
     }
-    
+
     @Override
     public IQueryResult<Document> fetch(IQueryContext context) {
         DateRange dateRange = (DateRange) context.getParam("dateRange");
@@ -38,7 +37,7 @@ public class DocumentListQueryService extends AbstractQueryServiceEx<DocumentSer
         DocumentCategory category = (DocumentCategory) context.getParam("category");
         return QueryUtil.packageResult(service.retrieveHeaders(patient, startDate, endDate, category));
     }
-    
+
     @Override
     public boolean hasRequired(IQueryContext context) {
         return true;

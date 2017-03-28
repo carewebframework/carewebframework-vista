@@ -9,18 +9,18 @@
  */
 package org.carewebframework.vista.patientlist;
 
-import org.carewebframework.cal.api.patientlist.AbstractPatientListFilter;
+import org.hspconsortium.cwf.api.patientlist.AbstractPatientListFilter;
 
 public class PatientListFilter extends AbstractPatientListFilter {
-    
+
     public PatientListFilter(PatientListFilterEntity entity) {
         super(entity);
     }
-    
+
     public PatientListFilter(String value) {
         super(value);
     }
-    
+
     /**
      * Return the serialized form of the associated entity.
      */
@@ -28,7 +28,7 @@ public class PatientListFilter extends AbstractPatientListFilter {
     protected String serialize() {
         return getEntity().toString();
     }
-    
+
     /**
      * Deserialize an entity from its serialized form.
      */
@@ -36,7 +36,7 @@ public class PatientListFilter extends AbstractPatientListFilter {
     protected PatientListFilterEntity deserialize(String value) {
         return new PatientListFilterEntity(value);
     }
-    
+
     /**
      * Returns the display name of the associated entity (the name of the service location).
      */

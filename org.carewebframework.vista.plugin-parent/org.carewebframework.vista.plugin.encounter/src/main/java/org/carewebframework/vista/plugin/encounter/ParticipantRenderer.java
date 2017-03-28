@@ -9,49 +9,49 @@
  */
 package org.carewebframework.vista.plugin.encounter;
 
-import ca.uhn.fhir.model.api.IResource;
-import ca.uhn.fhir.model.dstu2.composite.ResourceReferenceDt;
-import ca.uhn.fhir.model.dstu2.resource.Encounter.Participant;
-
-import org.carewebframework.fhir.common.FhirUtil;
 import org.carewebframework.ui.zk.AbstractListitemRenderer;
-
+import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.instance.model.api.IAnyResource;
+import org.hspconsortium.cwf.fhir.common.FhirUtil;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listitem;
 
+import ca.uhn.fhir.model.api.IResource;
+
 public class ParticipantRenderer extends AbstractListitemRenderer<Object, Object> {
-    
-    private Participant primaryParticipant;
-    
+
+    private EncounterParticipantComponent primaryParticipant;
+
     @Override
     public void renderItem(Listitem item, Object data) {
-        Participant participant;
-        
-        if (data instanceof Participant) {
-            participant = (Participant) data;
+        EncounterParticipantComponent participant;
+
+        if (data instanceof EncounterParticipantComponent) {
+            participant = (EncounterParticipantComponent) data;
         } else if (data instanceof IResource) {
-            participant = new Participant();
-            participant.setIndividual(new ResourceReferenceDt((IResource) data));
+            participant = new EncounterParticipantComponent();
+            participant.setIndividual(new Reference((IAnyResource) data));
         } else {
             return;
         }
-        
+
         item.setValue(participant);
         createCell(item, FhirUtil.formatName(EncounterUtil.getName(participant)));
         item.setSclass(isPrimary(participant) ? Constants.SCLASS_PRIMARY : null);
         item.addForward(Events.ON_DOUBLE_CLICK, item.getListbox(), null);
     }
-    
-    private boolean isPrimary(Participant participant) {
+
+    private boolean isPrimary(EncounterParticipantComponent participant) {
         return primaryParticipant != null && primaryParticipant.equals(participant);
     }
-    
-    public Participant getPrimaryParticipant() {
+
+    public EncounterParticipantComponent getPrimaryParticipant() {
         return primaryParticipant;
     }
-    
-    public void setPrimaryParticipant(Participant primaryParticipant) {
+
+    public void setPrimaryParticipant(EncounterParticipantComponent primaryParticipant) {
         this.primaryParticipant = primaryParticipant;
     }
-    
+
 }

@@ -9,29 +9,29 @@
  */
 package org.carewebframework.vista.patientlist;
 
-import org.carewebframework.cal.api.patientlist.PatientListUtil;
 import org.carewebframework.common.StrUtil;
+import org.hspconsortium.cwf.api.patientlist.PatientListUtil;
 
 public class PatientListFilterEntity {
-    
+
     private final String id;
-    
+
     private final String name;
-    
+
     protected PatientListFilterEntity(String value) {
         String[] pcs = PatientListUtil.split(value, 3);
         id = pcs[0];
         name = pcs[1];
     }
-    
+
     public String getId() {
         return id;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     @Override
     public String toString() {
         return id + StrUtil.U + name;

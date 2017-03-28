@@ -9,14 +9,11 @@
  */
 package org.carewebframework.vista.plugin.location;
 
-import ca.uhn.fhir.model.dstu2.resource.Location;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.carewebframework.cal.api.location.LocationContext;
 import org.carewebframework.ui.FrameworkController;
-
+import org.hl7.fhir.dstu3.model.Location;
+import org.hspconsortium.cwf.api.location.LocationContext;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Label;

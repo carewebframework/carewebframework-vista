@@ -14,56 +14,55 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-
 import org.carewebframework.api.spring.SpringUtil;
 import org.carewebframework.common.StrUtil;
 import org.carewebframework.vista.mbroker.BrokerSession;
 import org.carewebframework.vista.mbroker.FMDate;
+import org.hl7.fhir.dstu3.model.Patient;
 
 /**
  * This is the documents api implementation.
  */
 public class DocumentService {
-    
+
     private final BrokerSession broker;
-    
+
     public static DocumentService getInstance() {
         return SpringUtil.getBean("vistaDocumentService", DocumentService.class);
     }
-    
+
     public DocumentService(BrokerSession broker) {
         this.broker = broker;
     };
-    
+
     public boolean hasDocuments(Patient patient) {
         return patient != null;
     }
-    
+
     public List<DocumentCategory> getCategories() {
-        List<DocumentCategory> categories = new ArrayList<DocumentCategory>();
-        
+        List<DocumentCategory> categories = new ArrayList<>();
+
         for (String result : broker.callRPCList("RGUTRPC FILGET", null, 8925.1, null, null, "I $P(^(0),U,4)=\"CL\"")) {
             String[] pcs = StrUtil.split(result, StrUtil.U);
             DocumentCategory cat = new DocumentCategory(pcs[0]);
             cat.setName(pcs[1]);
             categories.add(cat);
         }
-        
+
         Collections.sort(categories);
         return categories;
     }
-    
+
     /**
      * RPC: TIU GET RECORD TEXT
      *
      * <pre>
      *     Get the textual portion of a TIU Document.
-     * 
+     *
      *     Input parameters:
      *         IEN     -  IEN[8925] in the TIU Document file.
      *         ACTION  -  Defaults to VIEW.  .01 Field for file USR ACTION.
-     * 
+     *
      *     Return format:
      *         An array of text.
      *           Example (partial):
@@ -91,19 +90,19 @@ public class DocumentService {
             }
         }
     }
-    
+
     /**
      * RPC: TIU DOCUMENTS BY CONTEXT
      *
      * <pre>
      *     Returns lists of TIU Documents that satisfy the following search criteria:
-     * 
+     *
      *     1 - signed documents (all)
      *     2 - unsigned documents
      *     3 - uncosigned documents
      *     4 - signed documents/author
      *     5 - signed documents/date range
-     * 
+     *
      *     Input parameters:
      *         DocClass -  Pointer to TIU DOCUMENT DEFINITION #8925.1
      *     Context  -  1=All Signed (by PT),
@@ -119,7 +118,7 @@ public class DocumentService {
      *     SortSeq  -  Direction to search through dates, "A" - ascending, "D" - descending
      *     ShowAdd  -  parameter determines whether addenda will be included in the return array
      *     IncUnd   -  Flag to include undictated and untranscribed.  Only applies when CONTEXT=2
-     * 
+     *
      *     Return format:
      *         An array in the following format:
      *        1    2             3                            4                       5                6
@@ -138,11 +137,11 @@ public class DocumentService {
      */
     public List<Document> retrieveHeaders(Patient patient, Date startDate, Date endDate, DocumentCategory category) {
         List<DocumentCategory> categories = category == null ? getCategories() : Collections.singletonList(category);
-        List<Document> results = new ArrayList<Document>();
-        
+        List<Document> results = new ArrayList<>();
+
         for (DocumentCategory cat : categories) {
-            for (String result : broker.callRPCList("TIU DOCUMENTS BY CONTEXT", null, cat.getId().getIdPart(), 1, patient
-                    .getId().getIdPart(), startDate, endDate)) {
+            for (String result : broker.callRPCList("TIU DOCUMENTS BY CONTEXT", null, cat.getId().getIdPart(), 1,
+                patient.getIdElement().getIdPart(), startDate, endDate)) {
                 String[] pcs = StrUtil.split(result, StrUtil.U, 14);
                 Document doc = new Document();
                 doc.setId(pcs[0]);
@@ -155,7 +154,7 @@ public class DocumentService {
                 results.add(doc);
             }
         }
-        
+
         return results;
     }
 }

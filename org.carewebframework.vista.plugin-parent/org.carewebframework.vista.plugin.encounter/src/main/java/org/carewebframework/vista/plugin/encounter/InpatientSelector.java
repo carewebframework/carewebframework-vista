@@ -11,22 +11,20 @@ package org.carewebframework.vista.plugin.encounter;
 
 import java.util.List;
 
-import org.carewebframework.cal.api.encounter.EncounterSearchCriteria;
-
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hspconsortium.cwf.api.encounter.EncounterSearchCriteria;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Listbox;
-
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
 
 /**
  * Selector for inpatient encounters.
  */
 public class InpatientSelector extends EncounterSelector {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private Listbox lstInpatient;
-    
+
     /**
      * Wire variables and events.
      */
@@ -35,17 +33,17 @@ public class InpatientSelector extends EncounterSelector {
         super.doAfterCompose(comp);
         lstInpatient.setItemRenderer(new EncounterRenderer());
     }
-    
+
     public void onSelect$lstInpatient() {
         loadEncounterParticipants(getSelectedEncounter(lstInpatient));
         statusChanged();
     }
-    
+
     @Override
     protected Encounter getEncounterInternal() {
         return getSelectedEncounter(lstInpatient);
     }
-    
+
     @Override
     protected boolean init(MainController mainController) {
         super.init(mainController);
@@ -55,10 +53,10 @@ public class InpatientSelector extends EncounterSelector {
         List<Encounter> encounters = encounterSearch.search(criteria);
         return populateListbox(lstInpatient, encounters);
     }
-    
+
     @Override
     protected boolean isComplete() {
         return getEncounterInternal() != null;
     }
-    
+
 }
